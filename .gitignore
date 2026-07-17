@@ -1,0 +1,11 @@
+﻿# Static folders
+node_modules/
+client/node_modules/
+server/node_modules/
+
+env files
+*.env
+server/.env
+
+# Build artifacts
+client/dist/
