@@ -6,7 +6,7 @@ const procedures = ['Appendectomy', 'Knee Replacement', 'Hip Replacement', 'Gall
 const hospitalTypes = ['Standard', 'Premium', 'Luxury'];
 
 function CostEstimatorPage() {
-  const [form, setForm] = useState({ country: '', state: '', procedure: procedures[0], hospitalType: hospitalTypes[0] });
+  const [form, setForm] = useState({ country: 'India', state: '', procedure: procedures[0], hospitalType: hospitalTypes[0], currency: 'INR' });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
@@ -46,11 +46,11 @@ function CostEstimatorPage() {
             <input name="country" value={form.country} onChange={handleChange} required />
           </label>
           <label>
-            State
-            <input name="state" value={form.state} onChange={handleChange} required />
+            State / City
+            <input name="state" value={form.state} onChange={handleChange} placeholder="e.g., Karnataka, Bangalore" required />
           </label>
           <label>
-            Procedure
+            Treatment
             <select name="procedure" value={form.procedure} onChange={handleChange}>
               {procedures.map((procedure) => (
                 <option key={procedure} value={procedure}>{procedure}</option>
@@ -65,35 +65,40 @@ function CostEstimatorPage() {
               ))}
             </select>
           </label>
+          <label>
+            Currency
+            <input name="currency" value={form.currency} readOnly />
+          </label>
         </div>
         <button type="submit" className="primary-button" disabled={loading}>
-          {loading ? 'Estimating…' : 'Estimate cost'}
+          {loading ? 'Estimating…' : 'Estimate treatment cost'}
         </button>
       </form>
       {result ? (
         <section className="result-panel">
           <div className="result-header">
-            <h2>Estimated cost</h2>
+            <h2>Estimated treatment cost</h2>
+            <p className="eyebrow">{result.procedure} • {result.hospitalStay}</p>
           </div>
           <div className="result-grid">
             <article>
-              <h3>Cost range</h3>
-              <p>{result.costRange}</p>
+              <h3>Estimated (INR)</h3>
+              <p className="price">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(result.estimatedInr)}</p>
+              <small>Typical range: {result.costRange}</small>
             </article>
             <article>
-              <h3>Hospital stay</h3>
-              <p>{result.hospitalStay}</p>
-            </article>
-            <article>
-              <h3>Medication cost</h3>
+              <h3>Medication</h3>
               <p>{result.medicationCost}</p>
             </article>
             <article>
-              <h3>Follow-up cost</h3>
+              <h3>Follow-up</h3>
               <p>{result.followUpCost}</p>
             </article>
+            <article>
+              <h3>Notes</h3>
+              <p>{result.insuranceNote}</p>
+            </article>
           </div>
-          <p>{result.insuranceNote}</p>
           <small>{result.disclaimer}</small>
         </section>
       ) : null}

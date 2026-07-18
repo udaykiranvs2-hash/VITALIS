@@ -130,15 +130,63 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="landing-cta-band" id="pricing">
+      <section className="landing-pricing" id="pricing">
+        <div className="landing-section-head">
+          <p className="landing-section-pretitle">Pricing</p>
+          <h2 className="landing-section-title">Simple plans for individuals and care teams</h2>
+          <p className="landing-section-subtitle">Choose a plan that fits your needs — start free and upgrade as you scale.</p>
+        </div>
+
+        <div className="pricing-grid">
+          <article>
+            <h3>Free</h3>
+            <p className="price">₹0</p>
+            <ul>
+              <li>Basic symptom checks</li>
+              <li>Report summaries (limited)</li>
+              <li>Access to doctor directory</li>
+            </ul>
+            <Link to="/register" className="landing-cta-button">Start free</Link>
+          </article>
+
+          <article>
+            <h3>Plus</h3>
+            <p className="price">₹699 / mo</p>
+            <ul>
+              <li>Unlimited symptom checks</li>
+              <li>Full report analysis</li>
+              <li>Priority doctor matches</li>
+            </ul>
+            <Link to="/register" className="landing-cta-button">Get Plus</Link>
+          </article>
+
+          <article>
+            <h3>Pro</h3>
+            <p className="price">₹2,499 / mo</p>
+            <ul>
+              <li>Team accounts & sharing</li>
+              <li>Advanced analytics</li>
+              <li>Dedicated support</li>
+            </ul>
+            <Link to="/register" className="landing-cta-button">Get Pro</Link>
+          </article>
+        </div>
+      </section>
+
+      <section className="landing-cta-band" id="cta">
         <div className="landing-cta-content">
           <div>
             <p className="landing-section-pretitle">Ready to simplify care?</p>
             <h2>Start your first symptom review and medical report analysis in minutes.</h2>
           </div>
-          <Link to="/register" className="landing-cta-button">
-            Start for free
-          </Link>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <Link to="/cost-estimator" className="landing-cta-button" style={{ background: '#fff', color: '#0f172a' }}>
+              Estimate cost
+            </Link>
+            <Link to="/register" className="landing-cta-button">
+              Start for free
+            </Link>
+          </div>
         </div>
       </section>
     </div>

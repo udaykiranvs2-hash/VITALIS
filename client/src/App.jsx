@@ -50,6 +50,8 @@ function App() {
         <Route path="/register" element={user ? <Navigate to="/app" replace /> : <RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/cost-estimator" element={<CostEstimatorPage />} />
+
         <Route
           path="/app"
           element={
