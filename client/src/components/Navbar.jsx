@@ -29,7 +29,7 @@ export default function Navbar() {
               <HeartPulse size={22} />
             </div>
             <div className="app-navbar-logo-text">
-              <p>HealthAI</p>
+              <p>VITALIS</p>
               <span>AI Health Navigator</span>
             </div>
           </button>

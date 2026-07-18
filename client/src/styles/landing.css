@@ -48,9 +48,10 @@
 
 .landing-hero-container {
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  width: 100vw;
+  margin: 0;
+  padding: 0 3rem;
+  margin-left: calc(-50vw + 50%);
 }
 
 .landing-hero-grid {
@@ -168,6 +169,9 @@
 .landing-hero-card-image {
   width: 100%;
   display: block;
+  height: 500px;
+  object-fit: cover;
+  aspect-ratio: 4/3;
 }
 
 .landing-floating-card {
@@ -223,33 +227,35 @@
 }
 
 .landing-floating-card-1 {
-  top: 1.5rem;
-  left: -1rem;
-  width: 17rem;
+  top: 1rem;
+  left: 6rem;
+  width: 16rem;
 }
 
 .landing-floating-card-2 {
-  top: 14rem;
-  right: -1.5rem;
-  width: 17rem;
+  bottom: 6rem;
+  right: 1rem;
+  width: 16rem;
 }
 
 .landing-floating-card-3 {
-  bottom: 4.5rem;
-  left: -1.5rem;
-  width: 18.5rem;
+  bottom: 12rem;
+  left: 1rem;
+  width: 13rem;
 }
 
 .landing-floating-card-4 {
-  bottom: 8rem;
-  right: 0;
-  width: 15.5rem;
+  display: none;
+  top: 50%;
+  right: -3.5rem;
+  transform: translateY(-50%);
+  width: 15rem;
 }
 
 .landing-floating-card-5 {
-  top: 65%;
-  right: -2rem;
-  width: 16.5rem;
+  bottom: 1rem;
+  left: 8rem;
+  width: 16rem;
 }
 
 .landing-health-score-inner {
@@ -590,8 +596,9 @@
 .landing-features,
 .landing-workflow,
 .landing-cta-band {
-  width: 100%;
-  padding: 72px 40px;
+  width: 100vw;
+  padding: 72px 3rem;
+  margin-left: calc(-50vw + 50%);
 }
 
 .landing-features {
@@ -601,6 +608,7 @@
 .landing-section-head {
   max-width: 760px;
   margin: 0 auto 48px;
+  padding: 0 1.5rem;
   text-align: center;
 }
 
@@ -713,10 +721,9 @@
 .landing-doctors,
 .landing-about,
 .landing-contact {
-  padding: 72px 40px;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
+  padding: 72px 3rem;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 .landing-doctors {
@@ -778,8 +785,9 @@
 }
 
 .landing-cta-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

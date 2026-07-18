@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer className="site-footer">
       <div>
-        <p className="footer-brand">AI Health Navigator</p>
+        <p className="footer-brand">Powered by AI</p>
         <p>Trusted guidance for everyday health decisions.</p>
       </div>
       <div className="footer-links">

@@ -69,7 +69,7 @@ export default function Hero() {
           >
             <div className="landing-hero-card">
               <img
-                src="/hero-doctor.pnghttps://images.pexels.com/photos/5327584/pexels-photo-5327584.jpeg"
+                src="https://images.pexels.com/photos/5327584/pexels-photo-5327584.jpeg"
                 alt="Doctor illustration"
                 className="landing-hero-card-image"
               />

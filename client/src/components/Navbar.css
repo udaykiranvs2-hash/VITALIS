@@ -19,7 +19,7 @@
 }
 
 .app-navbar-container {
-  max-width: 1180px;
+  width: 100vw;
   margin: 0 auto;
   padding: 0 1.75rem;
 }
