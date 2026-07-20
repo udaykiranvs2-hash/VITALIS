@@ -4,6 +4,45 @@ import Hero from '../components/Hero.jsx';
 import '../styles/landing.css';
 
 function LandingPage() {
+  const pricingPlans = [
+    {
+      name: 'Free',
+      price: '₹0',
+      description: 'Get started with essential symptom checks, report summaries, and doctor discovery.',
+      features: [
+        'Basic symptom checks',
+        'Limited report summaries',
+        'Access to doctor directory',
+      ],
+      cta: 'Start free',
+      link: '/register',
+    },
+    {
+      name: 'Plus',
+      price: '₹699 / mo',
+      description: 'Unlock unlimited insights, advanced analysis, and faster specialist matching.',
+      features: [
+        'Unlimited symptom checks',
+        'Full report analysis',
+        'Priority doctor matches',
+      ],
+      cta: 'Get Plus',
+      link: '/register',
+    },
+    {
+      name: 'Pro',
+      price: '₹2,499 / mo',
+      description: 'Designed for families and care teams with collaborative tools and dedicated support.',
+      features: [
+        'Team accounts & sharing',
+        'Advanced analytics',
+        'Dedicated support',
+      ],
+      cta: 'Get Pro',
+      link: '/register',
+    },
+  ];
+
   return (
     <div className="landing-page">
       <Navbar />
@@ -137,39 +176,22 @@ function LandingPage() {
           <p className="landing-section-subtitle">Choose a plan that fits your needs — start free and upgrade as you scale.</p>
         </div>
 
-        <div className="pricing-grid">
-          <article>
-            <h3>Free</h3>
-            <p className="price">₹0</p>
-            <ul>
-              <li>Basic symptom checks</li>
-              <li>Report summaries (limited)</li>
-              <li>Access to doctor directory</li>
-            </ul>
-            <Link to="/register" className="landing-cta-button">Start free</Link>
-          </article>
-
-          <article>
-            <h3>Plus</h3>
-            <p className="price">₹699 / mo</p>
-            <ul>
-              <li>Unlimited symptom checks</li>
-              <li>Full report analysis</li>
-              <li>Priority doctor matches</li>
-            </ul>
-            <Link to="/register" className="landing-cta-button">Get Plus</Link>
-          </article>
-
-          <article>
-            <h3>Pro</h3>
-            <p className="price">₹2,499 / mo</p>
-            <ul>
-              <li>Team accounts & sharing</li>
-              <li>Advanced analytics</li>
-              <li>Dedicated support</li>
-            </ul>
-            <Link to="/register" className="landing-cta-button">Get Pro</Link>
-          </article>
+        <div className="pricing-grid landing-pricing-grid">
+          {pricingPlans.map((plan) => (
+            <article key={plan.name} className="pricing-card">
+              <h3>{plan.name}</h3>
+              <p className="price">{plan.price}</p>
+              <p className="pricing-description">{plan.description}</p>
+              <ul>
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+              <Link to={plan.link} className="landing-cta-button">
+                {plan.cta}
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 
