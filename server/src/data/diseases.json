@@ -1,0 +1,32 @@
+[
+  {
+    "disease_id": "D001",
+    "disease_name": "Common Cold",
+    "category": "Respiratory",
+    "severity": "Low",
+    "contagious": "Yes",
+    "chronic": "No",
+    "emergency_level": "Low",
+    "specialist": "General Physician"
+  },
+  {
+    "disease_id": "D002",
+    "disease_name": "Influenza (Flu)",
+    "category": "Respiratory",
+    "severity": "Medium",
+    "contagious": "Yes",
+    "chronic": "No",
+    "emergency_level": "Medium",
+    "specialist": "General Physician"
+  },
+  {
+    "disease_id": "D003",
+    "disease_name": "COVID-19",
+    "category": "Respiratory",
+    "severity": "Medium",
+    "contagious": "Yes",
+    "chronic": "No",
+    "emergency_level": "Medium",
+    "specialist": "Pulmonologist"
+  }
+]

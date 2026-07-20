@@ -1,6 +1,4 @@
-﻿import { Router } from 'express';
-import { protect } from '../middleware/auth.middleware.js';
-import { checkSymptoms, analyzeReport, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
+import express from 'express';
 import {
   getAllDiseases,
   getDiseaseById,
@@ -16,31 +14,29 @@ import {
   searchSymptoms
 } from '../controllers/health.data.controller.js';
 
-const router = Router();
+const router = express.Router();
 
-// User health check routes (protected)
-router.post('/symptoms', protect, checkSymptoms);
-router.post('/report', protect, analyzeReport);
-router.get('/history', protect, getHistory);
-router.post('/appointment', protect, bookAppointment);
-router.delete('/appointment/:id', protect, cancelAppointment);
-
-// Public health data routes
+// Disease routes
 router.get('/diseases', getAllDiseases);
-router.get('/diseases/search', searchDiseases);
 router.get('/diseases/:diseaseId', getDiseaseById);
+router.get('/diseases/search', searchDiseases);
 
+// Symptom routes
 router.get('/symptoms', getAllSymptoms);
 router.get('/symptoms/search', searchSymptoms);
 
+// Treatment cost routes
 router.get('/costs', getAllTreatmentCosts);
 router.get('/costs/:diseaseId', getTreatmentCostByDisease);
 
+// Mapping routes
 router.get('/disease-symptoms', getDiseaseSymptomsMapping);
 
+// Emergency flags routes
 router.get('/emergency-flags', getEmergencyFlags);
 router.get('/emergency-flags/symptom/:symptomId', getEmergencyFlagsBySymptom);
 
+// Followup questions routes
 router.get('/followup-questions', getFollowupQuestions);
 router.get('/followup-questions/symptom/:symptomId', getFollowupQuestionsBySymptom);
 
