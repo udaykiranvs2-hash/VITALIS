@@ -1,6 +1,6 @@
 ﻿import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { getMockUserByEmail, createMockUser, getMockUserById, updateMockUser } from '../config/mockDb.js';
+import { getMockUserByEmail, getMockUserByResetToken, createMockUser, getMockUserById, updateMockUser } from '../config/mockDb.js';
 import { createToken } from '../utils/jwt.utils.js';
 
 const sanitizeUser = (user) => ({
@@ -81,9 +81,13 @@ export const resetPassword = async (req, res) => {
     return res.status(400).json({ message: 'Reset token and new password are required.' });
   }
 
-  // For now, we'll accept the reset token and allow password reset
-  // In production, you should validate the token properly
+  const user = getMockUserByResetToken(token);
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid or expired reset token.' });
+  }
+
   const passwordHash = await bcrypt.hash(newPassword, 10);
+  updateMockUser(user.id, { passwordHash, resetToken: null, resetTokenExpires: null });
 
   return res.status(200).json({ message: 'Password has been reset. You may now log in with your new password.' });
 };

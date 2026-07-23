@@ -653,6 +653,12 @@
   transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
 }
 
+.landing-feature-link {
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .feature-card:hover {
   transform: translateY(-6px);
   border-color: #93c5fd;

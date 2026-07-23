@@ -5,6 +5,7 @@ import { forgotPassword as forgotPasswordRequest } from '../api/api.js';
 function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [resetToken, setResetToken] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -15,8 +16,10 @@ function ForgotPasswordPage() {
     try {
       const response = await forgotPasswordRequest({ email });
       setMessage(response.data.message || 'If your email exists, you will receive instructions shortly.');
+      setResetToken(response.data.resetToken || '');
     } catch (err) {
       setError(err?.response?.data?.message || 'Unable to send reset instructions.');
+      setResetToken('');
     } finally {
       setLoading(false);
     }
@@ -37,6 +40,12 @@ function ForgotPasswordPage() {
           </button>
           {message && <p className="form-message success">{message}</p>}
           {error && <p className="form-message error">{error}</p>}
+          {resetToken && (
+            <p className="form-message info">
+              Test reset link:{' '}
+              <Link to={`/reset-password?token=${resetToken}`}>Reset password now</Link>
+            </p>
+          )}
         </form>
         <p className="auth-footnote">
           Return to <Link to="/login">Sign in</Link>

@@ -18,6 +18,10 @@ export const getMockUserByEmail = (email) => {
   return mockUsers.find(u => u.email === email);
 };
 
+export const getMockUserByResetToken = (token) => {
+  return mockUsers.find(u => u.resetToken === token && u.resetTokenExpires > Date.now());
+};
+
 export const createMockUser = (user) => {
   const newUser = {
     id: Date.now().toString(),
