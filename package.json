@@ -1,0 +1,16 @@
+{
+  "name": "vitalis-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:server": "npm install --prefix server",
+    "install:client": "npm install --prefix client",
+    "install-all": "npm install && npm run install:server && npm run install:client",
+    "start:server": "npm run dev --prefix server",
+    "start:client": "npm run dev --prefix client",
+    "dev": "concurrently --kill-others-on-fail \"npm run start:server\" \"npm run start:client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
