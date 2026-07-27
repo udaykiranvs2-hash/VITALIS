@@ -1,7 +1,10 @@
 import { ArrowRight, ShieldCheck, Activity, FileHeart, Stethoscope, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 export default function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="landing-hero-section">
       <div className="landing-hero-bg">
@@ -36,11 +39,22 @@ export default function Hero() {
             </p>
 
             <div className="landing-hero-cta-group">
-              <button type="button" className="landing-hero-button landing-hero-button-primary">
+              <button 
+                type="button" 
+                className="landing-hero-button landing-hero-button-primary"
+                onClick={() => navigate('/register')}
+              >
                 Get Started
                 <ArrowRight size={18} />
               </button>
-              <button type="button" className="landing-hero-button landing-hero-button-secondary">
+              <button 
+                type="button" 
+                className="landing-hero-button landing-hero-button-secondary"
+                onClick={() => {
+                  const elem = document.querySelector('.landing-features-section');
+                  if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
                 Learn More
               </button>
             </div>

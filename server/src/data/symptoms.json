@@ -1,0 +1,32 @@
+[
+  {
+    "symptom_id": "S001",
+    "symptom_name": "Fever",
+    "category": "General"
+  },
+  {
+    "symptom_id": "S002",
+    "symptom_name": "High Fever (>102°F)",
+    "category": "General"
+  },
+  {
+    "symptom_id": "S003",
+    "symptom_name": "Mild Fever",
+    "category": "General"
+  },
+  {
+    "symptom_id": "S004",
+    "symptom_name": "Chills",
+    "category": "General"
+  },
+  {
+    "symptom_id": "S005",
+    "symptom_name": "Fatigue",
+    "category": "General"
+  },
+  {
+    "symptom_id": "S006",
+    "symptom_name": "Weakness",
+    "category": "General"
+  }
+]

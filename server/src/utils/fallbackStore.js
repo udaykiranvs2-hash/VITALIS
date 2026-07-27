@@ -63,3 +63,19 @@ export const createUser = async (data) => {
 
   return createMemoryUser({ ...data, email: normalizeEmail(data.email) });
 };
+
+export const updateUser = async (id, updates) => {
+  if (isMongoConnected()) {
+    const UserModel = (await import('../models/User.model.js')).default;
+    return UserModel.findByIdAndUpdate(id, updates, { new: true });
+  }
+
+  const existingUser = memoryUsers.get(id);
+  if (!existingUser) {
+    return null;
+  }
+
+  const updatedUser = { ...existingUser, ...updates, email: normalizeEmail(updates.email || existingUser.email) };
+  memoryUsers.set(id, updatedUser);
+  return updatedUser;
+};

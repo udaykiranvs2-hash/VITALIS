@@ -1,36 +1,39 @@
-﻿import { useState } from 'react';
-import { sendAssistantMessage } from '../api/api.js';
-import Loader from '../components/Loader.jsx';
-import Toast from '../components/Toast.jsx';
+import { useState } from 'react';
+
+const getPreviewReply = (message) => {
+  const question = message.toLowerCase();
+
+  if (question.includes('emergency') || question.includes('chest pain') || question.includes('trouble breathing')) {
+    return 'If you have chest pain, trouble breathing, fainting, severe bleeding, or other urgent symptoms, please contact local emergency services or visit the nearest emergency department now.';
+  }
+  if (question.includes('diet') || question.includes('food') || question.includes('nutrition')) {
+    return 'For general wellness, try to include vegetables, fruit, whole grains, protein, and water regularly. This is a frontend preview response; your real AI and health data can be connected when the backend is ready.';
+  }
+  if (question.includes('sleep')) {
+    return 'A consistent sleep schedule, a dark quiet room, and limiting caffeine late in the day can support better sleep. This is a frontend preview response.';
+  }
+  if (question.includes('exercise') || question.includes('workout')) {
+    return 'For many people, starting with gentle walking and gradually building activity is a practical approach. Check with a clinician before starting a new plan if you have health concerns. This is a frontend preview response.';
+  }
+
+  return 'Your message has been received. This chat is currently running entirely in the frontend, so no information is being sent to a server. Connect your data and AI backend later to provide real personalised responses.';
+};
 
 function AssistantPage() {
   const [query, setQuery] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState('');
 
-  const sendMessage = async (event) => {
+  const sendMessage = (event) => {
     event.preventDefault();
-    if (!query.trim()) {
-      setToast('Please enter a question or topic.');
-      return;
-    }
-    setLoading(true);
-    setToast('');
     const prompt = query.trim();
-    try {
-      const response = await sendAssistantMessage({ message: prompt });
-      setChatHistory((previous) => [
-        ...previous,
-        { role: 'user', message: prompt },
-        { role: 'assistant', message: response.data.reply }
-      ]);
-      setQuery('');
-    } catch {
-      setToast('Unable to process your request at the moment.');
-    } finally {
-      setLoading(false);
-    }
+    if (!prompt) return;
+
+    setChatHistory((previous) => [
+      ...previous,
+      { role: 'user', message: prompt },
+      { role: 'assistant', message: getPreviewReply(prompt) }
+    ]);
+    setQuery('');
   };
 
   return (
@@ -41,7 +44,6 @@ function AssistantPage() {
           <h1>Ask health questions and get practical guidance.</h1>
         </div>
       </div>
-      <Toast message={toast} onClose={() => setToast('')} />
       <form className="assistant-form" onSubmit={sendMessage} aria-label="Health assistant chat form">
         <textarea
           value={query}
@@ -50,9 +52,7 @@ function AssistantPage() {
           rows="4"
           required
         />
-        <button type="submit" className="primary-button" disabled={loading}>
-          {loading ? 'Sending…' : 'Send question'}
-        </button>
+        <button type="submit" className="primary-button">Send question</button>
       </form>
       <div className="chat-card">
         {chatHistory.length ? (
@@ -66,7 +66,7 @@ function AssistantPage() {
         )}
       </div>
       <div className="assistant-disclaimer">
-        <p>Disclaimer: The assistant is educational and not a replacement for professional medical advice.</p>
+        <p>Frontend preview: messages stay in this browser until a backend is connected. This assistant is educational and not a replacement for professional medical advice.</p>
       </div>
     </div>
   );

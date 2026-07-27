@@ -23,7 +23,8 @@ A full-stack healthcare SaaS platform designed to help users analyze symptoms, u
 
 3. Configure environment variables:
    - Copy `server/.env.example` to `server/.env`.
-   - Update `MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL`.
+   - Update `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, and `GEMINI_API_KEY`.
+   - Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey), then add it only to `server/.env`. Never place it in a Vite/client environment variable.
 
 ## Running the app
 
@@ -69,6 +70,8 @@ The frontend runs on `http://localhost:5173` and the backend runs on `http://loc
 - `MONGODB_URI` - MongoDB connection string.
 - `JWT_SECRET` - JWT signing secret.
 - `CLIENT_URL` - Frontend origin for CORS.
+- `GEMINI_API_KEY` - Google AI Studio API key used by the server-side health assistant.
+- `GEMINI_MODEL` - Optional Gemini model override (defaults to `gemini-2.5-flash`).
 
 ## Frontend features
 
