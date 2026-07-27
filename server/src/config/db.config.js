@@ -1,4 +1,12 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+// Bypass local router SRV resolution issues by using Cloudflare/Google DNS servers
+try {
+  dns.setServers(['1.1.1.1', '8.8.8.8']);
+} catch (err) {
+  console.warn('Unable to set custom DNS servers, using system defaults.');
+}
 
 const connectDB = async () => {
   try {
