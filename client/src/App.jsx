@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/Navbar.jsx';
@@ -22,15 +22,11 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 function MainLayout() {
-  return (
-    <div className="app-shell">
-      <Navbar />
-      <main className="app-content">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <div className="app-shell"><Navbar /><main className="app-content"><Outlet /></main><Footer /></div>;
+}
+
+function FeaturePreviewLayout() {
+  return <div className="app-shell"><Navbar /><main className="app-content"><Outlet /></main><Footer /></div>;
 }
 
 function App() {
@@ -46,18 +42,21 @@ function App() {
     <div className="app-root">
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/dev/assistant" element={<AssistantPage />} />
         <Route path="/login" element={user ? <Navigate to="/app" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/app" replace /> : <RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route
-          path="/app"
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          }
-        >
+        <Route path="/cost-estimator" element={<CostEstimatorPage />} />
+
+        <Route path="/features" element={<FeaturePreviewLayout />}>
+          <Route path="symptoms" element={<SymptomCheckerPage />} />
+          <Route path="reports" element={<ReportAnalyzerPage />} />
+          <Route path="doctors" element={<DoctorDirectoryPage />} />
+          <Route path="cost-estimator" element={<CostEstimatorPage />} />
+        </Route>
+
+        <Route path="/app" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
           <Route index element={<DashboardPage />} />
           <Route path="symptoms" element={<SymptomCheckerPage />} />
           <Route path="reports" element={<ReportAnalyzerPage />} />

@@ -1,8 +1,8 @@
 ﻿import bcrypt from 'bcryptjs';
-import User from '../models/User.model.js';
+import { findUserById, updateUser } from '../utils/fallbackStore.js';
 
 const sanitizeProfile = (user) => ({
-  id: user._id,
+  id: user.id,
   name: user.name,
   email: user.email,
   profile: user.profile,
@@ -13,7 +13,7 @@ const sanitizeProfile = (user) => ({
 });
 
 export const getProfile = async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -22,13 +22,12 @@ export const getProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   const updates = req.body;
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
-  user.profile = { ...user.profile, ...updates };
-  await user.save();
-  return res.status(200).json({ user: sanitizeProfile(user), message: 'Profile updated successfully.' });
+  const updatedUser = await updateUser(req.userId, { profile: { ...user.profile, ...updates } });
+  return res.status(200).json({ user: sanitizeProfile(updatedUser), message: 'Profile updated successfully.' });
 };
 
 export const changePassword = async (req, res) => {
@@ -38,7 +37,7 @@ export const changePassword = async (req, res) => {
     return res.status(400).json({ message: 'Current and new passwords are required.' });
   }
 
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -48,14 +47,14 @@ export const changePassword = async (req, res) => {
     return res.status(401).json({ message: 'Current password is incorrect.' });
   }
 
-  user.passwordHash = await bcrypt.hash(newPassword, 10);
-  await user.save();
+  const passwordHash = await bcrypt.hash(newPassword, 10);
+  await updateUser(req.userId, { passwordHash });
 
   return res.status(200).json({ message: 'Password changed successfully.' });
 };
 
 export const getNotifications = async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }

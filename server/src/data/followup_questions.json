@@ -1,0 +1,32 @@
+[
+  {
+    "question_id": "Q001",
+    "symptom_id": "S001",
+    "question": "How many days have you had fever?"
+  },
+  {
+    "question_id": "Q002",
+    "symptom_id": "S001",
+    "question": "What is your highest recorded body temperature?"
+  },
+  {
+    "question_id": "Q003",
+    "symptom_id": "S002",
+    "question": "How high did your fever reach?"
+  },
+  {
+    "question_id": "Q004",
+    "symptom_id": "S002",
+    "question": "Did your fever improve after taking medicine?"
+  },
+  {
+    "question_id": "Q005",
+    "symptom_id": "S005",
+    "question": "For how long have you been feeling fatigued?"
+  },
+  {
+    "question_id": "Q006",
+    "symptom_id": "S005",
+    "question": "Is the fatigue affecting your daily activities?"
+  }
+]

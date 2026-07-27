@@ -1,0 +1,20 @@
+[
+  {
+    "flag_id": "E001",
+    "symptom_id": "S002",
+    "emergency_level": "High",
+    "action": "Seek immediate medical care if the high fever persists or is accompanied by confusion or seizures."
+  },
+  {
+    "flag_id": "E002",
+    "symptom_id": "S005",
+    "emergency_level": "Medium",
+    "action": "Seek medical care if fatigue persists for more than a week with other symptoms."
+  },
+  {
+    "flag_id": "E003",
+    "symptom_id": "S006",
+    "emergency_level": "Medium",
+    "action": "Consult a doctor if weakness is severe or accompanied by other concerning symptoms."
+  }
+]

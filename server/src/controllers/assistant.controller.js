@@ -1,8 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
 
-const apiKey = process.env.GEMINI_API_KEY;
-const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
-
 const cannedReplies = [
   {
     match: ['report', 'analysis', 'lab'],
@@ -24,57 +21,62 @@ const cannedReplies = [
 
 const defaultReply = 'I am here to provide general health guidance. Please remember this is informational and not a replacement for professional medical advice.';
 
+const disclaimer =
+  'This assistant provides educational guidance only and does not replace a medical professional.';
+
+const systemInstruction = `You are Vitalis, a helpful health-information assistant.
+Give clear, concise, evidence-informed general wellness guidance. Do not diagnose, prescribe medication, or claim certainty. Encourage a qualified clinician for personalised care. If a user describes possible emergency symptoms (for example chest pain, trouble breathing, stroke signs, severe bleeding, loss of consciousness, or thoughts of self-harm), clearly tell them to seek emergency care immediately. Always include a brief reminder that your answer is informational, not medical advice.`;
+
 export const chat = async (req, res) => {
-  const { message } = req.body;
-  if (!message) {
+  const { message, history = [] } = req.body;
+
+  if (typeof message !== 'string' || !message.trim()) {
     return res.status(400).json({ message: 'Please type a question or topic.' });
   }
 
-  if (ai) {
+  // If Gemini API Key is available, use live Gemini
+  if (process.env.GEMINI_API_KEY) {
     try {
-      const prompt = `Act as Vitalis' virtual AI health assistant. You are chatting with a user.
-User Message: "${message}"
+      const previousMessages = Array.isArray(history)
+        ? history
+            .filter(
+              (item) =>
+                item &&
+                ['user', 'assistant'].includes(item.role) &&
+                typeof item.message === 'string' &&
+                item.message.trim()
+            )
+            .slice(-10)
+            .map((item) => ({
+              role: item.role === 'assistant' ? 'model' : 'user',
+              parts: [{ text: item.message.trim() }]
+            }))
+        : [];
 
-Task:
-1. Provide a professional, compassionate, clear, and informative response to the user's question.
-2. Ensure you provide helpful general health education/guidance, but never diagnose, prescribe, or provide clinical treatment plans.
-3. If they ask about symptoms or medical issues, suggest they check their symptoms using the Vitalis Symptom Checker page or seek care from a primary care provider.
-4. Include a concise medical educational disclaimer.
-
-You MUST respond strictly in JSON format. The response schema must be:
-{
-  "reply": "Your response here...",
-  "disclaimer": "This assistant provides educational guidance only and does not replace a medical professional."
-}
-
-JSON Response:`;
-
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
+        model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+        contents: [...previousMessages, { role: 'user', parts: [{ text: message.trim() }] }],
         config: {
-          responseMimeType: 'application/json'
+          systemInstruction,
+          temperature: 0.4,
+          maxOutputTokens: 700
         }
       });
-
-      const parsed = JSON.parse(response.text.trim());
-      if (parsed.reply) {
-        return res.status(200).json({
-          reply: parsed.reply,
-          disclaimer: parsed.disclaimer || 'This assistant provides educational guidance only and does not replace a medical professional.'
-        });
+      
+      const reply = response.text?.trim();
+      if (reply) {
+        return res.status(200).json({ reply, disclaimer });
       }
     } catch (error) {
-      console.error('Gemini Assistant Chat Error, falling back to mock:', error.message);
+      console.error('Gemini assistant request failed, falling back to canned response:', error.message);
     }
   }
 
+  // Fallback to local canned replies
   const normalized = message.toLowerCase();
   const matched = cannedReplies.find((item) => item.match.some((trigger) => normalized.includes(trigger)));
   const reply = matched ? matched.response : defaultReply;
 
-  return res.status(200).json({
-    reply,
-    disclaimer: 'This assistant provides educational guidance only and does not replace a medical professional.'
-  });
+  return res.status(200).json({ reply, disclaimer });
 };

@@ -1,0 +1,37 @@
+[
+  {
+    "disease_id": "D001",
+    "symptom_id": "S001",
+    "importance": "High",
+    "weight": 10,
+    "is_primary": true
+  },
+  {
+    "disease_id": "D001",
+    "symptom_id": "S004",
+    "importance": "Medium",
+    "weight": 8,
+    "is_primary": false
+  },
+  {
+    "disease_id": "D002",
+    "symptom_id": "S002",
+    "importance": "High",
+    "weight": 10,
+    "is_primary": true
+  },
+  {
+    "disease_id": "D002",
+    "symptom_id": "S005",
+    "importance": "High",
+    "weight": 10,
+    "is_primary": true
+  },
+  {
+    "disease_id": "D003",
+    "symptom_id": "S001",
+    "importance": "High",
+    "weight": 10,
+    "is_primary": true
+  }
+]

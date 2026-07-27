@@ -1,0 +1,23 @@
+[
+  {
+    "disease_id": "D001",
+    "consultation_cost": 500,
+    "test_cost": 0,
+    "medicine_cost": 300,
+    "total_estimated_cost": 800
+  },
+  {
+    "disease_id": "D002",
+    "consultation_cost": 600,
+    "test_cost": 800,
+    "medicine_cost": 600,
+    "total_estimated_cost": 2000
+  },
+  {
+    "disease_id": "D003",
+    "consultation_cost": 700,
+    "test_cost": 1500,
+    "medicine_cost": 1200,
+    "total_estimated_cost": 3400
+  }
+]

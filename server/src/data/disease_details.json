@@ -1,0 +1,35 @@
+[
+  {
+    "disease_id": "D001",
+    "overview": "A mild viral infection affecting the nose and throat.",
+    "causes": "Usually caused by rhinoviruses.",
+    "recommended_tests": "Usually no tests are required.",
+    "treatment": "Rest, hydration, and over-the-counter medicines to relieve symptoms.",
+    "home_care": "Drink plenty of fluids, rest, and use warm liquids to soothe the throat.",
+    "prevention": "Wash hands regularly, avoid close contact with infected individuals, and cover coughs and sneezes.",
+    "emergency_warning": "Seek medical care if symptoms last more than 10 days, high fever develops, or breathing becomes difficult.",
+    "last_updated": "2026-07-17"
+  },
+  {
+    "disease_id": "D002",
+    "overview": "A contagious viral infection that affects the respiratory system.",
+    "causes": "Influenza virus.",
+    "recommended_tests": "Rapid influenza test or RT-PCR when clinically indicated.",
+    "treatment": "Rest, fluids, antiviral medicines when prescribed, and fever control.",
+    "home_care": "Stay hydrated, rest adequately, and monitor symptoms.",
+    "prevention": "Receive annual influenza vaccination, practice hand hygiene, and avoid close contact with infected people.",
+    "emergency_warning": "Seek immediate medical care if severe breathing difficulty, chest pain, or persistent high fever develops.",
+    "last_updated": "2026-07-17"
+  },
+  {
+    "disease_id": "D003",
+    "overview": "A contagious respiratory illness caused by SARS-CoV-2.",
+    "causes": "SARS-CoV-2 virus.",
+    "recommended_tests": "RT-PCR test or Rapid Antigen Test.",
+    "treatment": "Supportive care and antiviral treatment when appropriate under medical supervision.",
+    "home_care": "Rest, maintain hydration, isolate if contagious, and monitor oxygen saturation if advised.",
+    "prevention": "Get vaccinated, practice hand hygiene, wear masks in crowded settings if needed, and maintain social distance.",
+    "emergency_warning": "Seek emergency care if severe breathing difficulty, chest pain, or confusion develops.",
+    "last_updated": "2026-07-17"
+  }
+]
