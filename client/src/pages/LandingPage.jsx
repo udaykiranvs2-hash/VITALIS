@@ -133,42 +133,51 @@ function LandingPage() {
       <section className="landing-pricing" id="pricing">
         <div className="landing-section-head">
           <p className="landing-section-pretitle">Pricing</p>
-          <h2 className="landing-section-title">Simple plans for individuals and care teams</h2>
-          <p className="landing-section-subtitle">Choose a plan that fits your needs — start free and upgrade as you scale.</p>
+          <h2 className="landing-section-title">Plans that fit the way people actually seek care</h2>
+          <p className="landing-section-subtitle">
+            Whether you are checking a one-off concern or planning long-term follow-up, Vitalis helps you move from questions to action with less stress.
+          </p>
         </div>
 
         <div className="pricing-grid">
-          <article>
-            <h3>Free</h3>
-            <p className="price">₹0</p>
+          <article className="pricing-card">
+            <span className="pricing-badge">For first-time questions</span>
+            <h3>Care starter</h3>
+            <p className="price">₹0 <span>/ month</span></p>
+            <p className="pricing-description">A calm place to start when you want quick guidance and reassurance.</p>
             <ul>
-              <li>Basic symptom checks</li>
-              <li>Report summaries (limited)</li>
-              <li>Access to doctor directory</li>
+              <li>3 guided symptom checks</li>
+              <li>Basic report summaries</li>
+              <li>Access to the doctor directory</li>
             </ul>
-            <Link to="/register" className="landing-cta-button">Start free</Link>
+            <Link to="/register" className="landing-cta-button">Try it free</Link>
           </article>
 
-          <article>
-            <h3>Plus</h3>
-            <p className="price">₹699 / mo</p>
+          <article className="pricing-card pricing-card-featured">
+            <span className="pricing-badge pricing-badge-featured">Most popular</span>
+            <h3>Care companion</h3>
+            <p className="price">₹699 <span>/ month</span></p>
+            <p className="pricing-description">Ideal for ongoing follow-ups, recurring concerns, and better care coordination.</p>
             <ul>
               <li>Unlimited symptom checks</li>
-              <li>Full report analysis</li>
-              <li>Priority doctor matches</li>
+              <li>Detailed report analysis</li>
+              <li>Priority doctor matching</li>
+              <li>Estimated treatment and consultation costs</li>
             </ul>
-            <Link to="/register" className="landing-cta-button">Get Plus</Link>
+            <Link to="/register" className="landing-cta-button">Choose Companion</Link>
           </article>
 
-          <article>
-            <h3>Pro</h3>
-            <p className="price">₹2,499 / mo</p>
+          <article className="pricing-card">
+            <span className="pricing-badge">For families & clinics</span>
+            <h3>Care team</h3>
+            <p className="price">₹2,499 <span>/ month</span></p>
+            <p className="pricing-description">Support shared care journeys with more visibility and a smoother handoff.</p>
             <ul>
-              <li>Team accounts & sharing</li>
-              <li>Advanced analytics</li>
-              <li>Dedicated support</li>
+              <li>Shared accounts and family access</li>
+              <li>Advanced care insights</li>
+              <li>Dedicated support for coordination</li>
             </ul>
-            <Link to="/register" className="landing-cta-button">Get Pro</Link>
+            <Link to="/register" className="landing-cta-button">Talk to sales</Link>
           </article>
         </div>
       </section>
