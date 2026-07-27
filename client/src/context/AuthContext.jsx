@@ -41,6 +41,11 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const saveSession = (tokenValue, userValue) => {
+    if (!tokenValue || !userValue) {
+      logout();
+      return;
+    }
+
     setToken(tokenValue);
     setUser(userValue);
     setInitialized(true);
@@ -55,14 +60,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('vitalis_token');
     localStorage.removeItem('vitalis_user');
     setAuthToken(null);
+    setError('');
   };
 
   const register = async (payload) => {
     setLoading(true);
+    setError('');
+    const normalizedPayload = {
+      ...payload,
+      email: payload.email?.toLowerCase().trim()
+    };
     try {
-      const response = await registerUser(payload);
+      const response = await registerUser(normalizedPayload);
       saveSession(response.data.token, response.data.user);
-      setError('');
       return response;
     } catch (err) {
       setError(err?.response?.data?.message || 'Unable to register.');
@@ -74,10 +84,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (payload) => {
     setLoading(true);
+    setError('');
+    const normalizedPayload = {
+      email: payload.email?.toLowerCase().trim(),
+      password: payload.password
+    };
     try {
-      const response = await loginUser(payload);
+      const response = await loginUser(normalizedPayload);
       saveSession(response.data.token, response.data.user);
-      setError('');
       return response;
     } catch (err) {
       setError(err?.response?.data?.message || 'Unable to log in.');

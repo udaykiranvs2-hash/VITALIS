@@ -1,5 +1,5 @@
 ﻿import bcrypt from 'bcryptjs';
-import User from '../models/User.model.js';
+import { findUserById } from '../utils/fallbackStore.js';
 
 const sanitizeProfile = (user) => ({
   id: user._id,
@@ -13,7 +13,7 @@ const sanitizeProfile = (user) => ({
 });
 
 export const getProfile = async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -22,7 +22,7 @@ export const getProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   const updates = req.body;
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -38,7 +38,7 @@ export const changePassword = async (req, res) => {
     return res.status(400).json({ message: 'Current and new passwords are required.' });
   }
 
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -55,7 +55,7 @@ export const changePassword = async (req, res) => {
 };
 
 export const getNotifications = async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }

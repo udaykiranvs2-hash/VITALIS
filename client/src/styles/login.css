@@ -10,6 +10,90 @@
   padding: 40px 20px;
 }
 
+.account-menu {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+}
+
+.account-menu-button {
+  border: none;
+  background: #ffffff;
+  color: #1a1a2e;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+  min-width: 120px;
+}
+
+.account-menu-card {
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid #e8e7f0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.account-menu-card p {
+  margin: 0;
+  color: #4a4a6a;
+  font-size: 14px;
+}
+
+.secondary-button {
+  border: 1px solid #6366f1;
+  background: #fff;
+  color: #6366f1;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background: #eef2ff;
+}
+
+.secondary-button.danger {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.secondary-button.danger:hover {
+  background: #fef2f2;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  color: #6366f1;
+}
+
 /* Brand logo at top */
 .login-brand {
   font-family: "Bree Serif", serif;

@@ -1,12 +1,15 @@
 ﻿import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import { Menu, X, HeartPulse } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -15,6 +18,18 @@ export default function Navbar() {
   }, []);
 
   const navLinks = ['Features', 'Doctors', 'Pricing', 'About', 'Contact'];
+
+  const handleLogout = () => {
+    setAccountOpen(false);
+    logout();
+    navigate('/login');
+  };
+
+  const handleSwitchAccount = () => {
+    setAccountOpen(false);
+    logout();
+    navigate('/login');
+  };
 
   return (
     <header className={`app-navbar ${scrolled ? 'scrolled' : 'top'}`}>
@@ -43,12 +58,44 @@ export default function Navbar() {
           </nav>
 
           <div className="app-navbar-actions">
-            <button type="button" className="app-navbar-login" onClick={() => navigate('/login')}>
-              Log In
-            </button>
-            <button type="button" className="app-navbar-cta" onClick={() => navigate('/register')}>
-              Get Started
-            </button>
+            {user ? (
+              <div className="app-navbar-account" onBlur={() => setAccountOpen(false)}>
+                <button
+                  type="button"
+                  className="app-account-button"
+                  onClick={() => setAccountOpen((v) => !v)}
+                >
+                  {user.name || user.email} ▾
+                </button>
+                {accountOpen && (
+                  <div className="app-account-menu">
+                    <button
+                      type="button"
+                      className="app-account-menu-item"
+                      onClick={handleLogout}
+                    >
+                      Log out
+                    </button>
+                    <button
+                      type="button"
+                      className="app-account-menu-item"
+                      onClick={handleSwitchAccount}
+                    >
+                      Switch account
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <button type="button" className="app-navbar-login" onClick={() => navigate('/login')}>
+                  Log In
+                </button>
+                <button type="button" className="app-navbar-cta" onClick={() => navigate('/register')}>
+                  Get Started
+                </button>
+              </>
+            )}
           </div>
 
           <button type="button" className="app-navbar-hamburger" onClick={() => setIsOpen(!isOpen)}>
