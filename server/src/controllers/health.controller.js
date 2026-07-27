@@ -1,9 +1,9 @@
-﻿import User from '../models/User.model.js';
+import User from '../models/User.model.js';
 import { buildSymptomAssessment, analyzeReportDocument } from '../services/ai.service.js';
 
 export const checkSymptoms = async (req, res) => {
   const { age, gender, symptoms, duration, severity, medicalHistory, allergies, medications } = req.body;
-  const assessment = buildSymptomAssessment({ age, gender, symptoms, duration, severity, medicalHistory, allergies, medications });
+  const assessment = await buildSymptomAssessment({ age, gender, symptoms, duration, severity, medicalHistory, allergies, medications });
   const user = await User.findById(req.userId);
 
   if (user) {
@@ -28,7 +28,7 @@ export const checkSymptoms = async (req, res) => {
 
 export const analyzeReport = async (req, res) => {
   const { reportType, reportName, fileName, fileText } = req.body;
-  const analysis = analyzeReportDocument({ reportType, fileName: reportName || fileName || 'Uploaded report', rawText: fileText || '' });
+  const analysis = await analyzeReportDocument({ reportType, fileName: reportName || fileName || 'Uploaded report', rawText: fileText || '' });
   const user = await User.findById(req.userId);
 
   if (user) {
