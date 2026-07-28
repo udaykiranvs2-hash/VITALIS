@@ -1,20 +1,9 @@
 // ============================================
 // error.middleware.js - Global Error Handling
 // ============================================
-// Catches errors from anywhere in the app and
-// sends a clean error response to the client.
-//
-// Express 5.x automatically catches async errors,
-// so we don't need express-async-errors!
-//
-// Status codes we use:
-//   404 = Not Found (route doesn't exist)
-//   500 = Server Error (something broke)
-// ============================================
 
 /**
  * 404 Handler - When a route doesn't exist.
- * Example: GET /api/nonexistent → "Route not found"
  */
 export const notFoundHandler = (req, res, next) => {
   res.status(404).json({
@@ -25,15 +14,19 @@ export const notFoundHandler = (req, res, next) => {
 
 /**
  * Global Error Handler - Catches all unhandled errors.
- *
- * Express knows this is an error handler because
- * it has 4 parameters: (err, req, res, next)
+ * Masks stack traces when NODE_ENV is set to 'production'.
  */
 export const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err.message);
+  const isProduction = process.env.NODE_ENV === 'production';
+  console.error('Unhandled Error:', isProduction ? err.message : err);
 
-  res.status(500).json({
+  const statusCode = err.statusCode || (res.statusCode === 200 ? 500 : res.statusCode || 500);
+
+  res.status(statusCode).json({
     success: false,
-    message: err.message || 'Something went wrong on the server.',
+    message: isProduction && statusCode === 500
+      ? 'An unexpected server error occurred. Please try again later.'
+      : err.message || 'Something went wrong on the server.',
+    ...(isProduction ? {} : { stack: err.stack })
   });
 };

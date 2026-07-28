@@ -1,39 +1,49 @@
 import { useState } from 'react';
-
-const getPreviewReply = (message) => {
-  const question = message.toLowerCase();
-
-  if (question.includes('emergency') || question.includes('chest pain') || question.includes('trouble breathing')) {
-    return 'If you have chest pain, trouble breathing, fainting, severe bleeding, or other urgent symptoms, please contact local emergency services or visit the nearest emergency department now.';
-  }
-  if (question.includes('diet') || question.includes('food') || question.includes('nutrition')) {
-    return 'For general wellness, try to include vegetables, fruit, whole grains, protein, and water regularly. This is a frontend preview response; your real AI and health data can be connected when the backend is ready.';
-  }
-  if (question.includes('sleep')) {
-    return 'A consistent sleep schedule, a dark quiet room, and limiting caffeine late in the day can support better sleep. This is a frontend preview response.';
-  }
-  if (question.includes('exercise') || question.includes('workout')) {
-    return 'For many people, starting with gentle walking and gradually building activity is a practical approach. Check with a clinician before starting a new plan if you have health concerns. This is a frontend preview response.';
-  }
-
-  return 'Your message has been received. This chat is currently running entirely in the frontend, so no information is being sent to a server. Connect your data and AI backend later to provide real personalised responses.';
-};
+import { sendAssistantMessage } from '../api/api.js';
 
 function AssistantPage() {
   const [query, setQuery] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const sendMessage = (event) => {
+  const sendMessage = async (event) => {
     event.preventDefault();
     const prompt = query.trim();
-    if (!prompt) return;
+    if (!prompt || loading) return;
 
-    setChatHistory((previous) => [
-      ...previous,
-      { role: 'user', message: prompt },
-      { role: 'assistant', message: getPreviewReply(prompt) }
-    ]);
+    const userEntry = { role: 'user', message: prompt };
+    const updatedHistory = [...chatHistory, userEntry];
+
+    setChatHistory(updatedHistory);
     setQuery('');
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await sendAssistantMessage({
+        message: prompt,
+        history: chatHistory
+      });
+
+      const replyText = response?.data?.reply || 'Received response from assistant.';
+      const disclaimerText = response?.data?.disclaimer;
+
+      setChatHistory([
+        ...updatedHistory,
+        { role: 'assistant', message: replyText, disclaimer: disclaimerText }
+      ]);
+    } catch (err) {
+      console.error('Assistant API error:', err);
+      const errorMsg = err?.response?.data?.message || 'Unable to process your request at the moment. Please try again.';
+      setError(errorMsg);
+      setChatHistory([
+        ...updatedHistory,
+        { role: 'assistant', message: `⚠️ ${errorMsg}` }
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,15 +60,24 @@ function AssistantPage() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Ask about reports, lifestyle, nutrition, or preventive care."
           rows="4"
+          disabled={loading}
           required
         />
-        <button type="submit" className="primary-button">Send question</button>
+        <button type="submit" className="primary-button" disabled={loading}>
+          {loading ? 'Thinking...' : 'Send question'}
+        </button>
       </form>
+      {error && <p className="error-message" style={{ color: '#ef4444', marginTop: '10px' }}>{error}</p>}
       <div className="chat-card">
         {chatHistory.length ? (
           chatHistory.map((entry, index) => (
             <div key={index} className={`chat-bubble ${entry.role}`}>
               <p>{entry.message}</p>
+              {entry.disclaimer && (
+                <span className="disclaimer-subtext" style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginTop: '6px' }}>
+                  {entry.disclaimer}
+                </span>
+              )}
             </div>
           ))
         ) : (
@@ -66,7 +85,7 @@ function AssistantPage() {
         )}
       </div>
       <div className="assistant-disclaimer">
-        <p>Frontend preview: messages stay in this browser until a backend is connected. This assistant is educational and not a replacement for professional medical advice.</p>
+        <p>This AI health assistant provides educational guidance only and is not a replacement for professional medical advice.</p>
       </div>
     </div>
   );

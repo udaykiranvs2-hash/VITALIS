@@ -2,6 +2,22 @@ import { GoogleGenAI } from '@google/genai';
 
 const cannedReplies = [
   {
+    match: ['bp', 'blood pressure', 'hypertension', 'pressure'],
+    response: 'To help manage blood pressure: 1) Reduce sodium/salt intake. 2) Engage in regular moderate physical activity (like 30 minutes of daily walking). 3) Eat a potassium-rich diet (vegetables, bananas, leafy greens). 4) Manage stress through breathing or rest. 5) Avoid smoking and excessive alcohol. If your BP is severely high or accompanied by chest pain, severe headache, or dizziness, seek immediate medical care.'
+  },
+  {
+    match: ['fever', 'temperature', 'chills'],
+    response: 'For a mild fever: rest, stay well-hydrated with fluids/water, and wear lightweight clothing. Over-the-counter fever reducers like acetaminophen or ibuprofen can help reduce discomfort. Seek prompt medical evaluation if the fever exceeds 103°F (39.4°C), lasts more than 3 days, or is accompanied by a stiff neck or severe shortness of breath.'
+  },
+  {
+    match: ['headache', 'migraine', 'head pain'],
+    response: 'To manage headaches: rest in a quiet, dark room, stay hydrated, apply a cold compress to your forehead, and manage stress. If headaches are sudden, severe ("thunderclap"), or accompanied by fever, confusion, or weakness, seek immediate emergency care.'
+  },
+  {
+    match: ['diabetes', 'sugar', 'glucose'],
+    response: 'To help support healthy blood sugar levels: focus on fiber-rich whole foods, limit refined carbohydrates and sugary drinks, stay active after meals, and monitor glucose as recommended by your doctor.'
+  },
+  {
     match: ['report', 'analysis', 'lab'],
     response: 'I can help explain your report. Share the key readings or upload the report summary, and I will explain what each value means in simple language.'
   },
@@ -34,7 +50,7 @@ export const chat = async (req, res) => {
     return res.status(400).json({ message: 'Please type a question or topic.' });
   }
 
-  // If Gemini API Key is available, use live Gemini
+  // If Gemini API Key is available, use live Gemini AI
   if (process.env.GEMINI_API_KEY) {
     try {
       const previousMessages = Array.isArray(history)
@@ -55,7 +71,7 @@ export const chat = async (req, res) => {
 
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
-        model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+        model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
         contents: [...previousMessages, { role: 'user', parts: [{ text: message.trim() }] }],
         config: {
           systemInstruction,
