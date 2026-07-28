@@ -1,13 +1,17 @@
-﻿import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { createToken } from '../utils/jwt.utils.js';
 import {
   createUser,
   findUserByEmail,
   findUserByResetToken,
-  isMongoConnected,
+  isSupabaseConnected,
   updateUser
 } from '../utils/fallbackStore.js';
+import {
+  sendLoginNotificationEmail,
+  sendPasswordResetEmail
+} from '../services/email.service.js';
 
 const sanitizeUser = (user) => ({
   id: user.id,
@@ -58,6 +62,16 @@ export const login = async (req, res) => {
   }
 
   const token = createToken({ id: user.id });
+
+  // Dispatch login alert email asynchronously
+  const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '';
+  sendLoginNotificationEmail({
+    to: user.email,
+    name: user.name || user.profile?.fullName,
+    loginTime: new Date().toLocaleString(),
+    ipAddress: clientIp
+  }).catch((err) => console.error('[AUTH ERROR] Login notification dispatch failed:', err.message));
+
   return res.status(200).json({ token, user: sanitizeUser(user) });
 };
 
@@ -69,15 +83,24 @@ export const forgotPassword = async (req, res) => {
 
   const user = await findUserByEmail(email);
   if (!user) {
-    return res.status(200).json({ message: 'If this email is registered, instructions have been sent.' });
+    return res.status(200).json({ message: 'If your email is registered, password reset instructions have been sent.' });
   }
 
   const resetToken = crypto.randomBytes(20).toString('hex');
   await updateUser(user.id, { resetToken, resetTokenExpires: Date.now() + 3600000 });
 
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+  const resetLink = `${clientUrl}/reset-password?token=${resetToken}`;
+
+  // Dispatch password reset email asynchronously
+  sendPasswordResetEmail({
+    to: user.email,
+    name: user.name || user.profile?.fullName,
+    resetLink
+  }).catch((err) => console.error('[AUTH ERROR] Password reset email dispatch failed:', err.message));
+
   return res.status(200).json({
-    message: 'Password reset token generated.',
-    resetToken
+    message: 'If your email is registered, password reset instructions have been sent.'
   });
 };
 

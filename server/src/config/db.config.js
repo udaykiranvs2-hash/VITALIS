@@ -1,22 +1,24 @@
-import mongoose from 'mongoose';
+import supabase from './supabase.js';
 
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI;
-
-    if (!mongoURI) {
-      console.warn('MONGODB_URI is not defined in your .env file. Continuing without MongoDB for local development.');
+    if (!supabase) {
+      console.warn('⚠️ Supabase credentials not set. Operating with fallback storage.');
       return false;
     }
 
-    const conn = await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 5000,
-    });
+    // Ping Supabase DB
+    const { data, error } = await supabase.from('users').select('id').limit(1);
+    if (error && error.code !== 'PGRST116') {
+      console.log(`⚡ Connected to Supabase Project: ${process.env.SUPABASE_URL}`);
+      console.log(`ℹ️  Supabase Table Note: ${error.message}`);
+    } else {
+      console.log(`⚡ Supabase Database Connected successfully: ${process.env.SUPABASE_URL}`);
+    }
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
     return true;
   } catch (error) {
-    console.warn(`MongoDB Connection Error: ${error.message}. Continuing without MongoDB for local development.`);
+    console.warn(`Supabase Connection Warning: ${error.message}`);
     return false;
   }
 };

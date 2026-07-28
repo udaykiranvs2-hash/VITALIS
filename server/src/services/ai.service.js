@@ -1,4 +1,9 @@
-﻿const emergencyKeywords = [
+import { GoogleGenAI } from '@google/genai';
+
+const apiKey = process.env.GEMINI_API_KEY;
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
+
+const emergencyKeywords = [
   'chest pain',
   'shortness of breath',
   'severe headache',
@@ -71,7 +76,7 @@ const reportTemplates = {
   }
 };
 
-export const buildSymptomAssessment = ({ age, gender, symptoms, duration, severity }) => {
+const buildLocalSymptomAssessment = ({ age, gender, symptoms = [], duration, severity }) => {
   const normalized = symptoms.map((item) => item.trim().toLowerCase()).filter(Boolean);
   const isEmergency = normalized.some((symptom) =>
     emergencyKeywords.some((keyword) => symptom.includes(keyword))
@@ -100,7 +105,7 @@ export const buildSymptomAssessment = ({ age, gender, symptoms, duration, severi
     possibleConditions.add('Gastritis');
   }
 
-  const conditions = Array.from(possibleConditions.length ? possibleConditions : ['General wellness review']);
+  const conditions = Array.from(possibleConditions.size ? possibleConditions : ['General wellness review']);
   const confidence = Math.min(98, 60 + conditions.length * 8 + (severity === 'severe' ? 15 : 0));
 
   const suggestedSpecialist = normalized.some((symptom) => symptom.includes('skin'))
@@ -137,7 +142,70 @@ export const buildSymptomAssessment = ({ age, gender, symptoms, duration, severi
   };
 };
 
-export const analyzeReportDocument = ({ reportType = 'General Lab Report', fileName = '', rawText = '' }) => {
+export const buildSymptomAssessment = async ({ age, gender, symptoms = [], duration, severity, medicalHistory = [], allergies = [], medications = [] }) => {
+  if (ai) {
+    try {
+      const symptomsList = Array.isArray(symptoms) ? symptoms.join(', ') : symptoms;
+      const historyList = Array.isArray(medicalHistory) ? medicalHistory.join(', ') : medicalHistory;
+      const allergiesList = Array.isArray(allergies) ? allergies.join(', ') : allergies;
+      const medsList = Array.isArray(medications) ? medications.join(', ') : medications;
+
+      const prompt = `Act as an AI medical diagnostic assistant. Review the following symptom assessment request:
+- Patient Age: ${age}
+- Patient Gender: ${gender}
+- Symptoms: ${symptomsList}
+- Duration: ${duration}
+- Severity: ${severity}
+- Medical History: ${historyList || 'None'}
+- Allergies: ${allergiesList || 'None'}
+- Current Medications: ${medsList || 'None'}
+
+Evaluate the symptoms. Based on clinical guidelines:
+1. Determine the severity level ("mild", "moderate", "severe").
+2. Check if the symptoms could indicate a life-threatening medical emergency (e.g. chest pain, severe shortness of breath, sudden weakness/numbness, etc.). If so, return an "emergencyWarning" object containing a "headline" (e.g. "🚨 Emergency Warning") and a "message" with advice to seek immediate emergency care. If not, "emergencyWarning" must be null.
+3. List up to 3 possible conditions (as clean, simple strings, e.g., "Common Cold", "Influenza").
+4. Provide a confidence level percentage (e.g. "80%").
+5. Recommend the most appropriate medical specialist category (e.g., "Cardiologist", "Pulmonologist", "Dermatologist", "General Physician").
+6. Suggest 3-4 next steps/care recommendations.
+7. Include a standard medical disclaimer.
+
+You MUST respond strictly in JSON format. The response schema must be:
+{
+  "disclaimer": "This assessment is informational only and is not a substitute for professional medical advice.",
+  "emergencyWarning": null or {
+    "headline": "🚨 Emergency Warning",
+    "message": "Immediate emergency care is advised..."
+  },
+  "possibleConditions": ["Condition A", "Condition B"],
+  "confidence": "85%",
+  "severityLevel": "moderate",
+  "suggestedSpecialist": "General Physician",
+  "nextSteps": ["Step 1", "Step 2", "Step 3"]
+}
+
+JSON Response:`;
+
+      const response = await ai.models.generateContent({
+        model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json'
+        }
+      });
+
+      const parsed = JSON.parse(response.text.trim());
+      if (parsed.possibleConditions && parsed.confidence && parsed.severityLevel && parsed.suggestedSpecialist && parsed.nextSteps) {
+        return parsed;
+      }
+    } catch (error) {
+      console.error('Gemini Symptom Assessment Error, falling back to mock:', error.message);
+    }
+  }
+
+  return buildLocalSymptomAssessment({ age, gender, symptoms, duration, severity });
+};
+
+const analyzeReportDocumentLocal = ({ reportType = 'General Lab Report', fileName = '', rawText = '' }) => {
   const base = reportTemplates[reportType] || {
     findings: ['The report was reviewed and appears structurally complete.'],
     abnormalValues: [],
@@ -174,4 +242,63 @@ export const analyzeReportDocument = ({ reportType = 'General Lab Report', fileN
     recommendations,
     disclaimer: 'This report analysis is for educational purposes only and does not replace clinical diagnosis.'
   };
+};
+
+export const analyzeReportDocument = async ({ reportType = 'General Lab Report', fileName = '', rawText = '' }) => {
+  if (ai) {
+    try {
+      const prompt = `Act as an AI medical report analyzer. Analyze the following medical diagnostic/lab report details:
+- Report Type: ${reportType}
+- File Name: ${fileName}
+- Report Raw Text:
+${rawText}
+
+Task:
+1. Provide a professional, concise summary (2-3 sentences) of the overall report findings.
+2. Extract the key findings (as an array of strings).
+3. Identify any abnormal/out-of-range values or markers (as an array of strings).
+4. Provide 3 actionable recommendations or follow-up suggestions (as an array of strings).
+5. Include a standard clinical educational disclaimer.
+
+You MUST respond strictly in JSON format. The response schema must be:
+{
+  "title": "${reportType} Analysis",
+  "fileName": "${fileName}",
+  "reportType": "${reportType}",
+  "summary": "Overall summary of the report...",
+  "findings": ["Finding 1", "Finding 2"],
+  "abnormalValues": ["Abnormal Marker 1"],
+  "recommendations": ["Recommendation 1", "Recommendation 2"],
+  "disclaimer": "This report analysis is for educational purposes only and does not replace clinical diagnosis."
+}
+
+JSON Response:`;
+
+      const response = await ai.models.generateContent({
+        model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json'
+        }
+      });
+
+      const parsed = JSON.parse(response.text.trim());
+      if (parsed.summary && parsed.findings && parsed.abnormalValues && parsed.recommendations) {
+        return {
+          title: parsed.title || `${reportType} Analysis`,
+          fileName: parsed.fileName || fileName,
+          reportType: parsed.reportType || reportType,
+          summary: parsed.summary,
+          findings: parsed.findings,
+          abnormalValues: parsed.abnormalValues,
+          recommendations: parsed.recommendations,
+          disclaimer: parsed.disclaimer || 'This report analysis is for educational purposes only and does not replace clinical diagnosis.'
+        };
+      }
+    } catch (error) {
+      console.error('Gemini Report Analyzer Error, falling back to mock:', error.message);
+    }
+  }
+
+  return analyzeReportDocumentLocal({ reportType, fileName, rawText });
 };

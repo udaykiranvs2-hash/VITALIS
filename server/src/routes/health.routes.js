@@ -1,6 +1,7 @@
-﻿import { Router } from 'express';
+import { Router } from 'express';
 import { protect } from '../middleware/auth.middleware.js';
 import { checkSymptoms, analyzeReport, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
+import { uploadReportFile } from '../middleware/upload.middleware.js';
 import {
   getAllDiseases,
   getDiseaseById,
@@ -20,7 +21,15 @@ const router = Router();
 
 // User health check routes (protected)
 router.post('/symptoms', protect, checkSymptoms);
-router.post('/report', protect, analyzeReport);
+router.post('/report', protect, (req, res, next) => {
+  uploadReportFile(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    next();
+  });
+}, analyzeReport);
+
 router.get('/history', protect, getHistory);
 router.post('/appointment', protect, bookAppointment);
 router.delete('/appointment/:id', protect, cancelAppointment);

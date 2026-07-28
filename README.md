@@ -1,11 +1,11 @@
-﻿# Vitalis - AI Health Navigator
+# Vitalis - AI Health Navigator
 
 A full-stack healthcare SaaS platform designed to help users analyze symptoms, understand medical reports, estimate treatment costs, find doctors, book appointments, and receive AI-powered health guidance.
 
 ## Project structure
 
 - `client/` - React frontend powered by Vite.
-- `server/` - Express backend with MongoDB models and API routes.
+- `server/` - Express backend with Supabase database integration and API routes.
 
 ## Installation
 
@@ -23,7 +23,7 @@ A full-stack healthcare SaaS platform designed to help users analyze symptoms, u
 
 3. Configure environment variables:
    - Copy `server/.env.example` to `server/.env`.
-   - Update `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, and `GEMINI_API_KEY`.
+   - Update `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET`, `CLIENT_URL`, and `GEMINI_API_KEY`.
    - Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey), then add it only to `server/.env`. Never place it in a Vite/client environment variable.
 
 ## Running the app
@@ -67,7 +67,9 @@ The frontend runs on `http://localhost:5173` and the backend runs on `http://loc
 ## Environment variables
 
 - `PORT` - Server port (default 5000).
-- `MONGODB_URI` - MongoDB connection string.
+- `SUPABASE_URL` - Supabase project URL.
+- `SUPABASE_ANON_KEY` - Supabase anonymous API key.
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key.
 - `JWT_SECRET` - JWT signing secret.
 - `CLIENT_URL` - Frontend origin for CORS.
 - `GEMINI_API_KEY` - Google AI Studio API key used by the server-side health assistant.

@@ -1,10 +1,10 @@
-﻿import User from '../models/User.model.js';
+import { findUserById } from '../utils/fallbackStore.js';
 import { buildSymptomAssessment, analyzeReportDocument } from '../services/ai.service.js';
 
 export const checkSymptoms = async (req, res) => {
   const { age, gender, symptoms, duration, severity, medicalHistory, allergies, medications } = req.body;
-  const assessment = buildSymptomAssessment({ age, gender, symptoms, duration, severity, medicalHistory, allergies, medications });
-  const user = await User.findById(req.userId);
+  const assessment = await buildSymptomAssessment({ age, gender, symptoms, duration, severity, medicalHistory, allergies, medications });
+  const user = await findUserById(req.userId);
 
   if (user) {
     user.history.unshift({
@@ -27,9 +27,28 @@ export const checkSymptoms = async (req, res) => {
 };
 
 export const analyzeReport = async (req, res) => {
-  const { reportType, reportName, fileName, fileText } = req.body;
-  const analysis = analyzeReportDocument({ reportType, fileName: reportName || fileName || 'Uploaded report', rawText: fileText || '' });
-  const user = await User.findById(req.userId);
+  let reportType = req.body?.reportType;
+  let reportName = req.body?.reportName;
+  let fileName = req.body?.fileName;
+  let fileText = req.body?.fileText || '';
+
+  if (req.file) {
+    fileName = req.file.originalname;
+    if (!reportName) {
+      reportName = req.file.originalname;
+    }
+    if (req.file.buffer) {
+      fileText = req.file.buffer.toString('utf-8');
+    }
+  }
+
+  const analysis = await analyzeReportDocument({
+    reportType: reportType || 'Lab Report',
+    fileName: reportName || fileName || 'Uploaded report',
+    rawText: fileText || ''
+  });
+
+  const user = await findUserById(req.userId);
 
   if (user) {
     user.reports.unshift({
@@ -52,7 +71,7 @@ export const analyzeReport = async (req, res) => {
 };
 
 export const getHistory = async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -65,7 +84,7 @@ export const bookAppointment = async (req, res) => {
     return res.status(400).json({ message: 'Doctor, date, and time are required to book an appointment.' });
   }
 
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
@@ -82,12 +101,15 @@ export const bookAppointment = async (req, res) => {
 
 export const cancelAppointment = async (req, res) => {
   const appointmentId = req.params.id;
-  const user = await User.findById(req.userId);
+  const user = await findUserById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });
   }
 
-  const appointment = user.appointments.id(appointmentId);
+  const appointment = typeof user.appointments.id === 'function'
+    ? user.appointments.id(appointmentId)
+    : user.appointments.find((item) => String(item._id || item.id) === String(appointmentId));
+
   if (!appointment) {
     return res.status(404).json({ message: 'Appointment not found.' });
   }
