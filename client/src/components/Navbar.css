@@ -100,13 +100,29 @@
 }
 
 .app-navbar-login {
-  background: rgba(255, 255, 255, 0.92);
-  color: #334e68;
+  position: relative;
+  overflow: hidden;
+  background: #2563eb;
+  color: #ffffff;
   padding: 0.95rem 1.2rem;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+  transition: transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease;
 }
 
 .app-navbar-login:hover {
-  color: #2563eb;
+  background: #1d4ed8;
+  color: #ffffff;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 18px 32px rgba(37, 99, 235, 0.34);
+}
+
+.app-navbar-login:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.app-navbar-login:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.32);
+  outline-offset: 3px;
 }
 
 .app-navbar-cta {

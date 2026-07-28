@@ -5,8 +5,6 @@ import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LandingPage from './pages/LandingPage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import RegisterPage from './pages/RegisterPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
@@ -20,6 +18,11 @@ import AssistantPage from './pages/AssistantPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import BackButton from './components/BackButton.jsx';
+import LoginModal from './components/LoginModal.jsx';
+import RegisterModal from './components/RegisterModal.jsx';
+import AmbientEffects from './components/AmbientEffects.jsx';
+import FloatingAiChat from './components/FloatingAiChat.jsx';
 
 function MainLayout() {
   return <div className="app-shell"><Navbar /><main className="app-content"><Outlet /></main><Footer /></div>;
@@ -40,11 +43,16 @@ function App() {
 
   return (
     <div className="app-root">
+      <AmbientEffects />
+      <BackButton />
+      <FloatingAiChat />
+      <LoginModal />
+      <RegisterModal />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dev/assistant" element={<AssistantPage />} />
-        <Route path="/login" element={user ? <Navigate to="/app" replace /> : <LoginPage />} />
-        <Route path="/register" element={user ? <Navigate to="/app" replace /> : <RegisterPage />} />
+        <Route path="/login" element={user ? <Navigate to="/app" replace /> : <Navigate to="/" replace />} />
+        <Route path="/register" element={user ? <Navigate to="/app" replace /> : <Navigate to="/" replace />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/cost-estimator" element={<CostEstimatorPage />} />

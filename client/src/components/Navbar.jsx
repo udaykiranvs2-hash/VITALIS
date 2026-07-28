@@ -7,9 +7,8 @@ import './Navbar.css';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, openLoginModal } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -18,16 +17,8 @@ export default function Navbar() {
   }, []);
 
   const navLinks = ['Features', 'Doctors', 'Pricing', 'About', 'Contact'];
-  const openAssistant = () => navigate('/dev/assistant');
-
   const handleLogout = () => {
-    setAccountOpen(false);
-    logout();
-    navigate('/login');
-  };
-
-  const handleSwitchAccount = () => {
-    setAccountOpen(false);
+    setIsOpen(false);
     logout();
     navigate('/login');
   };
@@ -46,42 +37,14 @@ export default function Navbar() {
           </nav>
 
           <div className="app-navbar-actions">
-            <button type="button" className="app-navbar-login" onClick={openAssistant}>AI Chat</button>
             {user ? (
-              <div className="app-navbar-account" onBlur={() => setAccountOpen(false)}>
-                <button
-                  type="button"
-                  className="app-account-button"
-                  onClick={() => setAccountOpen((v) => !v)}
-                >
-                  {user.name || user.email} ▾
-                </button>
-                {accountOpen && (
-                  <div className="app-account-menu">
-                    <button
-                      type="button"
-                      className="app-account-menu-item"
-                      onClick={handleLogout}
-                    >
-                      Log out
-                    </button>
-                    <button
-                      type="button"
-                      className="app-account-menu-item"
-                      onClick={handleSwitchAccount}
-                    >
-                      Switch account
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button type="button" className="app-account-button" onClick={handleLogout}>
+                {user.name || user.email} · Log out
+              </button>
             ) : (
               <>
-                <button type="button" className="app-navbar-login" onClick={() => navigate('/login')}>
+                <button type="button" className="app-navbar-login" onClick={openLoginModal}>
                   Log In
-                </button>
-                <button type="button" className="app-navbar-cta" onClick={() => navigate('/register')}>
-                  Get Started
                 </button>
               </>
             )}
@@ -98,9 +61,13 @@ export default function Navbar() {
           {navLinks.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="app-navbar-mobile-link" onClick={() => setIsOpen(false)}>{item}</a>
           ))}
-          <button type="button" className="app-navbar-mobile-button" onClick={() => { setIsOpen(false); openAssistant(); }}>AI Chat</button>
-          <button type="button" className="app-navbar-mobile-button" onClick={() => { setIsOpen(false); navigate('/login'); }}>Log In</button>
-          <button type="button" className="app-navbar-mobile-button app-navbar-mobile-cta" onClick={() => { setIsOpen(false); navigate('/register'); }}>Get Started</button>
+          {user ? (
+            <button type="button" className="app-navbar-mobile-button" onClick={() => { setIsOpen(false); handleLogout(); }}>Log out</button>
+          ) : (
+            <>
+              <button type="button" className="app-navbar-mobile-button" onClick={() => { setIsOpen(false); openLoginModal(); }}>Log In</button>
+            </>
+          )}
         </div>
       </div>
     </header>

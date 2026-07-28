@@ -7,7 +7,6 @@ function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -35,49 +34,22 @@ function LoginPage() {
     logout();
     setForm({ email: '', password: '' });
     setShowPassword(false);
-    setMenuOpen(false);
     setError('');
-    setMessage('You have been signed out. You can sign in with a different account now.');
-    navigate('/login');
-  };
-
-  const handleSwitchAccount = () => {
-    logout();
-    setMenuOpen(false);
-    setForm({ email: '', password: '' });
-    setShowPassword(false);
-    setError('');
-    setMessage('Switch account mode enabled. Enter a different email and password to sign in.');
+    setMessage('You have been signed out.');
     navigate('/login');
   };
 
   return (
     <section className="auth-page">
       <div className="auth-panel">
-        <div className="account-menu">
-          <button type="button" className="account-menu-button" onClick={() => setMenuOpen((value) => !value)}>
-            {user ? (user.name || user.email) : 'Account'} ▾
-          </button>
-          {menuOpen && (
-            <div className="account-menu-card">
-              <p>{user ? `Signed in as ${user.name || user.email}` : 'Not signed in'}</p>
-              {user ? (
-                <>
-                  <button type="button" className="secondary-button" onClick={handleSwitchAccount}>
-                    Switch account
-                  </button>
-                  <button type="button" className="secondary-button danger" onClick={handleLogout}>
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <button type="button" className="secondary-button" onClick={() => navigate('/login')}>
-                  Sign in
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+        {user && (
+          <div className="account-menu">
+            <p>Signed in as {user.name || user.email}</p>
+            <button type="button" className="secondary-button danger" onClick={handleLogout}>
+              Log out
+            </button>
+          </div>
+        )}
         <h1>Sign in to AI Health Navigator</h1>
         <p>Access your health dashboard, symptom tools and report analysis.</p>
 

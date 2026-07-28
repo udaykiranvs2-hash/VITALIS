@@ -1,6 +1,7 @@
 /* Landing Page - Professional health UI with friendlier, softer colors */
 
 .landing-page {
+  padding-bottom: 6.5rem;
   min-height: 100vh;
   background: #f5f7fb;
   color: #102a43;
@@ -913,8 +914,12 @@
 
 .landing-cta-button {
   padding: 16px 30px;
+  border: 0;
   border-radius: 999px;
   font-weight: 700;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
   color: #ffffff;
   background: #0f172a;
   text-decoration: none;

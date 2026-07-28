@@ -1,9 +1,9 @@
 import { ArrowRight, ShieldCheck, Activity, FileHeart, Stethoscope, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Hero() {
-  const navigate = useNavigate();
+  const { openRegisterModal } = useAuth();
 
   return (
     <section className="landing-hero-section">
@@ -42,7 +42,7 @@ export default function Hero() {
               <button 
                 type="button" 
                 className="landing-hero-button landing-hero-button-primary"
-                onClick={() => navigate('/register')}
+                onClick={openRegisterModal}
               >
                 Get Started
                 <ArrowRight size={18} />

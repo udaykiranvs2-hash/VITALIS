@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Hero from '../components/Hero.jsx';
 import '../styles/landing.css';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const featureLinks = [
   { title: 'Symptom checker', description: 'Step through guided symptom collection and get clear next actions.', link: '/features/symptoms' },
@@ -13,6 +14,7 @@ const featureLinks = [
 ];
 
 function LandingPage() {
+  const { openRegisterModal } = useAuth();
   const pricingPlans = [
     {
       name: 'Care Starter',
@@ -112,13 +114,13 @@ function LandingPage() {
               <ul>
                 {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
               </ul>
-              <Link to={plan.link} className="landing-cta-button">{plan.cta}</Link>
+              <button type="button" className="landing-cta-button" onClick={openRegisterModal}>{plan.cta}</button>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="landing-cta-band" id="cta"><div className="landing-cta-content"><div><p className="landing-section-pretitle">Ready to simplify care?</p><h2>Start your first symptom review and medical report analysis in minutes.</h2></div><div style={{ display: 'flex', gap: '0.75rem' }}><Link to="/features/cost-estimator" className="landing-cta-button" style={{ background: '#fff', color: '#0f172a' }}>Estimate cost</Link><Link to="/register" className="landing-cta-button">Start for free</Link></div></div></section>
+      <section className="landing-cta-band" id="cta"><div className="landing-cta-content"><div><p className="landing-section-pretitle">Ready to simplify care?</p><h2>Start your first symptom review and medical report analysis in minutes.</h2></div><div style={{ display: 'flex', gap: '0.75rem' }}><Link to="/features/cost-estimator" className="landing-cta-button" style={{ background: '#fff', color: '#0f172a' }}>Estimate cost</Link><button type="button" className="landing-cta-button" onClick={openRegisterModal}>Start for free</button></div></div></section>
     </div>
   );
 }

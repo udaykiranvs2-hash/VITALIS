@@ -1,6 +1,9 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function Footer() {
+  const { openLoginModal, openRegisterModal } = useAuth();
+
   return (
     <footer className="site-footer">
       <div>
@@ -9,8 +12,8 @@ function Footer() {
       </div>
       <div className="footer-links">
         <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
+        <button type="button" onClick={openLoginModal}>Login</button>
+        <button type="button" onClick={openRegisterModal}>Register</button>
       </div>
     </footer>
   );

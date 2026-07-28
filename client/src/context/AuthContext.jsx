@@ -12,6 +12,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState('');
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -145,9 +147,15 @@ export const AuthProvider = ({ children }) => {
       logout,
       updateProfile,
       changePassword,
-      setError
+      setError,
+      isLoginModalOpen,
+      openLoginModal: () => setIsLoginModalOpen(true),
+      closeLoginModal: () => setIsLoginModalOpen(false),
+      isRegisterModalOpen,
+      openRegisterModal: () => setIsRegisterModalOpen(true),
+      closeRegisterModal: () => setIsRegisterModalOpen(false)
     }),
-    [user, token, loading, initialized, error]
+    [user, token, loading, initialized, error, isLoginModalOpen, isRegisterModalOpen]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

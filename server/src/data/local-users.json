@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "demo-user",
+    "id": "demo-user",
+    "name": "Demo User",
+    "email": "demo@example.com",
+    "passwordHash": "$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi",
+    "role": "user",
+    "profile": {
+      "fullName": "Demo User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "resetToken": null,
+    "resetTokenExpires": null
+  }
+]
