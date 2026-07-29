@@ -15,5 +15,20 @@
     "history": [],
     "resetToken": null,
     "resetTokenExpires": null
+  },
+  {
+    "_id": "0e554191-3af3-4a97-a993-6858de100a3e",
+    "id": "0e554191-3af3-4a97-a993-6858de100a3e",
+    "name": "Thaduri Yeshwanth",
+    "email": "yeshwanththaduri@gmail.com",
+    "passwordHash": "$2b$10$UT4A9gfrqtDj9sgKg/3B9ePM.qD5VBS1bFTsuRYz8v1aeZBCWMpma",
+    "role": "user",
+    "profile": {
+      "fullName": "Thaduri Yeshwanth"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": []
   }
 ]

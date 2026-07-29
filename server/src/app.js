@@ -8,6 +8,8 @@ import { apiLimiter, authLimiter, aiLimiter } from './middleware/rateLimiter.mid
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import fs from 'fs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
@@ -48,12 +50,13 @@ app.use('/api', routes);
 
 // Serve static files from the React build (SPA support)
 const distPath = path.join(__dirname, '../../client/dist');
-app.use(express.static(distPath));
-
-// Fallback to index.html for React Router
-app.get(/^(?!\/api\/).*/, (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'));
-});
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  // Fallback to index.html for React Router
+  app.get(/^(?!\/api\/).*/, (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 app.use(notFoundHandler);
 app.use(errorHandler);

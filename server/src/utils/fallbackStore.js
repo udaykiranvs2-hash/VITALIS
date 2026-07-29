@@ -1,11 +1,32 @@
 import crypto from 'crypto';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import supabase from '../config/supabase.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const storageFile = path.join(__dirname, '../../data/users.json');
 
 const memoryUsers = globalThis.__vitalisMemoryUsers ?? (globalThis.__vitalisMemoryUsers = new Map());
 
 const normalizeEmail = (email) => (email || '').toLowerCase().trim();
+const generateId = () => (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
 
-const generateId = () => crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex');
+const demoUserSeed = {
+  id: 'demo-user',
+  name: 'Demo User',
+  email: 'demo@example.com',
+  passwordHash: '$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi',
+  role: 'user',
+  profile: { fullName: 'Demo User' },
+  reports: [],
+  appointments: [],
+  notifications: [],
+  history: [],
+  resetToken: null,
+  resetTokenExpires: null
+};
 
 const mapSupabaseUser = (row) => {
   if (!row) return null;
@@ -31,7 +52,7 @@ const mapSupabaseUser = (row) => {
 };
 
 const mapToSupabaseRow = (data) => {
-  const row = {
+  return {
     id: data.id ? String(data.id) : (data._id ? String(data._id) : generateId()),
     name: data.name || '',
     email: normalizeEmail(data.email),
@@ -45,12 +66,11 @@ const mapToSupabaseRow = (data) => {
     reset_token: data.resetToken !== undefined ? data.resetToken : data.reset_token,
     reset_token_expires: data.resetTokenExpires !== undefined ? data.resetTokenExpires : data.reset_token_expires
   };
-  return row;
 };
 
-const createMemoryUser = (data) => {
+const toUserRecord = (data) => {
   const idStr = data.id ? String(data.id) : (data._id ? String(data._id) : generateId());
-  const user = {
+  return {
     _id: idStr,
     id: idStr,
     name: data.name || '',
@@ -62,20 +82,83 @@ const createMemoryUser = (data) => {
     appointments: data.appointments || [],
     notifications: data.notifications || [],
     history: data.history || [],
-    resetToken: data.resetToken,
-    resetTokenExpires: data.resetTokenExpires,
+    resetToken: data.resetToken !== undefined ? data.resetToken : data.reset_token,
+    resetTokenExpires: data.resetTokenExpires !== undefined ? data.resetTokenExpires : data.reset_token_expires,
     save: async function save() {
-      memoryUsers.set(this.id, this);
-      return this;
+      return updateUser(this.id, this);
     }
   };
+};
 
+const createMemoryUser = async (data) => {
+  const user = toUserRecord(data);
   memoryUsers.set(user.id, user);
-  return user;
+  await persistUsers();
+  return mapSupabaseUser(user);
+};
+
+const persistUsers = async () => {
+  try {
+    const users = Array.from(memoryUsers.values()).map((user) => ({
+      _id: user._id,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      passwordHash: user.passwordHash,
+      role: user.role,
+      profile: user.profile || {},
+      reports: user.reports || [],
+      appointments: user.appointments || [],
+      notifications: user.notifications || [],
+      history: user.history || [],
+      resetToken: user.resetToken,
+      resetTokenExpires: user.resetTokenExpires
+    }));
+
+    await fs.mkdir(path.dirname(storageFile), { recursive: true });
+    await fs.writeFile(storageFile, JSON.stringify(users, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('[STORAGE PERSIST WARN]', err.message);
+  }
+};
+
+const loadUsersFromDisk = async () => {
+  try {
+    const raw = await fs.readFile(storageFile, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+  } catch {
+    // Ignore and fall back to seeded data below.
+  }
+  return [];
+};
+
+const getUserById = (id) => {
+  const targetId = String(id);
+  return memoryUsers.get(targetId) || Array.from(memoryUsers.values()).find((u) => u.id === targetId || u._id === targetId) || null;
 };
 
 export const isSupabaseConnected = () => !!supabase;
 export const isMongoConnected = isSupabaseConnected;
+
+const ensureSeedUsers = async () => {
+  if (memoryUsers.size > 0) {
+    return;
+  }
+
+  const storedUsers = await loadUsersFromDisk();
+  if (storedUsers.length > 0) {
+    storedUsers.forEach((userData) => {
+      const rec = toUserRecord(userData);
+      memoryUsers.set(rec.id, rec);
+    });
+    return;
+  }
+
+  await createMemoryUser(demoUserSeed);
+};
 
 export const findUserByEmail = async (email) => {
   const targetEmail = normalizeEmail(email);
@@ -97,6 +180,7 @@ export const findUserByEmail = async (email) => {
     }
   }
 
+  await ensureSeedUsers();
   const memUser = Array.from(memoryUsers.values()).find((user) => user.email === targetEmail);
   return memUser ? mapSupabaseUser(memUser) : null;
 };
@@ -123,7 +207,8 @@ export const findUserById = async (id) => {
     }
   }
 
-  const memUser = memoryUsers.get(targetId);
+  await ensureSeedUsers();
+  const memUser = getUserById(targetId);
   return memUser ? mapSupabaseUser(memUser) : null;
 };
 
@@ -148,6 +233,7 @@ export const findUserByResetToken = async (token) => {
     }
   }
 
+  await ensureSeedUsers();
   const memUser = Array.from(memoryUsers.values()).find((user) => user.resetToken === token);
   return memUser ? mapSupabaseUser(memUser) : null;
 };
@@ -175,6 +261,7 @@ export const createUser = async (data) => {
     }
   }
 
+  await ensureSeedUsers();
   return createMemoryUser(data);
 };
 
@@ -204,12 +291,20 @@ export const updateUser = async (id, updates) => {
     }
   }
 
-  const existingUser = memoryUsers.get(targetId);
+  await ensureSeedUsers();
+  const existingUser = getUserById(targetId);
   if (!existingUser) {
     return null;
   }
 
-  const updatedUser = { ...existingUser, ...updates, email: normalizeEmail(updates.email || existingUser.email) };
+  const updatedUser = {
+    ...existingUser,
+    ...updates,
+    id: existingUser.id,
+    _id: existingUser._id,
+    email: normalizeEmail(updates.email || existingUser.email)
+  };
   memoryUsers.set(targetId, updatedUser);
+  await persistUsers();
   return mapSupabaseUser(updatedUser);
 };
