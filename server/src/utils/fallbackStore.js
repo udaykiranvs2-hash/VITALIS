@@ -1,7 +1,4 @@
 import crypto from 'crypto';
-<<<<<<< HEAD
-import supabase from '../config/supabase.js';
-=======
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,16 +7,12 @@ import supabase from '../config/supabase.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storageFile = path.join(__dirname, '../../data/users.json');
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
 
 const memoryUsers = globalThis.__vitalisMemoryUsers ?? (globalThis.__vitalisMemoryUsers = new Map());
 
 const normalizeEmail = (email) => (email || '').toLowerCase().trim();
 const generateId = () => (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
 
-<<<<<<< HEAD
-const generateId = () => crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex');
-=======
 const demoUserSeed = {
   id: 'demo-user',
   name: 'Demo User',
@@ -34,7 +27,6 @@ const demoUserSeed = {
   resetToken: null,
   resetTokenExpires: null
 };
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
 
 const mapSupabaseUser = (row) => {
   if (!row) return null;
@@ -151,9 +143,6 @@ const getUserById = (id) => {
 
 export const isSupabaseConnected = () => !!supabase;
 export const isMongoConnected = isSupabaseConnected;
-<<<<<<< HEAD
-=======
-
 const ensureSeedUsers = async () => {
   if (memoryUsers.size > 0) {
     return;
@@ -170,7 +159,6 @@ const ensureSeedUsers = async () => {
 
   await createMemoryUser(demoUserSeed);
 };
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
 
 export const findUserByEmail = async (email) => {
   const targetEmail = normalizeEmail(email);
@@ -192,10 +180,7 @@ export const findUserByEmail = async (email) => {
     }
   }
 
-<<<<<<< HEAD
-=======
   await ensureSeedUsers();
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
   const memUser = Array.from(memoryUsers.values()).find((user) => user.email === targetEmail);
   return memUser ? mapSupabaseUser(memUser) : null;
 };
@@ -222,12 +207,8 @@ export const findUserById = async (id) => {
     }
   }
 
-<<<<<<< HEAD
-  const memUser = memoryUsers.get(targetId);
-=======
   await ensureSeedUsers();
   const memUser = getUserById(targetId);
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
   return memUser ? mapSupabaseUser(memUser) : null;
 };
 
@@ -252,10 +233,7 @@ export const findUserByResetToken = async (token) => {
     }
   }
 
-<<<<<<< HEAD
-=======
   await ensureSeedUsers();
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
   const memUser = Array.from(memoryUsers.values()).find((user) => user.resetToken === token);
   return memUser ? mapSupabaseUser(memUser) : null;
 };
@@ -283,10 +261,7 @@ export const createUser = async (data) => {
     }
   }
 
-<<<<<<< HEAD
-=======
   await ensureSeedUsers();
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
   return createMemoryUser(data);
 };
 
@@ -316,19 +291,12 @@ export const updateUser = async (id, updates) => {
     }
   }
 
-<<<<<<< HEAD
-  const existingUser = memoryUsers.get(targetId);
-=======
   await ensureSeedUsers();
   const existingUser = getUserById(targetId);
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
   if (!existingUser) {
     return null;
   }
 
-<<<<<<< HEAD
-  const updatedUser = { ...existingUser, ...updates, email: normalizeEmail(updates.email || existingUser.email) };
-=======
   const updatedUser = {
     ...existingUser,
     ...updates,
@@ -336,7 +304,6 @@ export const updateUser = async (id, updates) => {
     _id: existingUser._id,
     email: normalizeEmail(updates.email || existingUser.email)
   };
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
   memoryUsers.set(targetId, updatedUser);
   await persistUsers();
   return mapSupabaseUser(updatedUser);
