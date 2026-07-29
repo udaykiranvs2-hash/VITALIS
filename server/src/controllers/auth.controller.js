@@ -1,17 +1,4 @@
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import { createToken } from '../utils/jwt.utils.js';
-import {
-  createUser,
-  findUserByEmail,
-  findUserByResetToken,
-  isSupabaseConnected,
-  updateUser
-} from '../utils/fallbackStore.js';
-import {
-  sendLoginNotificationEmail,
-  sendPasswordResetEmail
-} from '../services/email.service.js';
+import { findUserById, createUser, updateUser } from '../utils/fallbackStore.js';
 
 const sanitizeUser = (user) => ({
   id: user.id,
@@ -22,105 +9,48 @@ const sanitizeUser = (user) => ({
   reports: user.reports,
   appointments: user.appointments,
   notifications: user.notifications,
-  history: user.history
+  history: user.history,
+  authProvider: user.authProvider,
 });
 
-export const register = async (req, res) => {
-  const { name, email, password } = req.body;
+export const syncProfile = async (req, res) => {
+  try {
+    const authUser = req.user;
+    if (!authUser) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Name, email, and password are required.' });
+    let profile = await findUserById(authUser.id);
+
+    if (!profile) {
+      // Create new profile mapped to Supabase auth.users
+      profile = await createUser({
+        id: authUser.id,
+        email: authUser.email,
+        name: authUser.user_metadata?.full_name || authUser.email.split('@')[0],
+        authProvider: authUser.app_metadata?.provider || 'email',
+        profile: {
+          fullName: authUser.user_metadata?.full_name || authUser.email.split('@')[0]
+        }
+      });
+    } else {
+      // Update any out-of-sync fields like email or name if they changed via OAuth
+      const updates = {};
+      let needsUpdate = false;
+      
+      if (profile.email !== authUser.email) {
+        updates.email = authUser.email;
+        needsUpdate = true;
+      }
+      
+      if (needsUpdate) {
+        profile = await updateUser(authUser.id, updates);
+      }
+    }
+
+    return res.status(200).json({ user: sanitizeUser(profile) });
+  } catch (error) {
+    console.error('[AUTH ERROR] Sync profile failed:', error.message);
+    return res.status(500).json({ message: 'Internal server error during profile synchronization.' });
   }
-
-  const existingUser = await findUserByEmail(email);
-  if (existingUser) {
-    return res.status(409).json({ message: 'Email is already registered.' });
-  }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-  const user = await createUser({ name, email, passwordHash, profile: { fullName: name } });
-  const token = createToken({ id: user.id });
-
-  return res.status(201).json({ token, user: sanitizeUser(user) });
-};
-
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
-  }
-
-  const user = await findUserByEmail(email);
-  if (!user) {
-    return res.status(401).json({ message: 'Invalid credentials.' });
-  }
-
-  const isValidPassword = await bcrypt.compare(password, user.passwordHash);
-  if (!isValidPassword) {
-    return res.status(401).json({ message: 'Invalid credentials.' });
-  }
-
-  const token = createToken({ id: user.id });
-
-  // Dispatch login alert email asynchronously
-  const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '';
-  sendLoginNotificationEmail({
-    to: user.email,
-    name: user.name || user.profile?.fullName,
-    loginTime: new Date().toLocaleString(),
-    ipAddress: clientIp
-  }).catch((err) => console.error('[AUTH ERROR] Login notification dispatch failed:', err.message));
-
-  return res.status(200).json({ token, user: sanitizeUser(user) });
-};
-
-export const forgotPassword = async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ message: 'Email is required.' });
-  }
-
-  const user = await findUserByEmail(email);
-  if (!user) {
-    return res.status(200).json({ message: 'If your email is registered, password reset instructions have been sent.' });
-  }
-
-  const resetToken = crypto.randomBytes(20).toString('hex');
-  await updateUser(user.id, { resetToken, resetTokenExpires: Date.now() + 3600000 });
-
-  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-  const resetLink = `${clientUrl}/reset-password?token=${resetToken}`;
-
-  // Dispatch password reset email asynchronously
-  sendPasswordResetEmail({
-    to: user.email,
-    name: user.name || user.profile?.fullName,
-    resetLink
-  }).catch((err) => console.error('[AUTH ERROR] Password reset email dispatch failed:', err.message));
-
-  return res.status(200).json({
-    message: 'If your email is registered, password reset instructions have been sent.'
-  });
-};
-
-export const resetPassword = async (req, res) => {
-  const { token, newPassword } = req.body;
-  if (!token || !newPassword) {
-    return res.status(400).json({ message: 'Reset token and new password are required.' });
-  }
-
-  const user = await findUserByResetToken(token);
-  if (!user) {
-    return res.status(400).json({ message: 'Invalid or expired reset token.' });
-  }
-
-  if (user.resetTokenExpires && user.resetTokenExpires <= Date.now()) {
-    return res.status(400).json({ message: 'Invalid or expired reset token.' });
-  }
-
-  const passwordHash = await bcrypt.hash(newPassword, 10);
-  await updateUser(user.id, { passwordHash, resetToken: null, resetTokenExpires: null });
-
-  return res.status(200).json({ message: 'Password has been reset. You may now log in with your new password.' });
 };

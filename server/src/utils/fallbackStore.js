@@ -17,15 +17,15 @@ const demoUserSeed = {
   id: 'demo-user',
   name: 'Demo User',
   email: 'demo@example.com',
-  passwordHash: '$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi',
+  authProvider: 'email',
   role: 'user',
   profile: { fullName: 'Demo User' },
   reports: [],
   appointments: [],
   notifications: [],
   history: [],
-  resetToken: null,
-  resetTokenExpires: null
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 };
 
 const mapSupabaseUser = (row) => {
@@ -36,15 +36,15 @@ const mapSupabaseUser = (row) => {
     id: String(row.id),
     name: row.name || '',
     email: normalizeEmail(row.email),
-    passwordHash: row.password_hash || row.passwordHash,
+    authProvider: row.auth_provider || 'email',
     role: row.role || 'user',
     profile: row.profile || {},
     reports: row.reports || [],
     appointments: row.appointments || [],
     notifications: row.notifications || [],
     history: row.history || [],
-    resetToken: row.reset_token || row.resetToken,
-    resetTokenExpires: row.reset_token_expires || row.resetTokenExpires,
+    createdAt: row.created_at || new Date().toISOString(),
+    updatedAt: row.updated_at || new Date().toISOString(),
     save: async function save() {
       return updateUser(this.id, this);
     }
@@ -56,15 +56,15 @@ const mapToSupabaseRow = (data) => {
     id: data.id ? String(data.id) : (data._id ? String(data._id) : generateId()),
     name: data.name || '',
     email: normalizeEmail(data.email),
-    password_hash: data.passwordHash || data.password_hash,
+    auth_provider: data.authProvider || data.auth_provider || 'email',
     role: data.role || 'user',
     profile: data.profile || {},
     reports: data.reports || [],
     appointments: data.appointments || [],
     notifications: data.notifications || [],
     history: data.history || [],
-    reset_token: data.resetToken !== undefined ? data.resetToken : data.reset_token,
-    reset_token_expires: data.resetTokenExpires !== undefined ? data.resetTokenExpires : data.reset_token_expires
+    created_at: data.createdAt || data.created_at || new Date().toISOString(),
+    updated_at: data.updatedAt || data.updated_at || new Date().toISOString()
   };
 };
 
@@ -75,15 +75,15 @@ const toUserRecord = (data) => {
     id: idStr,
     name: data.name || '',
     email: normalizeEmail(data.email),
-    passwordHash: data.passwordHash || data.password_hash,
+    authProvider: data.authProvider || data.auth_provider || 'email',
     role: data.role || 'user',
     profile: data.profile || {},
     reports: data.reports || [],
     appointments: data.appointments || [],
     notifications: data.notifications || [],
     history: data.history || [],
-    resetToken: data.resetToken !== undefined ? data.resetToken : data.reset_token,
-    resetTokenExpires: data.resetTokenExpires !== undefined ? data.resetTokenExpires : data.reset_token_expires,
+    createdAt: data.createdAt || data.created_at || new Date().toISOString(),
+    updatedAt: data.updatedAt || data.updated_at || new Date().toISOString(),
     save: async function save() {
       return updateUser(this.id, this);
     }
@@ -104,15 +104,15 @@ const persistUsers = async () => {
       id: user.id,
       name: user.name,
       email: user.email,
-      passwordHash: user.passwordHash,
+      authProvider: user.authProvider,
       role: user.role,
       profile: user.profile || {},
       reports: user.reports || [],
       appointments: user.appointments || [],
       notifications: user.notifications || [],
       history: user.history || [],
-      resetToken: user.resetToken,
-      resetTokenExpires: user.resetTokenExpires
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     }));
 
     await fs.mkdir(path.dirname(storageFile), { recursive: true });

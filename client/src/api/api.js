@@ -18,14 +18,19 @@ apiClient.interceptors.request.use((config) => {
 });
 
 export const setAuthToken = (token) => {
-  // We keep this function so we don't break existing imports, 
-  // but the interceptor handles the logic automatically now.
+  if (token) {
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    localStorage.setItem('vitalis_token', token);
+  } else {
+    delete apiClient.defaults.headers.common['Authorization'];
+    localStorage.removeItem('vitalis_token');
+  }
 };
-
 export const registerUser = (data) => apiClient.post('/auth/register', data);
 export const loginUser = (data) => apiClient.post('/auth/login', data);
 export const forgotPassword = (data) => apiClient.post('/auth/forgot-password', data);
 export const resetPassword = (data) => apiClient.post('/auth/reset-password', data);
+export const syncProfile = () => apiClient.post('/auth/sync');
 export const fetchProfile = () => apiClient.get('/user/profile');
 export const updateProfile = (data) => apiClient.put('/user/profile', data);
 export const changePassword = (data) => apiClient.put('/user/password', data);

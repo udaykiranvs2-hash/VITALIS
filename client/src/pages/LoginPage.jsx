@@ -1,9 +1,9 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 function LoginPage() {
-  const { user, login, logout, loading, error, setError } = useAuth();
+  const { user, login, loginWithGoogle, logout, loading, error, setError } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,8 +25,7 @@ function LoginPage() {
       await login(payload);
       navigate('/app');
     } catch (err) {
-      const serverMessage = err?.response?.data?.message || 'Unable to sign in.';
-      setMessage(serverMessage);
+      setMessage(err.message || 'Unable to sign in.');
     }
   };
 
@@ -80,6 +79,10 @@ function LoginPage() {
           </label>
           <button type="submit" className="primary-button" disabled={loading}>
             {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+          <div style={{ textAlign: 'center', margin: '1rem 0', color: '#666', fontSize: '0.9rem' }}>or</div>
+          <button type="button" className="secondary-button" onClick={loginWithGoogle} disabled={loading} style={{ width: '100%', marginBottom: '1rem' }}>
+            Sign in with Google
           </button>
           {message && <p className="form-message error">{message}</p>}
           {error && !message && <p className="form-message error">{error}</p>}
