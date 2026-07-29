@@ -1,0 +1,70 @@
+.app-sidebar {
+  width: 250px;
+  background-color: transparent;
+  border-right: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  /* Instead of height: 100%, it should fill the available height in flex layout */
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: sticky;
+  top: 100px; /* Offset for navbar */
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(241, 245, 249, 0.8);
+  color: #0f172a;
+}
+
+.sidebar-link.active {
+  background-color: #eff6ff;
+  color: #0863ce;
+}
+
+.sidebar-link.active svg {
+  color: #0863ce;
+}
+
+.app-main-layout {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.app-content.app-content-with-sidebar {
+  padding: 2rem 1.5rem 6.5rem 2rem;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .app-sidebar {
+    display: none; /* Hide on mobile, handled by mobile menu if necessary */
+  }
+  .app-main-layout {
+    flex-direction: column;
+  }
+  .app-content.app-content-with-sidebar {
+    padding: 2rem 1.5rem 6.5rem;
+  }
+}
