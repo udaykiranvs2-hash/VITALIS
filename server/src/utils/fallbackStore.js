@@ -11,6 +11,21 @@ const storageFile = path.join(__dirname, '../data/local-users.json');
 const normalizeEmail = (email) => (email || '').toLowerCase().trim();
 const generateId = () => (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
 
+const demoUserSeed = {
+  id: 'demo-user',
+  name: 'Demo User',
+  email: 'demo@example.com',
+  passwordHash: '$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi',
+  role: 'user',
+  profile: { fullName: 'Demo User' },
+  reports: [],
+  appointments: [],
+  notifications: [],
+  history: [],
+  resetToken: null,
+  resetTokenExpires: null
+};
+
 const mapSupabaseUser = (row) => {
   if (!row) return null;
   return {
@@ -51,46 +66,33 @@ const mapToSupabaseRow = (data) => {
   };
 };
 
-const demoUserSeed = {
-  id: 'demo-user',
-  name: 'Demo User',
-  email: 'demo@example.com',
-  passwordHash: '$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi',
-  role: 'user',
-  profile: { fullName: 'Demo User' },
-  reports: [],
-  appointments: [],
-  notifications: [],
-  history: [],
-  resetToken: null,
-  resetTokenExpires: null
+const toUserRecord = (data) => {
+  const idStr = data.id ? String(data.id) : (data._id ? String(data._id) : generateId());
+  return {
+    _id: idStr,
+    id: idStr,
+    name: data.name || '',
+    email: normalizeEmail(data.email),
+    passwordHash: data.passwordHash || data.password_hash,
+    role: data.role || 'user',
+    profile: data.profile || {},
+    reports: data.reports || [],
+    appointments: data.appointments || [],
+    notifications: data.notifications || [],
+    history: data.history || [],
+    resetToken: data.resetToken !== undefined ? data.resetToken : data.reset_token,
+    resetTokenExpires: data.resetTokenExpires !== undefined ? data.resetTokenExpires : data.reset_token_expires,
+    save: async function save() {
+      return updateUser(this.id, this);
+    }
+  };
 };
-
-const toUserRecord = (data) => ({
-  _id: String(data._id || data.id || generateId()),
-  id: String(data.id || data._id || generateId()),
-  name: data.name || '',
-  email: normalizeEmail(data.email),
-  passwordHash: data.passwordHash || data.password_hash,
-  role: data.role || 'user',
-  profile: data.profile || {},
-  reports: data.reports || [],
-  appointments: data.appointments || [],
-  notifications: data.notifications || [],
-  history: data.history || [],
-  resetToken: data.resetToken || data.reset_token,
-  resetTokenExpires: data.resetTokenExpires || data.reset_token_expires,
-  save: async function save() {
-    return updateUser(this.id, this);
-  }
-});
 
 const createMemoryUser = async (data) => {
   const user = toUserRecord(data);
   memoryUsers.set(user.id, user);
-  memoryUsers.set(user._id, user);
   await persistUsers();
-  return user;
+  return mapSupabaseUser(user);
 };
 
 const persistUsers = async () => {
@@ -138,7 +140,7 @@ const getUserById = (id) => {
 };
 
 export const isSupabaseConnected = () => !!supabase;
-export const isMongoConnected = () => true;
+export const isMongoConnected = isSupabaseConnected;
 
 const ensureSeedUsers = async () => {
   if (memoryUsers.size > 0) {
@@ -150,7 +152,6 @@ const ensureSeedUsers = async () => {
     storedUsers.forEach((userData) => {
       const rec = toUserRecord(userData);
       memoryUsers.set(rec.id, rec);
-      memoryUsers.set(rec._id, rec);
     });
     return;
   }
@@ -180,7 +181,7 @@ export const findUserByEmail = async (email) => {
 
   await ensureSeedUsers();
   const memUser = Array.from(memoryUsers.values()).find((user) => user.email === targetEmail);
-  return memUser ? toUserRecord(memUser) : null;
+  return memUser ? mapSupabaseUser(memUser) : null;
 };
 
 export const findUserById = async (id) => {
@@ -207,7 +208,7 @@ export const findUserById = async (id) => {
 
   await ensureSeedUsers();
   const memUser = getUserById(targetId);
-  return memUser ? toUserRecord(memUser) : null;
+  return memUser ? mapSupabaseUser(memUser) : null;
 };
 
 export const findUserByResetToken = async (token) => {
@@ -233,7 +234,7 @@ export const findUserByResetToken = async (token) => {
 
   await ensureSeedUsers();
   const memUser = Array.from(memoryUsers.values()).find((user) => user.resetToken === token);
-  return memUser ? toUserRecord(memUser) : null;
+  return memUser ? mapSupabaseUser(memUser) : null;
 };
 
 export const createUser = async (data) => {
@@ -260,7 +261,7 @@ export const createUser = async (data) => {
   }
 
   await ensureSeedUsers();
-  return createMemoryUser({ ...data, email: normalizeEmail(data.email) });
+  return createMemoryUser(data);
 };
 
 export const updateUser = async (id, updates) => {
@@ -295,15 +296,14 @@ export const updateUser = async (id, updates) => {
     return null;
   }
 
-  const updatedUser = toUserRecord({
+  const updatedUser = {
     ...existingUser,
     ...updates,
-    _id: existingUser._id,
     id: existingUser.id,
+    _id: existingUser._id,
     email: normalizeEmail(updates.email || existingUser.email)
-  });
-  memoryUsers.set(existingUser.id, updatedUser);
-  memoryUsers.set(existingUser._id, updatedUser);
+  };
+  memoryUsers.set(targetId, updatedUser);
   await persistUsers();
-  return updatedUser;
+  return mapSupabaseUser(updatedUser);
 };
