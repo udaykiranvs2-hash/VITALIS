@@ -6,13 +6,15 @@ function Footer() {
 
   return (
     <footer className="site-footer">
-      <div>
+      <div className="footer-center">
         <p className="footer-brand">Powered by AI</p>
-        <p>Trusted guidance for everyday health decisions.</p>
+        <p className="footer-subtitle">Trusted guidance for everyday health decisions.</p>
       </div>
       <div className="footer-links">
         <Link to="/">Home</Link>
+        <span className="footer-divider">•</span>
         <button type="button" onClick={openLoginModal}>Login</button>
+        <span className="footer-divider">•</span>
         <button type="button" onClick={openRegisterModal}>Register</button>
       </div>
     </footer>
