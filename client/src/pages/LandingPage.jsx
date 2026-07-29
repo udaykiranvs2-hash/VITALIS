@@ -1,20 +1,31 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Hero from '../components/Hero.jsx';
 import '../styles/landing.css';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const featureLinks = [
-  { title: 'Symptom checker', description: 'Step through guided symptom collection and get clear next actions.', link: '/features/symptoms' },
-  { title: 'Report analysis', description: 'Upload lab and pathology reports for concise, easy-to-understand summaries.', link: '/features/reports' },
-  { title: 'X-ray analysis', description: 'Review imaging findings with AI-assisted highlights and risk indicators.', link: '/features/reports' },
-  { title: 'Cost estimation', description: 'Estimate treatment and procedure pricing across care tiers.', link: '/features/cost-estimator' },
-  { title: 'Doctor connection', description: 'Find and connect with verified specialists based on your needs.', link: '/features/doctors' },
-  { title: 'AI health chat', description: 'Ask the assistant questions and get guided health context fast.', link: '/dev/assistant' }
+  { title: 'Symptom checker', description: 'Step through guided symptom collection and get clear next actions.', link: '/app/symptoms' },
+  { title: 'Report analysis', description: 'Upload lab and pathology reports for concise, easy-to-understand summaries.', link: '/app/reports' },
+  { title: 'X-ray analysis', description: 'Review imaging findings with AI-assisted highlights and risk indicators.', link: '/app/reports' },
+  { title: 'Cost estimation', description: 'Estimate treatment and procedure pricing across care tiers.', link: '/app/cost-estimator' },
+  { title: 'Doctor connection', description: 'Find and connect with verified specialists based on your needs.', link: '/app/doctors' },
+  { title: 'AI health chat', description: 'Ask the assistant questions and get guided health context fast.', link: '/app/assistant' }
 ];
 
 function LandingPage() {
-  const { openRegisterModal } = useAuth();
+  const { user, openLoginModal, openRegisterModal } = useAuth();
+  const navigate = useNavigate();
+
+  const handleFeatureClick = (e, link) => {
+    e.preventDefault();
+    if (user) {
+      navigate(link);
+    } else {
+      openLoginModal();
+    }
+  };
+
   const pricingPlans = [
     {
       name: 'Care Starter',
@@ -56,10 +67,10 @@ function LandingPage() {
         </div>
         <div className="landing-feature-grid">
           {featureLinks.map((feature) => (
-            <Link key={feature.title} to={feature.link} className="feature-card landing-feature-link" aria-label={`Open ${feature.title}`}>
+            <a key={feature.title} href={feature.link} onClick={(e) => handleFeatureClick(e, feature.link)} className="feature-card landing-feature-link" aria-label={`Open ${feature.title}`}>
               <h3>{feature.title}</h3>
               <p>{feature.description}</p>
-            </Link>
+            </a>
           ))}
         </div>
       </section>
@@ -71,8 +82,8 @@ function LandingPage() {
           <p className="landing-section-subtitle">Browse expert physicians and care teams matched to your symptoms, reports, and location.</p>
         </div>
         <div className="landing-doctors-grid">
-          <Link to="/features/doctors" className="feature-card landing-feature-link"><h3>Specialist matching</h3><p>Find the right doctor for imaging, lab follow-up, or primary care coordination.</p></Link>
-          <Link to="/features/doctors" className="feature-card landing-feature-link"><h3>Verified credentials</h3><p>Access profile details, availability, and care focus for better trust and faster booking.</p></Link>
+          <a href="/app/doctors" onClick={(e) => handleFeatureClick(e, '/app/doctors')} className="feature-card landing-feature-link"><h3>Specialist matching</h3><p>Find the right doctor for imaging, lab follow-up, or primary care coordination.</p></a>
+          <a href="/app/doctors" onClick={(e) => handleFeatureClick(e, '/app/doctors')} className="feature-card landing-feature-link"><h3>Verified credentials</h3><p>Access profile details, availability, and care focus for better trust and faster booking.</p></a>
         </div>
       </section>
 
@@ -83,10 +94,10 @@ function LandingPage() {
           <p className="landing-section-subtitle">Move from symptom review to report insights and doctor coordination in a clear, professional process.</p>
         </div>
         <div className="landing-workflow-grid">
-          <Link to="/features/symptoms" className="workflow-card landing-feature-link"><strong>01</strong><h3>Record symptoms</h3><p>Capture your condition with guided prompts and urgency detection.</p></Link>
-          <Link to="/features/reports" className="workflow-card landing-feature-link"><strong>02</strong><h3>Upload reports</h3><p>Analyze lab work, imaging, and clinical notes in one workflow.</p></Link>
-          <Link to="/features/cost-estimator" className="workflow-card landing-feature-link"><strong>03</strong><h3>Review costs</h3><p>See treatment and consultation estimates before booking care.</p></Link>
-          <Link to="/dev/assistant" className="workflow-card landing-feature-link"><strong>04</strong><h3>Chat with AI</h3><p>Get instant answers and prepare for your next medical visit.</p></Link>
+          <a href="/app/symptoms" onClick={(e) => handleFeatureClick(e, '/app/symptoms')} className="workflow-card landing-feature-link"><strong>01</strong><h3>Record symptoms</h3><p>Capture your condition with guided prompts and urgency detection.</p></a>
+          <a href="/app/reports" onClick={(e) => handleFeatureClick(e, '/app/reports')} className="workflow-card landing-feature-link"><strong>02</strong><h3>Upload reports</h3><p>Analyze lab work, imaging, and clinical notes in one workflow.</p></a>
+          <a href="/app/cost-estimator" onClick={(e) => handleFeatureClick(e, '/app/cost-estimator')} className="workflow-card landing-feature-link"><strong>03</strong><h3>Review costs</h3><p>See treatment and consultation estimates before booking care.</p></a>
+          <a href="/app/assistant" onClick={(e) => handleFeatureClick(e, '/app/assistant')} className="workflow-card landing-feature-link"><strong>04</strong><h3>Chat with AI</h3><p>Get instant answers and prepare for your next medical visit.</p></a>
         </div>
       </section>
 
@@ -120,7 +131,7 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="landing-cta-band" id="cta"><div className="landing-cta-content"><div><p className="landing-section-pretitle">Ready to simplify care?</p><h2>Start your first symptom review and medical report analysis in minutes.</h2></div><div style={{ display: 'flex', gap: '0.75rem' }}><Link to="/features/cost-estimator" className="landing-cta-button" style={{ background: '#fff', color: '#0f172a' }}>Estimate cost</Link><button type="button" className="landing-cta-button" onClick={openRegisterModal}>Start for free</button></div></div></section>
+      <section className="landing-cta-band" id="cta"><div className="landing-cta-content"><div><p className="landing-section-pretitle">Ready to simplify care?</p><h2>Start your first symptom review and medical report analysis in minutes.</h2></div><div style={{ display: 'flex', gap: '0.75rem' }}><a href="/app/cost-estimator" onClick={(e) => handleFeatureClick(e, '/app/cost-estimator')} className="landing-cta-button" style={{ background: '#fff', color: '#0f172a', textDecoration: 'none' }}>Estimate cost</a><button type="button" className="landing-cta-button" onClick={openRegisterModal}>Start for free</button></div></div></section>
     </div>
   );
 }

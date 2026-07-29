@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -9,12 +9,17 @@ export const apiClient = axios.create({
   }
 });
 
-export const setAuthToken = (token) => {
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('vitalis_token');
   if (token) {
-    apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-  } else {
-    delete apiClient.defaults.headers.common.Authorization;
+    config.headers.Authorization = `Bearer ${token}`;
   }
+  return config;
+});
+
+export const setAuthToken = (token) => {
+  // We keep this function so we don't break existing imports, 
+  // but the interceptor handles the logic automatically now.
 };
 
 export const registerUser = (data) => apiClient.post('/auth/register', data);
