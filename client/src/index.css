@@ -417,8 +417,9 @@ button {
 
 .app-content {
   flex: 1;
-  padding: 2rem 1.5rem 6.5rem;
+  padding: 1.5rem 1.5rem 1.25rem;
   max-width: 1240px;
+  width: 100%;
   margin: 0 auto;
   width: 100%;
 }
@@ -431,17 +432,66 @@ button {
 
 .site-footer {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 2rem 1.5rem 6.5rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.55rem;
+  padding: 1.25rem 1.5rem;
   background: var(--surface-strong);
+  border-top: 1px solid var(--border);
   color: var(--muted);
+  width: 100%;
+}
+
+.footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
 }
 
 .footer-brand {
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin: 0;
+}
+
+.footer-subtitle {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  font-size: 0.88rem;
+}
+
+.footer-links a,
+.footer-links button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover,
+.footer-links button:hover {
+  color: var(--primary);
+}
+
+.footer-divider {
+  color: var(--muted);
+  opacity: 0.5;
+  font-size: 0.75rem;
 }
 
 .hero-section,
