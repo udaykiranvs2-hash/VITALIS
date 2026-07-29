@@ -29,7 +29,8 @@ export const resetPassword = (data) => apiClient.post('/auth/reset-password', da
 export const fetchProfile = () => apiClient.get('/user/profile');
 export const updateProfile = (data) => apiClient.put('/user/profile', data);
 export const changePassword = (data) => apiClient.put('/user/password', data);
-export const submitSymptomCheck = (data) => apiClient.post('/health/symptoms', data);
+export const submitSymptomCheck = (data) => apiClient.post('/symptoms/assess', data);
+export const fetchSymptomHistory = () => apiClient.get('/symptoms/history');
 export const analyzeReport = (data) => apiClient.post('/health/report', data);
 export const fetchHistory = () => apiClient.get('/health/history');
 export const getDoctors = (params) => apiClient.get('/doctors', { params });

@@ -1,4 +1,4 @@
-﻿import { Router } from 'express';
+import { Router } from 'express';
 import authRoutes from './auth.routes.js';
 import userRoutes from './user.routes.js';
 import healthRoutes from './health.routes.js';
@@ -6,6 +6,7 @@ import doctorRoutes from './doctor.routes.js';
 import assistantRoutes from './assistant.routes.js';
 import medicineRoutes from './medicine.routes.js';
 import costRoutes from './cost.routes.js';
+import symptomRoutes from './symptom.routes.js';
 
 const router = Router();
 
@@ -20,4 +21,5 @@ router.use('/doctors', doctorRoutes);
 router.use('/assistant', assistantRoutes);
 router.use('/medicine', medicineRoutes);
 router.use('/estimate', costRoutes);
+router.use('/symptoms', symptomRoutes);
 export default router;

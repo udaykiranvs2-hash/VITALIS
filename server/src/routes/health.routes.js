@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { protect } from '../middleware/auth.middleware.js';
-import { checkSymptoms, analyzeReport, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
+import { analyzeReport, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
 import { uploadReportFile } from '../middleware/upload.middleware.js';
 import {
   getAllDiseases,
@@ -20,7 +20,6 @@ import {
 const router = Router();
 
 // User health check routes (protected)
-router.post('/symptoms', protect, checkSymptoms);
 router.post('/report', protect, (req, res, next) => {
   uploadReportFile(req, res, (err) => {
     if (err) {
