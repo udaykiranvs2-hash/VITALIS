@@ -1,22 +1,30 @@
 import supabase from '../config/supabase.js';
-import { GoogleGenAI } from '@google/genai';
+import { createLLMProvider } from '../ai/llm/factory.js';
+import { GeminiEmbeddingProvider } from '../ai/embeddings/provider.js';
+import { VectorStore } from '../ai/vector/search.js';
+import { EmergencyEngine } from '../ai/rag/emergency.engine.js';
+import { FollowUpEngine } from '../ai/rag/followup.engine.js';
+import { RagRetriever } from '../ai/rag/retriever.js';
+import { SymptomAnalysisService } from '../ai/rag/analyzer.js';
 
-const apiKey = process.env.GEMINI_API_KEY;
-const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
-
-// Emergency keywords to short-circuit the AI assessment
-export const emergencyKeywords = [
-  'chest pain',
-  'shortness of breath',
-  'difficulty breathing',
-  'severe headache',
-  'loss of consciousness',
-  'blood in stool',
-  'sudden weakness',
-  'blurred vision',
-  'stroke',
-  'heart attack'
-];
+// Initialize the new AI Architecture using Dependency Injection
+let aiService = null;
+try {
+  if (process.env.GEMINI_API_KEY) {
+    const llmProvider = createLLMProvider();
+    const embeddingProvider = new GeminiEmbeddingProvider(process.env.GEMINI_API_KEY);
+    const vectorStore = new VectorStore(embeddingProvider);
+    
+    const emergencyEngine = new EmergencyEngine();
+    const followupEngine = new FollowUpEngine(llmProvider);
+    const ragRetriever = new RagRetriever(vectorStore);
+    
+    aiService = new SymptomAnalysisService(emergencyEngine, followupEngine, ragRetriever, llmProvider);
+    console.log('[SymptomController] AI Architecture initialized successfully.');
+  }
+} catch (err) {
+  console.warn('[SymptomController] AI Services initialization failed:', err.message);
+}
 
 export const assessSymptoms = async (req, res) => {
   try {
@@ -31,87 +39,57 @@ export const assessSymptoms = async (req, res) => {
     const historyList = Array.isArray(medicalHistory) ? medicalHistory.join(', ') : '';
     const allergiesList = Array.isArray(allergies) ? allergies.join(', ') : '';
     const medsList = Array.isArray(medications) ? medications.join(', ') : '';
-    
-    // Hard-coded safety check: Emergency keywords
-    const isEmergency = symptoms.some((s) => 
-      emergencyKeywords.some((keyword) => s.toLowerCase().includes(keyword))
-    ) || severity === 'emergency';
 
     let result;
 
-    if (isEmergency) {
-      // Short-circuit for emergencies
-      result = {
-        disclaimer: 'This assessment is informational only and is not a substitute for professional medical advice.',
-        emergencyWarning: {
-          headline: '🚨 Emergency Warning',
-          message: 'Immediate emergency care is advised. Your symptoms indicate a potentially serious condition. Visit the nearest emergency department or contact emergency services immediately.'
-        },
-        possibleConditions: ['Medical Emergency'],
-        confidence: '99%',
-        severityLevel: 'emergency',
-        suggestedSpecialist: 'Emergency Department',
-        nextSteps: ['Seek immediate emergency medical care', 'Do not drive yourself to the hospital']
-      };
-    } else if (ai) {
-      // Call Gemini for structured assessment
-      const prompt = `Act as an AI medical diagnostic assistant. Review the following symptom assessment request:
-- Patient Age: ${age}
-- Patient Gender: ${gender}
-- Symptoms: ${symptomsList}
-- Duration: ${duration || 'Unknown'}
-- Severity: ${severity || 'Unknown'}
-- Medical History: ${historyList || 'None'}
-- Allergies: ${allergiesList || 'None'}
-- Current Medications: ${medsList || 'None'}
-
-Evaluate the symptoms. Based on clinical guidelines:
-1. Determine the severity level ("mild", "moderate", "severe").
-2. Check if the symptoms could indicate a life-threatening medical emergency. If so, return an "emergencyWarning" object containing a "headline" (e.g. "🚨 Emergency Warning") and a "message" with advice to seek immediate emergency care. If not, "emergencyWarning" must be null.
-3. List up to 3 possible conditions (as clean, simple strings, e.g., "Common Cold", "Influenza").
-4. Provide a confidence level percentage (e.g. "80%").
-5. Recommend the most appropriate medical specialist category (e.g., "Cardiologist", "Pulmonologist", "Dermatologist", "General Physician").
-6. Suggest 3-4 next steps/care recommendations.
-7. Include a standard medical disclaimer.
-
-You MUST respond strictly in JSON format. The response schema must be:
-{
-  "disclaimer": "This assessment is informational only and is not a substitute for professional medical advice.",
-  "emergencyWarning": null,
-  "possibleConditions": ["Condition A", "Condition B"],
-  "confidence": "85%",
-  "severityLevel": "moderate",
-  "suggestedSpecialist": "General Physician",
-  "nextSteps": ["Step 1", "Step 2", "Step 3"]
-}
-
-JSON Response:`;
-
-      const generateAttempt = async () => {
-        const response = await ai.models.generateContent({
-          model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
-          contents: prompt,
-          config: {
-            responseMimeType: 'application/json',
+    if (aiService) {
+      try {
+        // Route the request through the new orchestrator
+        const aiResult = await aiService.analyze({
+          symptoms,
+          profile: { 
+            age, 
+            gender, 
+            duration, 
+            severity, 
+            medicalHistory: historyList, 
+            allergies: allergiesList, 
+            medications: medsList, 
+            lifestyle 
           }
         });
-        const parsed = JSON.parse(response.text.trim());
-        if (!parsed.possibleConditions || !parsed.severityLevel || !parsed.nextSteps) {
-          throw new Error('Malformed JSON missing required keys');
-        }
-        return parsed;
-      };
 
-      try {
-        result = await generateAttempt();
-      } catch (firstError) {
-        console.warn('Gemini first attempt failed, retrying once...', firstError.message);
-        try {
-          result = await generateAttempt();
-        } catch (secondError) {
-          console.error('Gemini second attempt failed:', secondError.message);
-          return res.status(503).json({ message: 'AI assessment service is currently unavailable. Please try again later.' });
+        // Adapter Pattern: Map the strictly structured backend output to the exact frontend schema
+        let emergencyWarning = null;
+        if (aiResult.emergency) {
+          emergencyWarning = {
+            headline: '🚨 Emergency Warning',
+            message: 'Immediate emergency care is advised. Your symptoms indicate a potentially serious condition.'
+          };
         }
+
+        if (aiResult.needsFollowUp) {
+          // Explicitly pass follow-up state to the frontend
+          result = {
+            needsFollowUp: true,
+            questions: aiResult.questions,
+            disclaimer: 'This assessment is informational only and is not a substitute for professional medical advice.',
+          };
+        } else {
+          result = {
+            needsFollowUp: false,
+            disclaimer: 'This assessment is informational only and is not a substitute for professional medical advice.',
+            emergencyWarning,
+            possibleConditions: aiResult.possibleConditions || [],
+            confidence: aiResult.confidence || '70%',
+            severityLevel: severity || 'moderate',
+            suggestedSpecialist: aiResult.specialist || 'General Physician',
+            nextSteps: aiResult.nextSteps || []
+          };
+        }
+      } catch (aiError) {
+        console.error('[SymptomController] AI Analysis Error:', aiError.message);
+        return res.status(503).json({ message: 'AI assessment service is currently unavailable. Please try again later.' });
       }
     } else {
       // Fallback if AI not configured
@@ -148,7 +126,6 @@ JSON Response:`;
       
       if (error) {
         console.error('Error inserting into symptom_history:', error.message);
-        // We continue to return the result even if logging fails
       }
     }
 

@@ -27,7 +27,11 @@ function RegisterModal() {
     event.preventDefault();
     setMessage('');
     try {
-      await register(form);
+      const data = await register(form);
+      if (!data?.session) {
+        setMessage('Registration successful! Please check your email to verify your account before signing in.');
+        return;
+      }
       handleClose();
       navigate('/app');
     } catch (err) {

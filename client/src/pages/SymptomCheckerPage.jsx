@@ -175,17 +175,56 @@ function SymptomCheckerPage() {
       ) : (
         <>
           {result ? (
-        /* Results View */
-        <div className="symptom-card">
-          <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <span className="eyebrow" style={{ color: 'var(--primary)', fontWeight: 600 }}>Assessment Completed</span>
-              <h2 style={{ margin: '0.2rem 0 0 0' }}>Symptom Analysis Report</h2>
+            result.needsFollowUp ? (
+            /* Needs Follow-Up View */
+            <div className="symptom-card">
+              <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span className="eyebrow" style={{ color: 'var(--primary)', fontWeight: 600 }}>More Information Needed</span>
+                  <h2 style={{ margin: '0.2rem 0 0 0' }}>Clarification Required</h2>
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--surface-strong)', borderRadius: '16px', padding: '1.25rem', marginTop: '1rem' }}>
+                <p style={{ margin: '0 0 1rem 0', color: 'var(--text)' }}>
+                  To ensure clinical safety and provide a highly accurate assessment, our AI needs a bit more context about your symptoms.
+                </p>
+                <h3 style={{ fontSize: '1rem', margin: '0 0 0.75rem 0' }}>Please answer the following:</h3>
+                <ul style={{ paddingLeft: '1.25rem', margin: '0 0 1.5rem 0', color: 'var(--text)', fontWeight: 500 }}>
+                  {result.questions?.map((item, index) => (
+                    <li key={index} style={{ marginBottom: '0.6rem' }}>{item}</li>
+                  ))}
+                </ul>
+                
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setResult(null);
+                    setStep(2); // Send them back to the symptoms step
+                  }} 
+                  className="step-next-btn"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  <ArrowLeft size={18} /> Update Symptoms
+                </button>
+              </div>
+
+              <p style={{ fontSize: '0.82rem', color: 'var(--muted)', fontStyle: 'italic', margin: '1.5rem 0 0 0' }}>
+                * Disclaimer: {result.disclaimer || 'This AI tool provides educational health guidance and is not a substitute for professional medical diagnosis.'}
+              </p>
             </div>
-            <button type="button" onClick={handleReset} className="step-back-btn">
-              <RotateCcw size={16} /> Start New Check
-            </button>
-          </div>
+          ) : (
+            /* Results View */
+            <div className="symptom-card">
+              <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span className="eyebrow" style={{ color: 'var(--primary)', fontWeight: 600 }}>Assessment Completed</span>
+                  <h2 style={{ margin: '0.2rem 0 0 0' }}>Symptom Analysis Report</h2>
+                </div>
+                <button type="button" onClick={handleReset} className="step-back-btn">
+                  <RotateCcw size={16} /> Start New Check
+                </button>
+              </div>
 
           {result.emergencyWarning ? (
             <div className="emergency-banner" style={{ background: 'rgba(218, 68, 83, 0.12)', border: '1px solid rgba(218, 68, 83, 0.3)', borderRadius: '16px', padding: '1.25rem', color: 'var(--danger)', display: 'flex', gap: '0.85rem' }}>
@@ -232,8 +271,9 @@ function SymptomCheckerPage() {
           <p style={{ fontSize: '0.82rem', color: 'var(--muted)', fontStyle: 'italic', margin: 0 }}>
             * Disclaimer: {result.disclaimer || 'This AI tool provides educational health guidance and is not a substitute for professional medical diagnosis.'}
           </p>
-        </div>
-      ) : (
+            </div>
+            )
+          ) : (
         /* Multi-step Form Wizard */
         <div className="symptom-checker-grid">
           {/* Left Column: Form & Stepper Card */}

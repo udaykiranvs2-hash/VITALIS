@@ -1,0 +1,70 @@
+[
+  {
+    "_id": "demo-user",
+    "id": "demo-user",
+    "name": "Demo User",
+    "email": "demo@example.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Demo User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:05:32.896Z",
+    "updatedAt": "2026-07-29T14:05:32.896Z"
+  },
+  {
+    "_id": "test-user-id-1234",
+    "id": "test-user-id-1234",
+    "name": "Test User",
+    "email": "test@example.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Test User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:05:32.908Z",
+    "updatedAt": "2026-07-29T14:05:32.908Z"
+  },
+  {
+    "_id": "test-user-id-real",
+    "id": "test-user-id-real",
+    "name": "Test Real User",
+    "email": "test-real@example.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Test Real User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:08:49.473Z",
+    "updatedAt": "2026-07-29T14:08:49.473Z"
+  },
+  {
+    "_id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
+    "id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
+    "name": "Uday Kiran",
+    "email": "udaykiranvs2@gmail.com",
+    "authProvider": "google",
+    "role": "user",
+    "profile": {
+      "fullName": "Uday Kiran"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:13:20.249Z",
+    "updatedAt": "2026-07-29T14:13:20.249Z"
+  }
+]
