@@ -4,11 +4,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import supabase from '../config/supabase.js';
 
+const memoryUsers = globalThis.__vitalisMemoryUsers ?? (globalThis.__vitalisMemoryUsers = new Map());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storageFile = path.join(__dirname, '../../data/users.json');
+<<<<<<< HEAD
 
 const memoryUsers = globalThis.__vitalisMemoryUsers ?? (globalThis.__vitalisMemoryUsers = new Map());
+=======
+>>>>>>> 03649be16cb41dccf156a9f61ddc9efa514003a6
 
 const normalizeEmail = (email) => (email || '').toLowerCase().trim();
 const generateId = () => (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));

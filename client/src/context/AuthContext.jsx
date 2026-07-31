@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+<<<<<<< HEAD
 import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest, registerUser, loginUser } from '../api/api.js';
+=======
+import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
+>>>>>>> 03649be16cb41dccf156a9f61ddc9efa514003a6
 import { supabase } from '../config/supabase.js';
 
 const AuthContext = createContext(null);
