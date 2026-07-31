@@ -1,5 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest, registerUser, loginUser } from '../api/api.js';
+=======
+>>>>>>> 3fbb7de7e17df286ba76a3275bdaeffe002c2dda
 import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
+>>>>>>> 03649be16cb41dccf156a9f61ddc9efa514003a6
 import { supabase } from '../config/supabase.js';
 
 const AuthContext = createContext(null);
@@ -28,16 +35,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check active sessions and sets the user
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      handleSession(session);
+    supabase.auth.getSession().then((res) => {
+      handleSession(res?.data?.session || null);
+    }).catch((err) => {
+      console.warn('Supabase getSession error:', err);
+      setInitialized(true);
     });
 
     // Listen for changes on auth state (sign in, sign out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       handleSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => data?.subscription?.unsubscribe?.();
   }, []);
 
   const handleSession = async (session) => {
