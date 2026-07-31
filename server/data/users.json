@@ -4,7 +4,6 @@
     "id": "demo-user",
     "name": "Demo User",
     "email": "demo@example.com",
-    "passwordHash": "$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi",
     "authProvider": "email",
     "role": "user",
     "profile": {
@@ -14,8 +13,6 @@
     "appointments": [],
     "notifications": [],
     "history": [],
-    "resetToken": null,
-    "resetTokenExpires": null,
     "createdAt": "2026-07-29T14:05:32.896Z",
     "updatedAt": "2026-07-29T14:05:32.896Z"
   },
@@ -24,7 +21,7 @@
     "id": "8551d549-46a6-4330-a331-4c6ad5c77f7a",
     "name": "Kushaal",
     "email": "kushaal227@gmail.com",
-    "passwordHash": "$2b$10$e.QxCPdClS4dZvm/RiUJOeGKF5D/LmIjZTupxGVxFFtQGu3JP9sta",
+    "authProvider": "email",
     "role": "user",
     "profile": {
       "fullName": "Kushaal"
@@ -53,7 +50,9 @@
         "type": "report"
       }
     ],
-    "history": []
+    "history": [],
+    "createdAt": "2026-07-31T06:02:05.032Z",
+    "updatedAt": "2026-07-31T06:02:05.032Z"
   },
   {
     "_id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
@@ -71,5 +70,34 @@
     "history": [],
     "createdAt": "2026-07-29T14:13:20.249Z",
     "updatedAt": "2026-07-29T14:13:20.249Z"
+  },
+  {
+    "_id": "3534ce92-90f8-493d-b363-ddab0b9e04cc",
+    "id": "3534ce92-90f8-493d-b363-ddab0b9e04cc",
+    "name": "Thaduri Yeshwanth",
+    "email": "yeshwanththaduri@gmail.com",
+    "authProvider": "google",
+    "role": "user",
+    "profile": {
+      "fullName": " Yeshwanth",
+      "phone": "7569879985",
+      "birthDate": "2006-04-17",
+      "gender": "male",
+      "bloodGroup": "O+",
+      "emergencyContact": "7569879958",
+      "insuranceProvider": "",
+      "insuranceNumber": "",
+      "preferredHospital": "",
+      "medicalConditions": [],
+      "allergies": [],
+      "medications": [],
+      "familyHistory": []
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-31T06:02:05.104Z",
+    "updatedAt": "2026-07-31T06:02:05.104Z"
   }
 ]
