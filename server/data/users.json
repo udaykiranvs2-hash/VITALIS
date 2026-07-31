@@ -4,11 +4,8 @@
     "id": "demo-user",
     "name": "Demo User",
     "email": "demo@example.com",
-<<<<<<< HEAD
     "passwordHash": "$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi",
-=======
     "authProvider": "email",
->>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     "role": "user",
     "profile": {
       "fullName": "Demo User"
@@ -17,9 +14,10 @@
     "appointments": [],
     "notifications": [],
     "history": [],
-<<<<<<< HEAD
     "resetToken": null,
-    "resetTokenExpires": null
+    "resetTokenExpires": null,
+    "createdAt": "2026-07-29T14:05:32.896Z",
+    "updatedAt": "2026-07-29T14:05:32.896Z"
   },
   {
     "_id": "8551d549-46a6-4330-a331-4c6ad5c77f7a",
@@ -56,9 +54,6 @@
       }
     ],
     "history": []
-=======
-    "createdAt": "2026-07-29T14:05:32.896Z",
-    "updatedAt": "2026-07-29T14:05:32.896Z"
   },
   {
     "_id": "test-user-id-1234",
@@ -110,6 +105,5 @@
     "history": [],
     "createdAt": "2026-07-29T14:13:20.249Z",
     "updatedAt": "2026-07-29T14:13:20.249Z"
->>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
   }
 ]
