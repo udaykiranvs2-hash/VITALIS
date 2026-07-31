@@ -5,10 +5,10 @@ function FloatingAiChat() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (location.pathname === '/dev/assistant' || location.pathname === '/app/assistant') return null;
+  if (location.pathname === '/app/assistant') return null;
 
   return (
-    <button type="button" className="floating-ai-chat" onClick={() => navigate('/dev/assistant')} aria-label="Open AI Health Chat">
+    <button type="button" className="floating-ai-chat" onClick={() => navigate('/app/assistant')} aria-label="Open AI Health Chat">
       <span className="floating-ai-icon"><Stethoscope size={27} strokeWidth={2.2} /></span>
       <span className="floating-ai-label">AI Chat</span>
       <Sparkles className="floating-ai-sparkle" size={15} aria-hidden="true" />

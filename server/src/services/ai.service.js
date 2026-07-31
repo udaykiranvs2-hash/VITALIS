@@ -186,7 +186,7 @@ You MUST respond strictly in JSON format. The response schema must be:
 JSON Response:`;
 
       const response = await ai.models.generateContent({
-        model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+        model: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
         contents: prompt,
         config: {
           responseMimeType: 'application/json'
@@ -275,7 +275,7 @@ You MUST respond strictly in JSON format. The response schema must be:
 JSON Response:`;
 
       const response = await ai.models.generateContent({
-        model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+        model: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
         contents: prompt,
         config: {
           responseMimeType: 'application/json'

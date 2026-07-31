@@ -72,9 +72,11 @@ function AssistantPage() {
         {chatHistory.length ? (
           chatHistory.map((entry, index) => (
             <div key={index} className={`chat-bubble ${entry.role}`}>
-              <p>{entry.message}</p>
+              <div className="chat-bubble-text" style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '0.95rem' }}>
+                {entry.message}
+              </div>
               {entry.disclaimer && (
-                <span className="disclaimer-subtext" style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginTop: '6px' }}>
+                <span className="disclaimer-subtext" style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginTop: '8px', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '4px' }}>
                   {entry.disclaimer}
                 </span>
               )}

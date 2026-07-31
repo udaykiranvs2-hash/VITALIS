@@ -93,6 +93,11 @@ function App() {
           <Route path="settings" element={<SettingsPage darkMode={darkMode} onToggleTheme={toggleTheme} />} />
         </Route>
 
+        {/* Convenience alias redirects for assistant & chat */}
+        <Route path="/assistant"     element={<Navigate to="/app/assistant" replace />} />
+        <Route path="/chat"          element={<Navigate to="/app/assistant" replace />} />
+        <Route path="/dev/assistant" element={<Navigate to="/app/assistant" replace />} />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
