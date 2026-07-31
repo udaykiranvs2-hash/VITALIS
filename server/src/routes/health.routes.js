@@ -1,10 +1,6 @@
 import { Router } from 'express';
 import { protect } from '../middleware/auth.middleware.js';
-<<<<<<< HEAD
-import { checkSymptoms, analyzeReport, analyzeXray, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
-=======
-import { analyzeReport, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
->>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
+import { analyzeReport, analyzeXray, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
 import { uploadReportFile } from '../middleware/upload.middleware.js';
 import {
   getAllDiseases,

@@ -145,8 +145,7 @@ const getUserById = (id) => {
 
 export const isSupabaseConnected = () => !!supabase;
 export const isMongoConnected = isSupabaseConnected;
-<<<<<<< HEAD
-=======
+
 
 const ensureSeedUsers = async () => {
   if (memoryUsers.size > 0) {
