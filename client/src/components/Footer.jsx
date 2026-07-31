@@ -7,7 +7,7 @@ function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-center">
-        <p className="footer-brand">Powered by AI</p>
+        <p className="footer-brand">VITALIS</p>
         <p className="footer-subtitle">Trusted guidance for everyday health decisions.</p>
       </div>
       <div className="footer-links">

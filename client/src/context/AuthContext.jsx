@@ -1,6 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+<<<<<<< HEAD
+import { setAuthToken, registerUser, loginUser, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
+=======
 import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
 import { supabase } from '../config/supabase.js';
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
 
 const AuthContext = createContext(null);
 
@@ -12,6 +16,19 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState('');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
+  const splashTimerRef = { current: null };
+
+  const triggerSplash = () => {
+    if (splashTimerRef.current) {
+      clearTimeout(splashTimerRef.current);
+    }
+    setShowSplash(true);
+    splashTimerRef.current = setTimeout(() => {
+      setShowSplash(false);
+      splashTimerRef.current = null;
+    }, 3800);
+  };
 
   useEffect(() => {
     // Check active sessions and sets the user
@@ -57,6 +74,12 @@ export const AuthProvider = ({ children }) => {
     const normalizedEmail = payload.email?.toLowerCase().trim();
     
     try {
+<<<<<<< HEAD
+      const response = await registerUser(normalizedPayload);
+      triggerSplash();
+      saveSession(response.data.token, response.data.user);
+      return response;
+=======
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: normalizedEmail,
         password: payload.password,
@@ -70,6 +93,7 @@ export const AuthProvider = ({ children }) => {
       if (signUpError) throw signUpError;
       
       return data;
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     } catch (err) {
       setError(err.message || 'Unable to register.');
       throw err;
@@ -84,6 +108,12 @@ export const AuthProvider = ({ children }) => {
     const normalizedEmail = payload.email?.toLowerCase().trim();
     
     try {
+<<<<<<< HEAD
+      const response = await loginUser(normalizedPayload);
+      triggerSplash();
+      saveSession(response.data.token, response.data.user);
+      return response;
+=======
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: normalizedEmail,
         password: payload.password,
@@ -92,6 +122,7 @@ export const AuthProvider = ({ children }) => {
       if (signInError) throw signInError;
       
       return data;
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     } catch (err) {
       setError(err.message || 'Unable to log in.');
       throw err;
@@ -192,9 +223,11 @@ export const AuthProvider = ({ children }) => {
       closeLoginModal: () => setIsLoginModalOpen(false),
       isRegisterModalOpen,
       openRegisterModal: () => setIsRegisterModalOpen(true),
-      closeRegisterModal: () => setIsRegisterModalOpen(false)
+      closeRegisterModal: () => setIsRegisterModalOpen(false),
+      showSplash,
+      triggerSplash
     }),
-    [user, token, loading, initialized, error, isLoginModalOpen, isRegisterModalOpen]
+    [user, token, loading, initialized, error, isLoginModalOpen, isRegisterModalOpen, showSplash]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

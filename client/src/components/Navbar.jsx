@@ -1,31 +1,62 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useDashboard } from '../context/DashboardContext.jsx';
-import { Menu, X, HeartPulse, Bell, ChevronDown, User, Settings, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, HeartPulse, Bell, ChevronDown, User, Settings, LogOut, LayoutDashboard, Calendar, Stethoscope, Inbox } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout, openLoginModal } = useAuth();
   const { showDashboard, toggleDashboard, closeDashboard } = useDashboard();
+  const notificationsRef = useRef(null);
 
-  // Scroll effect
-  useState(() => {
+  useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
+        setShowNotifications(false);
+      }
+    };
+    if (showNotifications) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showNotifications]);
+
   const navLinks = ['Features', 'Doctors', 'Pricing', 'About', 'Contact'];
+
+  const appointments = Array.isArray(user?.appointments) ? user.appointments : [];
+
+  const notificationItems = appointments
+    .slice()
+    .sort((a, b) => {
+      const da = new Date(`${a.date}T${a.time || '00:00'}`);
+      const db = new Date(`${b.date}T${b.time || '00:00'}`);
+      return da - db;
+    })
+    .map((apt, idx) => ({
+      id: apt.id || apt._id || `apt-${idx}`,
+      title: `Appointment with ${apt.doctorName || 'Your Doctor'}`,
+      subtitle: apt.specialty || 'Consultation',
+      time: `${apt.date || 'TBD'} ${apt.time ? '• ' + apt.time : ''}`,
+      status: apt.status || 'Scheduled'
+    }));
 
   const handleLogout = () => {
     setIsOpen(false);
     setShowDropdown(false);
+    setShowNotifications(false);
     closeDashboard();
     logout();
     navigate('/');
@@ -33,13 +64,11 @@ export default function Navbar() {
 
   const handleDashboardToggle = () => {
     if (showDashboard) {
-      // Toggle OFF: close sidebar and go to welcome home
       closeDashboard();
       navigate('/app');
     } else {
-      // Toggle ON: open sidebar layout; navigate to /app to show dashboard home (6-card grid)
       toggleDashboard();
-      navigate('/app');
+      navigate('/app/symptoms');
     }
   };
 
@@ -79,10 +108,64 @@ export default function Navbar() {
             {user ? (
               <div className="app-navbar-user-section">
                 {/* Notification bell */}
-                <button type="button" className="app-navbar-bell" aria-label="Notifications">
-                  <Bell size={20} />
-                  <span className="app-navbar-bell-badge">3</span>
-                </button>
+                <div className="app-navbar-notifications-wrapper" ref={notificationsRef}>
+                  <button
+                    type="button"
+                    className="app-navbar-bell"
+                    aria-label="Notifications"
+                    onClick={() => {
+                      setShowDropdown(false);
+                      setShowNotifications((v) => !v);
+                    }}
+                  >
+                    <Bell size={20} />
+                    {notificationItems.length > 0 && (
+                      <span className="app-navbar-bell-badge">{notificationItems.length}</span>
+                    )}
+                  </button>
+
+                  {showNotifications && (
+                    <div className="app-navbar-notifications-panel">
+                      <div className="app-notifications-header">
+                        <h3>Notifications</h3>
+                        <span className="app-notifications-count">{notificationItems.length}</span>
+                      </div>
+                      <hr className="app-dropdown-divider" />
+                      {notificationItems.length === 0 ? (
+                        <div className="app-notifications-empty">
+                          <Inbox size={28} />
+                          <p>No new notifications</p>
+                        </div>
+                      ) : (
+                        <ul className="app-notifications-list">
+                          {notificationItems.map((n) => (
+                            <li
+                              key={n.id}
+                              className="app-notification-item"
+                              onClick={() => {
+                                setShowNotifications(false);
+                                navigate('/app/history');
+                              }}
+                            >
+                              <div className="app-notification-icon">
+                                <Calendar size={18} />
+                              </div>
+                              <div className="app-notification-content">
+                                <p className="app-notification-title">{n.title}</p>
+                                <p className="app-notification-sub">
+                                  <Stethoscope size={12} /> {n.subtitle}
+                                </p>
+                                <p className="app-notification-meta">
+                                  {n.time} • <span className={`appt-status ${n.status?.toLowerCase()}`}>{n.status}</span>
+                                </p>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 {/* Dashboard toggle */}
                 <button

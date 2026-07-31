@@ -1,21 +1,274 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Hero from '../components/Hero.jsx';
 import '../styles/landing.css';
 import { useAuth } from '../context/AuthContext.jsx';
+import {
+  Stethoscope, FileHeart, ScanLine, Calculator, Users, MessageCircle,
+  ArrowRight, CheckCircle2, ShieldCheck, Lock, HeartPulse, X, Sparkles,
+  Clock, BadgeCheck, LifeBuoy, ChevronDown, ChevronUp, Bot
+} from 'lucide-react';
 
 const featureLinks = [
   { title: 'Symptom checker', description: 'Step through guided symptom collection and get clear next actions.', link: '/app/symptoms' },
   { title: 'Report analysis', description: 'Upload lab and pathology reports for concise, easy-to-understand summaries.', link: '/app/reports' },
-  { title: 'X-ray analysis', description: 'Review imaging findings with AI-assisted highlights and risk indicators.', link: '/app/reports' },
+  { title: 'X-ray analysis', description: 'Review imaging findings with AI-assisted highlights and risk indicators.', link: '/app/xray' },
   { title: 'Cost estimation', description: 'Estimate treatment and procedure pricing across care tiers.', link: '/app/cost-estimator' },
   { title: 'Doctor connection', description: 'Find and connect with verified specialists based on your needs.', link: '/app/doctors' },
   { title: 'AI health chat', description: 'Ask the assistant questions and get guided health context fast.', link: '/app/assistant' }
 ];
 
+/* ============================================================
+   LEARN MORE MODAL  (kept exactly as the user liked it)
+   ============================================================ */
+const featureTagStyles = {
+  blue:   { bg: 'rgba(37, 99, 235, 0.12)', fg: '#1d4ed8' },
+  green:  { bg: 'rgba(16, 185, 129, 0.14)', fg: '#047857' },
+  purple: { bg: 'rgba(139, 92, 246, 0.14)', fg: '#6d28d9' },
+  amber:  { bg: 'rgba(245, 158, 11, 0.16)', fg: '#b45309' },
+  teal:   { bg: 'rgba(20, 184, 166, 0.14)', fg: '#0f766e' },
+  pink:   { bg: 'rgba(236, 72, 153, 0.14)', fg: '#be185d' }
+};
+
+const learnMoreFeatures = [
+  { key: 'symptom', title: 'Smart Symptom Checker', tag: 'Start here', tagColor: 'blue', description: 'Walk through a friendly, step-by-step interview. Tell us your age, symptoms, duration, and lifestyle — VITALIS highlights possible causes, urgency level, and exactly what to do next.', icon: <Stethoscope size={22} /> },
+  { key: 'report',  title: 'Medical Report Analysis', tag: 'Most used', tagColor: 'green', description: 'Upload any lab report, pathology result, or discharge summary. VITALIS reads it instantly and explains values in plain language, flags out-of-range results, and suggests what to ask your doctor.', icon: <FileHeart size={22} /> },
+  { key: 'xray',    title: 'AI X-Ray Analysis', tag: 'Advanced', tagColor: 'purple', description: 'Upload a chest X-ray and our AI overlays possible findings, healthy vs. concerning regions, and gives you a readability confidence score. Perfect for getting a fast second-look before the radiologist report.', icon: <ScanLine size={22} /> },
+  { key: 'cost',    title: 'Treatment Cost Estimator', tag: 'Save money', tagColor: 'amber', description: 'Planning a procedure? Enter country, city, hospital tier, and treatment name. VITALIS returns a realistic cost range with breakdowns so you can compare options before booking.', icon: <Calculator size={22} /> },
+  { key: 'doctor',  title: 'Verified Doctor Connection', tag: 'Care network', tagColor: 'teal', description: 'Find the right specialist for your needs based on symptoms, location, availability, and verified credentials. See reviews, next available slot, and book with one click.', icon: <Users size={22} /> },
+  { key: 'ai',      title: '24/7 AI Health Chat', tag: 'Always on', tagColor: 'pink', description: 'A friendly AI assistant that answers your everyday health questions in seconds. Fever tips, BP ranges, meal plans, sleep advice, how to read reports — all in natural conversation.', icon: <MessageCircle size={22} /> }
+];
+
+function LearnMoreModal({ open, onClose, getStarted }) {
+  const [faqOpen, setFaqOpen] = useState(0);
+  const firstFocusRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => firstFocusRef.current?.focus(), 80);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const faqs = [
+    {
+      q: 'Is VITALIS a replacement for my doctor?',
+      a: 'No. VITALIS is an informational AI platform designed to help you understand your body and get care faster. It does not diagnose, prescribe, or replace a licensed physician. Always consult a doctor for medical decisions.'
+    },
+    {
+      q: 'Is my health data private and secure?',
+      a: 'Yes. VITALIS uses end-to-end encrypted connections, never shares your data with third parties, and auto-deletes uploads you mark as temporary. All files are stored in ISO 27001 compliant infrastructure behind strict role-based access controls.'
+    },
+    {
+      q: 'Do I need insurance or a prescription to use it?',
+      a: 'No. You can start using VITALIS for free simply by creating an account. No insurance card, referral, or prescription required.'
+    },
+    {
+      q: 'Which countries and languages are supported?',
+      a: 'VITALIS is globally accessible. Cost estimation currently covers 40+ countries and 4 currencies. The UI is in English, but the AI chat replies comfortably in Hindi, Spanish, French, and 20+ other languages.'
+    },
+    {
+      q: 'What is included in the free tier?',
+      a: 'Care Starter (free forever) gives you 3 symptom checks / month, basic report summaries, doctor directory access, and 30 AI chat turns / day. Upgrade to Care Companion for unlimited everything plus priority doctor matching.'
+    },
+    {
+      q: 'How accurate is the AI?',
+      a: 'We validate every release against a curated corpus of Qbank medical questions and peer-reviewed literature. The AI is tuned to favor caution (under-diagnose) rather than overconfidence, and clearly states when it is uncertain.'
+    }
+  ];
+
+  return (
+    <div
+      className="learn-more-overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      role="presentation"
+    >
+      <div
+        className={`learn-more-dialog ${open ? 'is-open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="learn-more-title"
+      >
+        <button
+          type="button"
+          className="learn-more-close"
+          onClick={onClose}
+          aria-label="Close learn more"
+          ref={firstFocusRef}
+        >
+          <X size={18} />
+        </button>
+
+        <header className="learn-more-header">
+          <div className="learn-more-header-badge">
+            <HeartPulse size={16} />
+            About VITALIS
+          </div>
+          <h2 id="learn-more-title">A calmer way to navigate everyday health.</h2>
+          <p>
+            VITALIS brings AI-powered symptom understanding, medical report clarity, cost transparency,
+            and verified doctor connections onto a single, secure platform. It's the friendly assistant
+            you wish you had before every doctor visit.
+          </p>
+        </header>
+
+        <section className="learn-more-grid">
+          {[
+            { icon: <Clock size={20} />, title: 'Answers in minutes', text: 'Get a clear picture of your symptoms and next steps in under 5 minutes.' },
+            { icon: <BadgeCheck size={20} />, title: 'Evidence-based', text: 'Every AI answer is grounded in current medical guidelines and peer-reviewed sources.' },
+            { icon: <Lock size={20} />, title: 'Private by design', text: 'Your data never trains public models. You control what stays and what is deleted.' },
+            { icon: <LifeBuoy size={20} />, title: 'Human backup', text: 'Stuck on something? Connect with a verified human doctor in a few taps.' }
+          ].map((it) => (
+            <div className="learn-more-cell" key={it.title}>
+              <div className="learn-more-cell-icon">{it.icon}</div>
+              <h3>{it.title}</h3>
+              <p>{it.text}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="learn-more-section">
+          <div className="learn-more-section-head">
+            <p className="landing-section-pretitle" style={{margin: 0}}>What you can do</p>
+            <h3>Six powerful tools, one calm experience.</h3>
+          </div>
+          <div className="learn-more-feature-list">
+            {learnMoreFeatures.map((f) => (
+              <div key={f.key} className="learn-more-feature-row">
+                <div
+                  className="learn-more-feature-icon"
+                  style={{ background: featureTagStyles[f.tagColor].bg, color: featureTagStyles[f.tagColor].fg }}
+                >
+                  {f.icon}
+                </div>
+                <div className="learn-more-feature-copy">
+                  <h4>{f.title}</h4>
+                  <p>{f.description}</p>
+                </div>
+                <span className="learn-more-feature-tag" style={{ background: featureTagStyles[f.tagColor].bg, color: featureTagStyles[f.tagColor].fg }}>
+                  {f.tag}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="learn-more-section">
+          <div className="learn-more-section-head">
+            <p className="landing-section-pretitle" style={{margin: 0}}>How it works</p>
+            <h3>From concern → clarity → care in 4 simple steps.</h3>
+          </div>
+          <ol className="learn-more-steps">
+            {[
+              { t: 'Sign up in 30 seconds', d: 'Just your name, email, and password — no paperwork, no insurance needed.' },
+              { t: 'Share what you feel', d: 'Describe symptoms, upload a report, ask the AI chat, or estimate a procedure cost.' },
+              { t: 'Understand the output', d: 'See severity, flagged values, likely next tests, and plain-language summaries.' },
+              { t: 'Take confident next action', d: 'Book a verified doctor appointment, save a PDF summary, or follow home-care guidance.' }
+            ].map((s, i) => (
+              <li key={s.t}>
+                <strong>0{i + 1}</strong>
+                <h4>{s.t}</h4>
+                <p>{s.d}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="learn-more-section learn-more-safety">
+          <div className="learn-more-safety-grid">
+            <div>
+              <p className="landing-section-pretitle" style={{margin: 0, color: '#059669'}}>Safety first</p>
+              <h3>Safety and privacy are not add-ons.</h3>
+              <p>
+                VITALIS AI answers carry a visible disclaimer that they are informational and not medical advice.
+                High-risk prompts are automatically routed to an "urgent care" panel with red-flag warnings and
+                emergency contact suggestions.
+              </p>
+              <ul className="learn-more-check-list">
+                <li><CheckCircle2 size={18} /> Red-flags "chest pain / breathlessness" → directs to ER</li>
+                <li><CheckCircle2 size={18} /> Never stores passwords; uses salted hashes only</li>
+                <li><CheckCircle2 size={18} /> Files encrypted in transit (TLS 1.3) and at rest (AES-256)</li>
+                <li><CheckCircle2 size={18} /> Delete all your data from Settings, one click</li>
+              </ul>
+            </div>
+            <div className="learn-more-safety-card">
+              <div className="learn-more-safety-card-icon">
+                <ShieldCheck size={22} />
+              </div>
+              <h4>Built with medical guardrails</h4>
+              <p>Every VITALIS AI response is routed through a safety layer that filters inappropriate requests, avoids definitive diagnoses, and suggests in-person consultation when needed.</p>
+              <div className="learn-more-safety-foot">
+                <Bot size={16} />
+                <span>Powered by VITALIS Safety v2.0</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="learn-more-section">
+          <div className="learn-more-section-head">
+            <p className="landing-section-pretitle" style={{margin: 0}}>FAQ</p>
+            <h3>Answers to common questions.</h3>
+          </div>
+          <div className="learn-more-faq-list">
+            {faqs.map((f, i) => {
+              const isOpen = faqOpen === i;
+              return (
+                <button
+                  type="button"
+                  key={f.q}
+                  className={`learn-more-faq-item ${isOpen ? 'is-open' : ''}`}
+                  onClick={() => setFaqOpen(isOpen ? -1 : i)}
+                  aria-expanded={isOpen}
+                >
+                  <div className="learn-more-faq-q">
+                    <span>{f.q}</span>
+                    {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  </div>
+                  {isOpen && (
+                    <div className="learn-more-faq-a">
+                      <p>{f.a}</p>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <footer className="learn-more-footer">
+          <div>
+            <h3>Ready to try VITALIS?</h3>
+            <p>Start free, no credit card required. You&apos;ll be inside in under a minute.</p>
+          </div>
+          <button type="button" className="landing-cta-button learn-more-cta-btn" onClick={getStarted}>
+            Get Started Free
+            <ArrowRight size={16} />
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   LANDING PAGE  (simple original layout restored)
+   ============================================================ */
 function LandingPage() {
   const { user, openLoginModal, openRegisterModal } = useAuth();
   const navigate = useNavigate();
+  const [learnOpen, setLearnOpen] = useState(false);
+  const [startedRipple, setStartedRipple] = useState(null);
 
   const handleFeatureClick = (e, link) => {
     e.preventDefault();
@@ -26,6 +279,21 @@ function LandingPage() {
     }
   };
 
+  const doGetStarted = (e) => {
+    if (e?.currentTarget && typeof window !== 'undefined') {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = (e.clientX ?? rect.left + rect.width / 2) - rect.left;
+      const y = (e.clientY ?? rect.top + rect.height / 2) - rect.top;
+      const id = Date.now();
+      setStartedRipple({ id, x, y });
+      setTimeout(() => setStartedRipple((r) => (r && r.id === id ? null : r)), 650);
+    }
+    openRegisterModal();
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const pricingPlans = [
     {
       name: 'Care Starter',
@@ -33,6 +301,8 @@ function LandingPage() {
       description: 'A calm place to start when you want quick guidance and reassurance.',
       features: ['3 guided symptom checks', 'Basic report summaries', 'Access to the doctor directory'],
       cta: 'Try it free',
+      badge: 'For first-time questions',
+      featured: false,
       link: '/register'
     },
     {
@@ -41,8 +311,9 @@ function LandingPage() {
       description: 'Ideal for ongoing follow-ups, recurring concerns, and better care coordination.',
       features: ['Unlimited symptom checks', 'Detailed report analysis', 'Priority doctor matching', 'Estimated treatment and consultation costs'],
       cta: 'Choose Companion',
-      link: '/register',
-      featured: true
+      badge: 'Most popular',
+      featured: true,
+      link: '/register'
     },
     {
       name: 'Care Team',
@@ -50,6 +321,8 @@ function LandingPage() {
       description: 'Support shared care journeys with more visibility and a smoother handoff.',
       features: ['Shared accounts and family access', 'Advanced care insights', 'Dedicated support for coordination'],
       cta: 'Talk to sales',
+      badge: 'For families & clinics',
+      featured: false,
       link: '/register'
     }
   ];
@@ -57,7 +330,10 @@ function LandingPage() {
   return (
     <div className="landing-page">
       <Navbar />
-      <Hero />
+      <Hero
+        onLearnMore={() => setLearnOpen(true)}
+        onGetStarted={doGetStarted}
+      />
 
       <section className="landing-features" id="features">
         <div className="landing-section-head">
@@ -117,21 +393,38 @@ function LandingPage() {
         <div className="pricing-grid landing-pricing-grid">
           {pricingPlans.map((plan) => (
             <article key={plan.name} className={`pricing-card${plan.featured ? ' pricing-card-featured' : ''}`}>
-              {plan.featured && <span className="pricing-badge pricing-badge-featured">Most popular</span>}
-              {!plan.featured && <span className="pricing-badge">{plan.name === 'Care Starter' ? 'For first-time questions' : 'For families & clinics'}</span>}
+              <span className={`pricing-badge${plan.featured ? ' pricing-badge-featured' : ''}`}>{plan.badge}</span>
               <h3>{plan.name}</h3>
               <p className="price">{plan.price}</p>
               <p className="pricing-description">{plan.description}</p>
               <ul>
                 {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
               </ul>
-              <button type="button" className="landing-cta-button" onClick={openRegisterModal}>{plan.cta}</button>
+              <button type="button" className="landing-cta-button" onClick={(e) => doGetStarted(e)}>
+                {startedRipple && (
+                  <span
+                    key={startedRipple.id}
+                    className="ripple-effect"
+                    style={{ left: startedRipple.x, top: startedRipple.y }}
+                  />
+                )}
+                {plan.cta}
+              </button>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="landing-cta-band" id="cta"><div className="landing-cta-content"><div><p className="landing-section-pretitle">Ready to simplify care?</p><h2>Start your first symptom review and medical report analysis in minutes.</h2></div><div style={{ display: 'flex', gap: '0.75rem' }}><a href="/app/cost-estimator" onClick={(e) => handleFeatureClick(e, '/app/cost-estimator')} className="landing-cta-button" style={{ background: '#fff', color: '#0f172a', textDecoration: 'none' }}>Estimate cost</a><button type="button" className="landing-cta-button" onClick={openRegisterModal}>Start for free</button></div></div></section>
+      <section className="landing-cta-band" id="cta"><div className="landing-cta-content"><div><p className="landing-section-pretitle">Ready to simplify care?</p><h2>Start your first symptom review and medical report analysis in minutes.</h2></div><div style={{ display: 'flex', gap: '0.75rem' }}><a href="/app/cost-estimator" onClick={(e) => handleFeatureClick(e, '/app/cost-estimator')} className="landing-cta-button" style={{ background: '#fff', color: '#0f172a', textDecoration: 'none' }}>Estimate cost</a><button type="button" className="landing-cta-button" onClick={(e) => doGetStarted(e)}>Start for free</button></div></div></section>
+
+      <LearnMoreModal
+        open={learnOpen}
+        onClose={() => setLearnOpen(false)}
+        getStarted={(e) => {
+          setLearnOpen(false);
+          setTimeout(() => doGetStarted(e), 150);
+        }}
+      />
     </div>
   );
 }

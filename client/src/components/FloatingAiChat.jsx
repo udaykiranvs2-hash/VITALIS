@@ -15,5 +15,3 @@ function FloatingAiChat() {
     </button>
   );
 }
-
-export default FloatingAiChat;

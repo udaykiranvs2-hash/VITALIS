@@ -401,6 +401,65 @@ button {
   transform: translateY(-1px);
 }
 
+.theme-toggle-button {
+  align-self: flex-start;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.theme-toggle-button:hover { background: var(--primary); color: #fff; }
+
+[data-theme='dark'] .app-navbar.top,
+[data-theme='dark'] .app-navbar.scrolled { background: rgba(15, 23, 36, 0.95); border-color: #27364a; }
+[data-theme='dark'] .app-navbar-logo-text span,
+[data-theme='dark'] .app-navbar-links a,
+[data-theme='dark'] .app-navbar-user-name,
+[data-theme='dark'] .app-navbar-chevron { color: #cbd5e1; }
+[data-theme='dark'] .app-navbar-bell { background: #172635; border-color: #304257; color: #dbeafe; }
+[data-theme='dark'] .app-navbar-dropdown-menu,
+[data-theme='dark'] .app-navbar-notifications-panel { background: #0f1724; border-color: #304257; }
+[data-theme='dark'] .app-dropdown-name,
+[data-theme='dark'] .app-notifications-header h3,
+[data-theme='dark'] .app-notification-title { color: #f1f5f9; }
+[data-theme='dark'] .app-dropdown-email,
+[data-theme='dark'] .app-dropdown-item,
+[data-theme='dark'] .app-notification-sub,
+[data-theme='dark'] .app-notifications-empty p { color: #cbd5e1; }
+[data-theme='dark'] .app-dropdown-item:hover,
+[data-theme='dark'] .app-notification-item:hover { background: #172635; }
+[data-theme='dark'] .app-sidebar { border-color: #27364a; }
+[data-theme='dark'] .sidebar-link { color: #cbd5e1; }
+[data-theme='dark'] .sidebar-link:hover { background: #172635; color: #f8fafc; }
+[data-theme='dark'] .sidebar-link.active { background: #183957; color: #93c5fd; }
+[data-theme='dark'] .xray-page { color: #e8f1fb; }
+[data-theme='dark'] .xray-header { background: radial-gradient(circle at 79% 55%, rgba(30, 64, 175, .42), transparent 14rem); }
+[data-theme='dark'] .xray-header p,
+[data-theme='dark'] .xray-dropzone p,
+[data-theme='dark'] .xray-dropzone small,
+[data-theme='dark'] .xray-steps small,
+[data-theme='dark'] .xray-tips-card,
+[data-theme='dark'] .xray-history p,
+[data-theme='dark'] .xray-result-summary,
+[data-theme='dark'] .xray-result-grid li,
+[data-theme='dark'] .xray-result-disclaimer { color: #cbd5e1; }
+[data-theme='dark'] .xray-workspace,
+[data-theme='dark'] .xray-dropzone,
+[data-theme='dark'] .xray-result-panel,
+[data-theme='dark'] .xray-result-grid article { background: #0f1724; border-color: #304257; }
+[data-theme='dark'] .xray-tips-card,
+[data-theme='dark'] .xray-note-card { background: #172635; }
+[data-theme='dark'] .xray-dropzone h2,
+[data-theme='dark'] .xray-guide-column h2,
+[data-theme='dark'] .xray-steps b,
+[data-theme='dark'] .xray-history b,
+[data-theme='dark'] .xray-result-heading h2,
+[data-theme='dark'] .xray-result-grid h3 { color: #f1f5f9; }
+
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -452,10 +511,14 @@ button {
 }
 
 .footer-brand {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--text);
+  font-weight: 900;
+  font-size: 2.4rem;
+  color: var(--primary);
   margin: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(8, 99, 206, 0.18);
 }
 
 .footer-subtitle {
@@ -1006,3 +1069,225 @@ textarea {
     padding: 2rem 0;
   }
 }
+
+
+/* ===== VITALIS LOGIN SPLASH ANIMATION (3-PHASE) =====
+   Phase 1: ECG heartbeat line draws itself
+   Phase 2: Heart (logo) grows around the ECG, surrounded by heart halo/pulse
+   Phase 3: Logo shrinks, VITALIS text appears next to it, then all fades
+=========================================================================== */
+.vitalis-splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+  gap: 0.4rem;
+}
+
+.vitalis-splash-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(8, 99, 206, 0.22), rgba(15, 23, 42, 0.0) 60%),
+    linear-gradient(180deg, rgba(8, 15, 38, 0.92), rgba(10, 20, 54, 0.96));
+  backdrop-filter: blur(8px);
+  animation: splash-bg-in 0.3s ease-out forwards, splash-bg-out 0.6s ease-in 3.1s forwards;
+}
+
+@keyframes splash-bg-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes splash-bg-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* =========== Phase 1: ECG heartbeat line =========== */
+.vitalis-splash-stage.stage-ecg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: stage-ecg-timeline 1.2s ease-in-out forwards;
+}
+
+@keyframes stage-ecg-timeline {
+  0%   { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.6); }
+}
+
+.vitalis-ecg-poly {
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: ecg-draw 0.9s cubic-bezier(0.3, 0.8, 0.4, 1) 0.05s forwards,
+             ecg-pulse 0.9s ease-in-out 0.95s forwards;
+}
+
+.vitalis-ecg-poly.vitalis-ecg-glow {
+  filter: blur(2px);
+  animation: ecg-draw 0.9s cubic-bezier(0.3, 0.8, 0.4, 1) 0.05s forwards,
+             ecg-glow-pulse 0.9s ease-in-out 0.95s forwards;
+}
+
+@keyframes ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ecg-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.25; }
+}
+
+@keyframes ecg-glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.15; }
+}
+
+/* =========== Phase 2: Heart + Logo mark =========== */
+.vitalis-splash-logo-mark {
+  position: relative;
+  transform: scale(0.2);
+  opacity: 0;
+  filter: blur(18px);
+  animation:
+    logo-pop 0.9s cubic-bezier(0.2, 1.3, 0.4, 1) 0.95s forwards,    /* pop in big */
+    logo-shrink 0.8s cubic-bezier(0.22, 1, 0.36, 1) 2.05s forwards,  /* shrink for phase 3 */
+    logo-fade-out 0.5s ease-in 3.1s forwards;
+}
+
+@keyframes logo-pop {
+  0%   { transform: scale(0.2); opacity: 0; filter: blur(18px); }
+  65%  { transform: scale(1.12); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1);    opacity: 1; filter: blur(0); }
+}
+
+@keyframes logo-shrink {
+  0%   { transform: scale(1) translateX(0); }
+  100% { transform: scale(0.55) translateX(-2.5rem); }
+}
+
+@keyframes logo-fade-out {
+  0%   { opacity: 1; filter: blur(0); }
+  100% { opacity: 0; filter: blur(8px); transform: scale(0.65) translateX(-2.5rem); }
+}
+
+/* Heart outline grows + gets pulse ring */
+.vitalis-heart-outline {
+  transform-origin: center;
+  transform: scale(0);
+  animation: heart-outline-in 0.75s cubic-bezier(0.2, 1.3, 0.4, 1) 1.05s forwards,
+             heart-beat 0.7s ease-in-out 1.8s 2;
+}
+
+@keyframes heart-outline-in {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  15%      { transform: scale(1.1); }
+  30%      { transform: scale(0.97); }
+  45%      { transform: scale(1.07); }
+  60%      { transform: scale(0.99); }
+}
+
+/* ECG line inside the heart draws in right after the heart outline appears */
+.vitalis-heart-ecg {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: heart-ecg-draw 0.55s ease-out 1.5s forwards;
+}
+
+@keyframes heart-ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Halo around the heart (radial glow + pulsing) */
+.vitalis-heart-halo {
+  transform-origin: center;
+  opacity: 0;
+  animation: halo-in 0.9s ease-out 1.0s forwards,
+             halo-pulse 0.8s ease-in-out 1.9s 2;
+}
+
+@keyframes halo-in {
+  0%   { opacity: 0; transform: scale(0.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes halo-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.9; }
+  50%      { transform: scale(1.2); opacity: 0.5; }
+}
+
+/* =========== Phase 3: VITALIS text + subtitle =========== */
+.vitalis-splash-brand-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.2rem;
+}
+
+.vitalis-splash-text {
+  position: relative;
+  margin: 0;
+  padding-left: 0.4rem;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateX(20px) scale(0.9);
+  filter: blur(10px);
+  text-shadow:
+    0 0 22px rgba(120, 177, 255, 0.65),
+    0 0 44px rgba(8, 99, 206, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.35);
+  animation:
+    vitalis-letter-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 2.25s forwards,
+    vitalis-fade-out 0.55s ease-in 3.1s forwards;
+}
+
+@keyframes vitalis-letter-in {
+  0%   { opacity: 0; transform: translateX(30px) scale(0.9); filter: blur(10px); letter-spacing: 0.4em; }
+  80%  { opacity: 1; transform: translateX(-3px) scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); letter-spacing: 0.08em; }
+}
+
+@keyframes vitalis-fade-out {
+  0%   { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.06); filter: blur(8px); }
+}
+
+.vitalis-splash-sub {
+  position: relative;
+  margin: 0.4rem 0 0;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(219, 234, 254, 0.95);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: vitalis-sub-in 0.7s ease-out 2.6s both,
+             vitalis-fade-out 0.55s ease-in 3.05s both;
+}
+
+@keyframes vitalis-sub-in {
+  0%   { opacity: 0; transform: translateY(14px); letter-spacing: 0.7em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: 0.35em; }
+}
+
