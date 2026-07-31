@@ -1,10 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-<<<<<<< HEAD
-import { setAuthToken, registerUser, loginUser, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
-=======
 import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
 import { supabase } from '../config/supabase.js';
->>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
 
 const AuthContext = createContext(null);
 
@@ -74,12 +70,6 @@ export const AuthProvider = ({ children }) => {
     const normalizedEmail = payload.email?.toLowerCase().trim();
     
     try {
-<<<<<<< HEAD
-      const response = await registerUser(normalizedPayload);
-      triggerSplash();
-      saveSession(response.data.token, response.data.user);
-      return response;
-=======
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: normalizedEmail,
         password: payload.password,
@@ -92,8 +82,8 @@ export const AuthProvider = ({ children }) => {
       
       if (signUpError) throw signUpError;
       
+      triggerSplash();
       return data;
->>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     } catch (err) {
       setError(err.message || 'Unable to register.');
       throw err;
@@ -108,12 +98,6 @@ export const AuthProvider = ({ children }) => {
     const normalizedEmail = payload.email?.toLowerCase().trim();
     
     try {
-<<<<<<< HEAD
-      const response = await loginUser(normalizedPayload);
-      triggerSplash();
-      saveSession(response.data.token, response.data.user);
-      return response;
-=======
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: normalizedEmail,
         password: payload.password,
@@ -121,8 +105,8 @@ export const AuthProvider = ({ children }) => {
 
       if (signInError) throw signInError;
       
+      triggerSplash();
       return data;
->>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     } catch (err) {
       setError(err.message || 'Unable to log in.');
       throw err;

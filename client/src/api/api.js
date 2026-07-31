@@ -26,10 +26,7 @@ export const setAuthToken = (token) => {
     localStorage.removeItem('vitalis_token');
   }
 };
-export const registerUser = (data) => apiClient.post('/auth/register', data);
-export const loginUser = (data) => apiClient.post('/auth/login', data);
-export const forgotPassword = (data) => apiClient.post('/auth/forgot-password', data);
-export const resetPassword = (data) => apiClient.post('/auth/reset-password', data);
+
 export const syncProfile = () => apiClient.post('/auth/sync');
 export const fetchProfile = () => apiClient.get('/user/profile');
 export const updateProfile = (data) => apiClient.put('/user/profile', data);
