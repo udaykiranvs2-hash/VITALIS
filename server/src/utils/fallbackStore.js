@@ -7,11 +7,8 @@ import supabase from '../config/supabase.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storageFile = path.join(__dirname, '../../data/users.json');
->>>>>>> 354186e3563a1d1335bc0dcd33ddffb3509ca05a
 
 const memoryUsers = globalThis.__vitalisMemoryUsers ?? (globalThis.__vitalisMemoryUsers = new Map());
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const storageFile = path.join(__dirname, '../data/local-users.json');
 
 const normalizeEmail = (email) => (email || '').toLowerCase().trim();
 const generateId = () => (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
@@ -145,8 +142,7 @@ const getUserById = (id) => {
 
 export const isSupabaseConnected = () => !!supabase;
 export const isMongoConnected = isSupabaseConnected;
-<<<<<<< HEAD
-=======
+
 
 const ensureSeedUsers = async () => {
   if (memoryUsers.size > 0) {
