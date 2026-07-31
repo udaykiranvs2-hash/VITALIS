@@ -89,10 +89,12 @@ export const assessSymptoms = async (req, res) => {
         }
       } catch (aiError) {
         console.error('[SymptomController] AI Analysis Error:', aiError.message);
-        return res.status(503).json({ message: 'AI assessment service is currently unavailable. Please try again later.' });
+        result = null; // Set to null to trigger fallback
       }
-    } else {
-      // Fallback if AI not configured
+    }
+    
+    if (!result) {
+      // Fallback if AI not configured or failed due to API limits
       result = {
         disclaimer: 'This assessment is informational only and is not a substitute for professional medical advice.',
         emergencyWarning: null,

@@ -24,3 +24,20 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 -- Allow Service Role and Anon full access for backend operations
 CREATE POLICY "Allow service role full access" ON public.users FOR ALL USING (true);
+
+-- Symptom History Table
+CREATE TABLE IF NOT EXISTS public.symptom_history (
+  id uuid NOT NULL DEFAULT extensions.uuid_generate_v4(),
+  user_id uuid NOT NULL,
+  demographics jsonb NOT NULL,
+  symptoms jsonb NOT NULL,
+  ai_assessment jsonb NOT NULL,
+  severity_level text NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT symptom_history_pkey PRIMARY KEY (id)
+);
+
+-- Enable RLS for symptom history
+ALTER TABLE public.symptom_history ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow service role full access" ON public.symptom_history FOR ALL USING (true);
+CREATE POLICY "Users can view their own history" ON public.symptom_history FOR SELECT USING (auth.uid() = user_id);
