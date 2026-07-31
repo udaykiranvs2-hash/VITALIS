@@ -1,11 +1,10 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { forgotPassword as forgotPasswordRequest } from '../api/api.js';
+import { supabase } from '../config/supabase.js';
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [resetToken, setResetToken] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -14,12 +13,14 @@ function ForgotPasswordPage() {
     setLoading(true);
     setError('');
     try {
-      const response = await forgotPasswordRequest({ email });
-      setMessage(response.data.message || 'If your email exists, you will receive instructions shortly.');
-      setResetToken(response.data.resetToken || '');
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password',
+      });
+      if (resetError) throw resetError;
+      
+      setMessage('If your email exists, you will receive instructions shortly.');
     } catch (err) {
-      setError(err?.response?.data?.message || 'Unable to send reset instructions.');
-      setResetToken('');
+      setError(err.message || 'Unable to send reset instructions.');
     } finally {
       setLoading(false);
     }
@@ -40,12 +41,6 @@ function ForgotPasswordPage() {
           </button>
           {message && <p className="form-message success">{message}</p>}
           {error && <p className="form-message error">{error}</p>}
-          {resetToken && (
-            <p className="form-message info">
-              Test reset link:{' '}
-              <Link to={`/reset-password?token=${resetToken}`}>Reset password now</Link>
-            </p>
-          )}
         </form>
         <p className="auth-footnote">
           Return to <Link to="/login">Sign in</Link>

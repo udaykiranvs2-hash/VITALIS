@@ -1,6 +1,6 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { resetPassword as resetPasswordRequest } from '../api/api.js';
+import { supabase } from '../config/supabase.js';
 
 function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -21,11 +21,13 @@ function ResetPasswordPage() {
     }
     setLoading(true);
     try {
-      await resetPasswordRequest({ token, newPassword: password });
+      const { error: resetError } = await supabase.auth.updateUser({ password });
+      if (resetError) throw resetError;
+      
       setMessage('Your password has been reset. Please sign in again.');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
-      setError(err?.response?.data?.message || 'Unable to reset password.');
+      setError(err.message || 'Unable to reset password.');
     } finally {
       setLoading(false);
     }
@@ -45,12 +47,11 @@ function ResetPasswordPage() {
             Confirm new password
             <input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={8} />
           </label>
-          <button type="submit" className="primary-button" disabled={loading || !token}>
+          <button type="submit" className="primary-button" disabled={loading}>
             {loading ? 'Updating…' : 'Reset password'}
           </button>
           {message && <p className="form-message success">{message}</p>}
           {error && <p className="form-message error">{error}</p>}
-          {!token && <p className="form-message error">Reset token is missing. Please request a new link.</p>}
         </form>
         <p className="auth-footnote">
           Return to <Link to="/login">Sign in</Link>

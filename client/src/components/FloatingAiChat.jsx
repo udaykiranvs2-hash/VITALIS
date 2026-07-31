@@ -17,7 +17,3 @@ function FloatingAiChat() {
 }
 
 export default FloatingAiChat;
-<<<<<<< HEAD
-=======
-
->>>>>>> 3fbb7de7e17df286ba76a3275bdaeffe002c2dda
