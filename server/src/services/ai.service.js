@@ -302,3 +302,36 @@ JSON Response:`;
 
   return analyzeReportDocumentLocal({ reportType, fileName, rawText });
 };
+
+export const analyzeXrayImage = async ({ fileName = 'Uploaded X-ray', mimeType = '', buffer }) => {
+  const disclaimer = 'This screening is educational only. It is not a diagnosis and must be reviewed by a qualified radiologist or clinician.';
+
+  if (ai && buffer && ['image/jpeg', 'image/png', 'image/jpg'].includes(mimeType)) {
+    try {
+      const response = await ai.models.generateContent({
+        model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+        contents: [{ role: 'user', parts: [
+          { inlineData: { mimeType, data: buffer.toString('base64') } },
+          { text: `You are an educational medical-image screening assistant. Review this uploaded X-ray image cautiously. Do not claim a diagnosis. Return strict JSON with: summary (2 concise sentences), findings (up to 4 observations, explicitly say when image quality limits review), riskLevel (Low, Moderate, or Needs clinical review), recommendations (3 next steps), and disclaimer. Emphasize urgent clinical review for any possible concerning finding.` }
+        ] }],
+        config: { responseMimeType: 'application/json', temperature: 0.2 }
+      });
+      const parsed = JSON.parse(response.text.trim());
+      if (parsed.summary && Array.isArray(parsed.findings) && Array.isArray(parsed.recommendations)) {
+        return { title: 'X-ray Analysis Result', fileName, summary: parsed.summary, findings: parsed.findings, riskLevel: parsed.riskLevel || 'Needs clinical review', recommendations: parsed.recommendations, disclaimer: parsed.disclaimer || disclaimer, aiAvailable: true };
+      }
+    } catch (error) {
+      console.error('Gemini X-ray analysis failed, using local screening response:', error.message);
+    }
+  }
+
+  return {
+    title: 'X-ray Upload Review', fileName,
+    summary: 'Your X-ray image was uploaded successfully. This local version can verify the upload and prepare a review, but image-level AI interpretation requires a configured clinical imaging model.',
+    findings: ['Image file received and queued for clinical review.', 'No diagnostic conclusion is shown in local screening mode.', 'A qualified radiologist should review the original image and clinical history.'],
+    riskLevel: 'Needs clinical review',
+    recommendations: ['Share the original X-ray with your radiologist or treating clinician.', 'Seek urgent care for severe breathlessness, chest pain, blue lips, or worsening symptoms.', 'Add a Gemini API key on the server to enable AI-assisted image screening.'],
+    disclaimer,
+    aiAvailable: false
+  };
+};

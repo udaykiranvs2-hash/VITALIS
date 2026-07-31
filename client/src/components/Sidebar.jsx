@@ -1,11 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
   Activity, 
   FileText, 
   Settings, 
   LogOut,
-  MessageSquare,
   Users,
   ScanHeart,
   Calculator
@@ -18,13 +16,11 @@ export default function Sidebar() {
   const { logout } = useAuth();
   
   const navItems = [
-    { label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/app' },
     { label: 'Symptom Checker', icon: <Activity size={20} />, path: '/app/symptoms' },
     { label: 'Report Analysis', icon: <FileText size={20} />, path: '/app/reports' },
     { label: 'X-ray Analysis', icon: <ScanHeart size={20} />, path: '/app/xray' },
     { label: 'Cost Estimation', icon: <Calculator size={20} />, path: '/app/cost-estimator' },
     { label: 'Doctors', icon: <Users size={20} />, path: '/app/doctors' },
-    { label: 'AI Health Chat', icon: <MessageSquare size={20} />, path: '/app/assistant' },
   ];
 
   return (

@@ -1,0 +1,35 @@
+
+> build-your-own-lovable-server@1.0.0 start
+> node server.js
+
+
+ Server is running on port 5000
+ Environment: development
+ URL: http://localhost:5000
+
+
+======================================================
+ [EMAIL SERVICE DEV FALLBACK] (No SMTP credentials set)
+ To: kushaal227@gmail.com
+ Subject: Security Alert: New Sign-in to Your Vitalis Account
+------------------------------------------------------
+Hello Kushaal,
+
+A new successful sign-in to your Vitalis Health account was detected at 30/7/2026, 11:11:37 am.
+
+If this was you, no further action is required. If you did not recognize this login, please change your password immediately.
+======================================================
+
+
+======================================================
+ [EMAIL SERVICE DEV FALLBACK] (No SMTP credentials set)
+ To: kushaal227@gmail.com
+ Subject: Security Alert: New Sign-in to Your Vitalis Account
+------------------------------------------------------
+Hello Kushaal,
+
+A new successful sign-in to your Vitalis Health account was detected at 30/7/2026, 12:25:52 pm.
+
+If this was you, no further action is required. If you did not recognize this login, please change your password immediately.
+======================================================
+

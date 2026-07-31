@@ -44,7 +44,7 @@ function SettingsPage({ darkMode, onToggleTheme }) {
         <article>
           <h2>Appearance</h2>
           <p>Switch between light and dark mode to match your environment.</p>
-          <button type="button" className="primary-button" onClick={onToggleTheme}>
+          <button type="button" className="theme-toggle-button" onClick={onToggleTheme}>
             {darkMode ? 'Use light mode' : 'Use dark mode'}
           </button>
         </article>

@@ -1,0 +1,69 @@
+{
+  "id": "d-001-common-cold",
+  "name": "Common Cold",
+  "aliases": [
+    "viral upper respiratory tract infection",
+    "head cold"
+  ],
+  "symptoms": [
+    "runny nose",
+    "sore throat",
+    "cough",
+    "congestion",
+    "mild body aches",
+    "sneezing",
+    "low-grade fever"
+  ],
+  "causes": [
+    "rhinovirus",
+    "coronavirus",
+    "adenovirus",
+    "respiratory syncytial virus (rsv)"
+  ],
+  "riskFactors": [
+    "age (children under 6 are at greatest risk)",
+    "weakened immune system",
+    "time of year (fall and winter)",
+    "smoking",
+    "exposure to crowds"
+  ],
+  "complications": [
+    "acute ear infection (otitis media)",
+    "asthma attack",
+    "acute sinusitis",
+    "other secondary infections like strep throat or pneumonia"
+  ],
+  "differentialDiagnosis": [],
+  "recommendedTests": [
+    "no specific test needed. diagnosis is based on symptoms."
+  ],
+  "possibleTreatments": [
+    "pain relievers (acetaminophen, ibuprofen)",
+    "decongestant nasal sprays",
+    "cough syrups",
+    "antihistamines"
+  ],
+  "homeCare": [
+    "drink plenty of fluids",
+    "rest",
+    "soothe your throat with warm salt water gargle",
+    "use a humidifier",
+    "sip warm liquids"
+  ],
+  "prevention": [
+    "wash your hands often",
+    "avoid touching your face",
+    "clean frequently touched surfaces",
+    "use hand sanitizer",
+    "stay away from people who are sick"
+  ],
+  "redFlags": [
+    "fever greater than 101.3°f (38.5°c)",
+    "fever lasting five days or more",
+    "shortness of breath",
+    "wheezing",
+    "severe sore throat, headache or sinus pain"
+  ],
+  "specialist": "",
+  "references": []
+}

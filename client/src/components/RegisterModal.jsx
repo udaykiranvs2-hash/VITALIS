@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 function RegisterModal() {
-  const { isRegisterModalOpen, closeRegisterModal, openLoginModal, register, loading, error, setError } = useAuth();
+  const { isRegisterModalOpen, closeRegisterModal, openLoginModal, register, loginWithGoogle, loading, error, setError } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -27,11 +27,15 @@ function RegisterModal() {
     event.preventDefault();
     setMessage('');
     try {
-      await register(form);
+      const data = await register(form);
+      if (!data?.session) {
+        setMessage('Registration successful! Please check your email to verify your account before signing in.');
+        return;
+      }
       handleClose();
       navigate('/app');
     } catch (err) {
-      setMessage(err?.response?.data?.message || 'Unable to create your account.');
+      setMessage(err.message || 'Unable to create your account.');
     }
   };
 
@@ -53,6 +57,10 @@ function RegisterModal() {
           <label>Password<input type="password" name="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} required minLength={8} autoComplete="new-password" /></label>
           {(message || error) && <p className="form-message error">{message || error}</p>}
           <button type="submit" className="primary-button login-modal-submit" disabled={loading}>{loading ? 'Creating account…' : 'Create account'}</button>
+          <div style={{ textAlign: 'center', margin: '1rem 0', color: '#666', fontSize: '0.9rem' }}>or</div>
+          <button type="button" className="secondary-button" onClick={loginWithGoogle} disabled={loading} style={{ width: '100%', marginBottom: '1rem' }}>
+            Sign up with Google
+          </button>
         </form>
         <div className="login-modal-links"><span>Already have an account? <button type="button" onClick={switchToLogin}>Sign in</button></span></div>
       </section>

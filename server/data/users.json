@@ -1,0 +1,115 @@
+[
+  {
+    "_id": "demo-user",
+    "id": "demo-user",
+    "name": "Demo User",
+    "email": "demo@example.com",
+<<<<<<< HEAD
+    "passwordHash": "$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi",
+=======
+    "authProvider": "email",
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
+    "role": "user",
+    "profile": {
+      "fullName": "Demo User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+<<<<<<< HEAD
+    "resetToken": null,
+    "resetTokenExpires": null
+  },
+  {
+    "_id": "8551d549-46a6-4330-a331-4c6ad5c77f7a",
+    "id": "8551d549-46a6-4330-a331-4c6ad5c77f7a",
+    "name": "Kushaal",
+    "email": "kushaal227@gmail.com",
+    "passwordHash": "$2b$10$e.QxCPdClS4dZvm/RiUJOeGKF5D/LmIjZTupxGVxFFtQGu3JP9sta",
+    "role": "user",
+    "profile": {
+      "fullName": "Kushaal"
+    },
+    "reports": [
+      {
+        "title": "Blood Test Analysis",
+        "type": "Blood Test",
+        "fileName": "alzimers 1.jpg",
+        "summary": "The blood test shows a healthy hematological profile, with a mild rise in cholesterol that can be managed with diet and follow-up testing.",
+        "findings": [
+          "Hemoglobin is within normal limits.",
+          "Cholesterol is mildly elevated and should be monitored.",
+          "Blood glucose is stable for the current profile."
+        ],
+        "abnormalValues": [
+          "Total cholesterol"
+        ],
+        "rawText": "alzimers 1.jpg"
+      }
+    ],
+    "appointments": [],
+    "notifications": [
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      }
+    ],
+    "history": []
+=======
+    "createdAt": "2026-07-29T14:05:32.896Z",
+    "updatedAt": "2026-07-29T14:05:32.896Z"
+  },
+  {
+    "_id": "test-user-id-1234",
+    "id": "test-user-id-1234",
+    "name": "Test User",
+    "email": "test@example.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Test User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:05:32.908Z",
+    "updatedAt": "2026-07-29T14:05:32.908Z"
+  },
+  {
+    "_id": "test-user-id-real",
+    "id": "test-user-id-real",
+    "name": "Test Real User",
+    "email": "test-real@example.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Test Real User"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:08:49.473Z",
+    "updatedAt": "2026-07-29T14:08:49.473Z"
+  },
+  {
+    "_id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
+    "id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
+    "name": "Uday Kiran",
+    "email": "udaykiranvs2@gmail.com",
+    "authProvider": "google",
+    "role": "user",
+    "profile": {
+      "fullName": "Uday Kiran"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-07-29T14:13:20.249Z",
+    "updatedAt": "2026-07-29T14:13:20.249Z"
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
+  }
+]
