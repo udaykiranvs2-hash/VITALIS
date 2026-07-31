@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { protect } from '../middleware/auth.middleware.js';
-import { checkSymptoms, analyzeReport, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
+import { checkSymptoms, analyzeReport, analyzeXray, getHistory, bookAppointment, cancelAppointment } from '../controllers/health.controller.js';
 import { uploadReportFile } from '../middleware/upload.middleware.js';
 import {
   getAllDiseases,
@@ -29,6 +29,12 @@ router.post('/report', protect, (req, res, next) => {
     next();
   });
 }, analyzeReport);
+router.post('/xray', protect, (req, res, next) => {
+  uploadReportFile(req, res, (err) => {
+    if (err) return res.status(400).json({ message: err.message });
+    next();
+  });
+}, analyzeXray);
 
 router.get('/history', protect, getHistory);
 router.post('/appointment', protect, bookAppointment);

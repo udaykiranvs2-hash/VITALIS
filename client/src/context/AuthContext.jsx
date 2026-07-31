@@ -1,4 +1,4 @@
-﻿import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { setAuthToken, registerUser, loginUser, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
 
 const AuthContext = createContext(null);
@@ -14,6 +14,19 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState('');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
+  const splashTimerRef = { current: null };
+
+  const triggerSplash = () => {
+    if (splashTimerRef.current) {
+      clearTimeout(splashTimerRef.current);
+    }
+    setShowSplash(true);
+    splashTimerRef.current = setTimeout(() => {
+      setShowSplash(false);
+      splashTimerRef.current = null;
+    }, 3800);
+  };
 
   useEffect(() => {
     if (token) {
@@ -74,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     };
     try {
       const response = await registerUser(normalizedPayload);
+      triggerSplash();
       saveSession(response.data.token, response.data.user);
       return response;
     } catch (err) {
@@ -93,6 +107,7 @@ export const AuthProvider = ({ children }) => {
     };
     try {
       const response = await loginUser(normalizedPayload);
+      triggerSplash();
       saveSession(response.data.token, response.data.user);
       return response;
     } catch (err) {
@@ -153,9 +168,11 @@ export const AuthProvider = ({ children }) => {
       closeLoginModal: () => setIsLoginModalOpen(false),
       isRegisterModalOpen,
       openRegisterModal: () => setIsRegisterModalOpen(true),
-      closeRegisterModal: () => setIsRegisterModalOpen(false)
+      closeRegisterModal: () => setIsRegisterModalOpen(false),
+      showSplash,
+      triggerSplash
     }),
-    [user, token, loading, initialized, error, isLoginModalOpen, isRegisterModalOpen]
+    [user, token, loading, initialized, error, isLoginModalOpen, isRegisterModalOpen, showSplash]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

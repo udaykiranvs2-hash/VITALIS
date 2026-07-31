@@ -167,13 +167,62 @@
 
 .home-hero-illustration {
   flex-shrink: 0;
+  background: transparent;
+  position: relative;
+  padding: 0;
+  isolation: isolate;
+}
+
+.home-hero-illustration::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 99, 206, 0.06), transparent 68%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .home-doctor-img {
-  width: 220px;
-  height: 220px;
+  position: relative;
+  z-index: 1;
+  width: 280px;
+  height: 280px;
   object-fit: contain;
-  filter: drop-shadow(0 8px 24px rgba(8, 99, 206, 0.15));
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0;
+  display: block;
+  clip-path: polygon(
+    6% 86%, 10% 62%, 16% 42%, 22% 28%, 28% 18%, 36% 12%, 46% 8%,
+    55% 8%, 64% 12%, 72% 18%, 78% 28%, 84% 42%, 90% 62%, 94% 86%,
+    90% 96%, 50% 100%, 10% 96%
+  );
+  -webkit-mask-image: radial-gradient(ellipse 55% 46% at 50% 48%, #000 66%, rgba(0,0,0,0.2) 86%, transparent 100%);
+          mask-image: radial-gradient(ellipse 55% 46% at 50% 48%, #000 66%, rgba(0,0,0,0.2) 86%, transparent 100%);
+  mix-blend-mode: multiply;
+  filter:
+    contrast(1.05)
+    brightness(1.02)
+    saturate(1.02)
+    drop-shadow(0 22px 44px rgba(8, 99, 206, 0.18))
+    drop-shadow(0 4px 10px rgba(8, 99, 206, 0.08));
+  transform: translateY(0);
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.home-hero-banner:hover .home-doctor-img {
+  transform: translateY(-4px);
+  filter:
+    contrast(1.04)
+    brightness(1.02)
+    saturate(1.02)
+    drop-shadow(0 30px 56px rgba(8, 99, 206, 0.22))
+    drop-shadow(0 6px 14px rgba(8, 99, 206, 0.1));
 }
 
 /* ===== MAIN GRID ===== */
