@@ -1,30 +1,6 @@
 import { findUserById } from '../utils/fallbackStore.js';
 import { buildSymptomAssessment, analyzeReportDocument, analyzeXrayImage } from '../services/ai.service.js';
 
-export const checkSymptoms = async (req, res) => {
-  const { age, gender, symptoms, duration, severity, medicalHistory, allergies, medications } = req.body;
-  const assessment = await buildSymptomAssessment({ age, gender, symptoms, duration, severity, medicalHistory, allergies, medications });
-  const user = await findUserById(req.userId);
-
-  if (user) {
-    user.history.unshift({
-      symptoms,
-      duration,
-      severity,
-      medicalHistory,
-      allergies,
-      medications,
-      result: assessment
-    });
-    user.notifications.push({
-      message: 'Your symptom check is complete. Review the results on your dashboard.',
-      type: 'health'
-    });
-    await user.save();
-  }
-
-  return res.status(200).json(assessment);
-};
 
 export const analyzeReport = async (req, res) => {
   let reportType = req.body?.reportType;

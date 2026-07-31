@@ -1,4 +1,4 @@
-﻿import { verifyToken } from '../utils/jwt.utils.js';
+import { supabase } from '../config/supabase.js';
 
 export const protect = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -10,8 +10,12 @@ export const protect = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = verifyToken(token);
-    req.userId = decoded.id;
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      throw error || new Error('Invalid token');
+    }
+    req.userId = user.id;
+    req.user = user;
     return next();
   } catch (error) {
     return res.status(401).json({ message: 'Authentication failed. Please log in again.' });

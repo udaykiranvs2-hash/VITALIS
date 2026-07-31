@@ -1,9 +1,9 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 function RegisterPage() {
-  const { register, loading, error } = useAuth();
+  const { register, loginWithGoogle, loading, error } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function RegisterPage() {
       await register(form);
       navigate('/app');
     } catch (err) {
-      setMessage(error || 'Unable to register.');
+      setMessage(err.message || 'Unable to register.');
     }
   };
 
@@ -42,6 +42,10 @@ function RegisterPage() {
           </label>
           <button type="submit" className="primary-button" disabled={loading}>
             {loading ? 'Creating account…' : 'Create account'}
+          </button>
+          <div style={{ textAlign: 'center', margin: '1rem 0', color: '#666', fontSize: '0.9rem' }}>or</div>
+          <button type="button" className="secondary-button" onClick={loginWithGoogle} disabled={loading} style={{ width: '100%', marginBottom: '1rem' }}>
+            Sign up with Google
           </button>
           {message && <p className="form-message error">{message}</p>}
           {error && !message && <p className="form-message error">{error}</p>}

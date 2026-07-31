@@ -1,14 +1,16 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+<<<<<<< HEAD
 import { setAuthToken, registerUser, loginUser, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
+=======
+import { setAuthToken, syncProfile, fetchProfile, updateProfile as updateProfileRequest, changePassword as changePasswordRequest } from '../api/api.js';
+import { supabase } from '../config/supabase.js';
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('vitalis_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [token, setToken] = useState(() => localStorage.getItem('vitalis_token') || '');
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState('');
@@ -29,69 +31,71 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (token) {
-      setAuthToken(token);
-    }
-  }, [token]);
+    // Check active sessions and sets the user
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleSession(session);
+    });
 
-  useEffect(() => {
-    const initialize = async () => {
-      if (!token) {
-        setInitialized(true);
-        return;
-      }
+    // Listen for changes on auth state (sign in, sign out, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      handleSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSession = async (session) => {
+    if (session?.access_token) {
+      setToken(session.access_token);
+      setAuthToken(session.access_token);
+      
       try {
+        // Sync profile with backend
+        await syncProfile();
+        // Fetch full user profile
         const response = await fetchProfile();
         if (response?.data?.user) {
           setUser(response.data.user);
-          localStorage.setItem('vitalis_user', JSON.stringify(response.data.user));
         }
-      } catch {
-        logout();
-      } finally {
-        setInitialized(true);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
       }
-    };
-    initialize();
-  }, []);
-
-  const saveSession = (tokenValue, userValue) => {
-    if (!tokenValue || !userValue) {
-      logout();
-      return;
+    } else {
+      setUser(null);
+      setToken('');
+      setAuthToken(null);
     }
-
-    setToken(tokenValue);
-    setUser(userValue);
     setInitialized(true);
-    localStorage.setItem('vitalis_token', tokenValue);
-    localStorage.setItem('vitalis_user', JSON.stringify(userValue));
-    setAuthToken(tokenValue);
-  };
-
-  const logout = () => {
-    setToken('');
-    setUser(null);
-    localStorage.removeItem('vitalis_token');
-    localStorage.removeItem('vitalis_user');
-    setAuthToken(null);
-    setError('');
   };
 
   const register = async (payload) => {
     setLoading(true);
     setError('');
-    const normalizedPayload = {
-      ...payload,
-      email: payload.email?.toLowerCase().trim()
-    };
+    const normalizedEmail = payload.email?.toLowerCase().trim();
+    
     try {
+<<<<<<< HEAD
       const response = await registerUser(normalizedPayload);
       triggerSplash();
       saveSession(response.data.token, response.data.user);
       return response;
+=======
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: normalizedEmail,
+        password: payload.password,
+        options: {
+          data: {
+            full_name: payload.name,
+          }
+        }
+      });
+      
+      if (signUpError) throw signUpError;
+      
+      return data;
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     } catch (err) {
-      setError(err?.response?.data?.message || 'Unable to register.');
+      setError(err.message || 'Unable to register.');
       throw err;
     } finally {
       setLoading(false);
@@ -101,21 +105,58 @@ export const AuthProvider = ({ children }) => {
   const login = async (payload) => {
     setLoading(true);
     setError('');
-    const normalizedPayload = {
-      email: payload.email?.toLowerCase().trim(),
-      password: payload.password
-    };
+    const normalizedEmail = payload.email?.toLowerCase().trim();
+    
     try {
+<<<<<<< HEAD
       const response = await loginUser(normalizedPayload);
       triggerSplash();
       saveSession(response.data.token, response.data.user);
       return response;
+=======
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: normalizedEmail,
+        password: payload.password,
+      });
+
+      if (signInError) throw signInError;
+      
+      return data;
+>>>>>>> 4f90630a9280c0a007105fa615cf76a968a07f2a
     } catch (err) {
-      setError(err?.response?.data?.message || 'Unable to log in.');
+      setError(err.message || 'Unable to log in.');
       throw err;
     } finally {
       setLoading(false);
     }
+  };
+
+  const loginWithGoogle = async () => {
+    setError('');
+    try {
+      const { error: signInError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/app'
+        }
+      });
+      if (signInError) throw signInError;
+    } catch (err) {
+      setError(err.message || 'Unable to sign in with Google.');
+      throw err;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error('Error logging out:', err);
+    }
+    setToken('');
+    setUser(null);
+    setAuthToken(null);
+    setError('');
   };
 
   const updateProfile = async (payload) => {
@@ -124,7 +165,6 @@ export const AuthProvider = ({ children }) => {
       const response = await updateProfileRequest(payload);
       if (response?.data?.user) {
         setUser(response.data.user);
-        localStorage.setItem('vitalis_user', JSON.stringify(response.data.user));
       }
       setError('');
       return response;
@@ -139,11 +179,25 @@ export const AuthProvider = ({ children }) => {
   const changePassword = async (payload) => {
     setLoading(true);
     try {
-      const response = await changePasswordRequest(payload);
+      // Supabase has its own updateUser method for passwords
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: payload.newPassword
+      });
+      if (updateError) throw updateError;
+      
+      // We can also call the backend if there is specific sync logic
+      if (typeof changePasswordRequest === 'function') {
+        try {
+          await changePasswordRequest(payload);
+        } catch (e) {
+          console.warn('Backend password sync error', e);
+        }
+      }
+
       setError('');
-      return response;
+      return true;
     } catch (err) {
-      setError(err?.response?.data?.message || 'Unable to change password.');
+      setError(err.message || 'Unable to change password.');
       throw err;
     } finally {
       setLoading(false);
@@ -159,6 +213,7 @@ export const AuthProvider = ({ children }) => {
       error,
       register,
       login,
+      loginWithGoogle,
       logout,
       updateProfile,
       changePassword,

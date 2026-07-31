@@ -41,7 +41,7 @@ app.get('/health', (req, res) => {
 // Apply rate limiters
 app.use('/api/auth', authLimiter);
 app.use('/api/assistant', aiLimiter);
-app.use('/api/health/symptoms', aiLimiter);
+app.use('/api/symptoms/assess', aiLimiter);
 app.use('/api/health/report', aiLimiter);
 app.use('/api', apiLimiter);
 

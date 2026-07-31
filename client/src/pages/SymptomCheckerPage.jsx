@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { submitSymptomCheck } from '../api/api.js';
+import { useState, useEffect } from 'react';
+import { submitSymptomCheck, fetchSymptomHistory } from '../api/api.js';
 import Loader from '../components/Loader.jsx';
 import Toast from '../components/Toast.jsx';
 import { ArrowRight, ArrowLeft, ShieldCheck, Check, Sparkles, RotateCcw, AlertTriangle } from 'lucide-react';
@@ -26,6 +26,29 @@ function SymptomCheckerPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
+  
+  const [viewMode, setViewMode] = useState('new'); // 'new' or 'history'
+  const [historyList, setHistoryList] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  useEffect(() => {
+    if (viewMode === 'history') {
+      loadHistory();
+    }
+  }, [viewMode]);
+
+  const loadHistory = async () => {
+    setLoadingHistory(true);
+    try {
+      const res = await fetchSymptomHistory();
+      setHistoryList(res.data || []);
+    } catch (err) {
+      console.error(err);
+      setToast('Failed to load history.');
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -91,25 +114,117 @@ function SymptomCheckerPage() {
 
   return (
     <div className="symptom-checker-container">
-      <div className="symptom-checker-header">
-        <h1>Symptom Checker</h1>
-        <p>Tell us how you feel and we'll guide you.</p>
+      <div className="symptom-checker-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1>Symptom Checker</h1>
+          <p>Tell us how you feel and we'll guide you.</p>
+        </div>
+        <div className="tab-switcher" style={{ display: 'flex', gap: '0.5rem', background: 'var(--surface-strong)', padding: '0.35rem', borderRadius: '12px' }}>
+          <button 
+            type="button" 
+            onClick={() => setViewMode('new')} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: 'none', background: viewMode === 'new' ? 'var(--primary)' : 'transparent', color: viewMode === 'new' ? '#fff' : 'var(--text)', cursor: 'pointer', fontWeight: 600 }}
+          >
+            New Check
+          </button>
+          <button 
+            type="button" 
+            onClick={() => setViewMode('history')} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: 'none', background: viewMode === 'history' ? 'var(--primary)' : 'transparent', color: viewMode === 'history' ? '#fff' : 'var(--text)', cursor: 'pointer', fontWeight: 600 }}
+          >
+            History
+          </button>
+        </div>
       </div>
 
       <Toast message={toast} type={result ? 'success' : 'info'} onClose={() => setToast('')} />
 
-      {result ? (
-        /* Results View */
-        <div className="symptom-card">
-          <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <span className="eyebrow" style={{ color: 'var(--primary)', fontWeight: 600 }}>Assessment Completed</span>
-              <h2 style={{ margin: '0.2rem 0 0 0' }}>Symptom Analysis Report</h2>
+      {viewMode === 'history' ? (
+        <div className="symptom-history-view">
+          <h2 style={{ marginBottom: '1.5rem' }}>Past Assessments</h2>
+          {loadingHistory ? (
+            <div style={{ padding: '2rem', textAlign: 'center' }}><Loader label="Loading history..." /></div>
+          ) : historyList.length === 0 ? (
+            <p style={{ color: 'var(--muted)', textAlign: 'center', padding: '3rem', background: 'var(--surface)', borderRadius: '16px' }}>No past assessments found.</p>
+          ) : (
+            <div className="history-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {historyList.map((item) => (
+                <div key={item.id} className="symptom-card" style={{ padding: '1.5rem', borderRadius: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.15rem' }}>{item.ai_assessment?.possibleConditions?.[0] || 'Assessment'}</h3>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+                      {new Date(item.created_at).toLocaleDateString()} {new Date(item.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </span>
+                  </div>
+                  <p style={{ margin: '0 0 1rem 0', color: 'var(--text)', fontSize: '0.95rem' }}>
+                    <strong>Symptoms:</strong> {item.symptoms?.symptomsList}
+                  </p>
+                  <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.85rem', flexWrap: 'wrap' }}>
+                    <span style={{ padding: '0.35rem 0.85rem', background: 'var(--surface-strong)', borderRadius: '20px', fontWeight: 500, border: item.severity_level === 'emergency' ? '1px solid var(--danger)' : '1px solid transparent' }}>
+                      Severity: <strong style={{ color: item.severity_level === 'emergency' ? 'var(--danger)' : 'inherit' }}>{item.severity_level}</strong>
+                    </span>
+                    <span style={{ padding: '0.35rem 0.85rem', background: 'var(--surface-strong)', borderRadius: '20px', fontWeight: 500 }}>
+                      Specialist: <strong>{item.ai_assessment?.suggestedSpecialist || 'General'}</strong>
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
-            <button type="button" onClick={handleReset} className="step-back-btn">
-              <RotateCcw size={16} /> Start New Check
-            </button>
-          </div>
+          )}
+        </div>
+      ) : (
+        <>
+          {result ? (
+            result.needsFollowUp ? (
+            /* Needs Follow-Up View */
+            <div className="symptom-card">
+              <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span className="eyebrow" style={{ color: 'var(--primary)', fontWeight: 600 }}>More Information Needed</span>
+                  <h2 style={{ margin: '0.2rem 0 0 0' }}>Clarification Required</h2>
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--surface-strong)', borderRadius: '16px', padding: '1.25rem', marginTop: '1rem' }}>
+                <p style={{ margin: '0 0 1rem 0', color: 'var(--text)' }}>
+                  To ensure clinical safety and provide a highly accurate assessment, our AI needs a bit more context about your symptoms.
+                </p>
+                <h3 style={{ fontSize: '1rem', margin: '0 0 0.75rem 0' }}>Please answer the following:</h3>
+                <ul style={{ paddingLeft: '1.25rem', margin: '0 0 1.5rem 0', color: 'var(--text)', fontWeight: 500 }}>
+                  {result.questions?.map((item, index) => (
+                    <li key={index} style={{ marginBottom: '0.6rem' }}>{item}</li>
+                  ))}
+                </ul>
+                
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setResult(null);
+                    setStep(2); // Send them back to the symptoms step
+                  }} 
+                  className="step-next-btn"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  <ArrowLeft size={18} /> Update Symptoms
+                </button>
+              </div>
+
+              <p style={{ fontSize: '0.82rem', color: 'var(--muted)', fontStyle: 'italic', margin: '1.5rem 0 0 0' }}>
+                * Disclaimer: {result.disclaimer || 'This AI tool provides educational health guidance and is not a substitute for professional medical diagnosis.'}
+              </p>
+            </div>
+          ) : (
+            /* Results View */
+            <div className="symptom-card">
+              <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span className="eyebrow" style={{ color: 'var(--primary)', fontWeight: 600 }}>Assessment Completed</span>
+                  <h2 style={{ margin: '0.2rem 0 0 0' }}>Symptom Analysis Report</h2>
+                </div>
+                <button type="button" onClick={handleReset} className="step-back-btn">
+                  <RotateCcw size={16} /> Start New Check
+                </button>
+              </div>
 
           {result.emergencyWarning ? (
             <div className="emergency-banner" style={{ background: 'rgba(218, 68, 83, 0.12)', border: '1px solid rgba(218, 68, 83, 0.3)', borderRadius: '16px', padding: '1.25rem', color: 'var(--danger)', display: 'flex', gap: '0.85rem' }}>
@@ -156,8 +271,9 @@ function SymptomCheckerPage() {
           <p style={{ fontSize: '0.82rem', color: 'var(--muted)', fontStyle: 'italic', margin: 0 }}>
             * Disclaimer: {result.disclaimer || 'This AI tool provides educational health guidance and is not a substitute for professional medical diagnosis.'}
           </p>
-        </div>
-      ) : (
+            </div>
+            )
+          ) : (
         /* Multi-step Form Wizard */
         <div className="symptom-checker-grid">
           {/* Left Column: Form & Stepper Card */}
@@ -491,6 +607,8 @@ function SymptomCheckerPage() {
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );
