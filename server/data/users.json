@@ -4,6 +4,7 @@
     "id": "demo-user",
     "name": "Demo User",
     "email": "demo@example.com",
+    "passwordHash": "$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi",
     "authProvider": "email",
     "role": "user",
     "profile": {
@@ -13,6 +14,8 @@
     "appointments": [],
     "notifications": [],
     "history": [],
+    "resetToken": null,
+    "resetTokenExpires": null,
     "createdAt": "2026-07-29T14:05:32.896Z",
     "updatedAt": "2026-07-29T14:05:32.896Z"
   },
