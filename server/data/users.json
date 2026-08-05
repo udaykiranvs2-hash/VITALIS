@@ -99,5 +99,39 @@
     "history": [],
     "createdAt": "2026-07-31T06:02:05.104Z",
     "updatedAt": "2026-07-31T06:02:05.104Z"
+  },
+  {
+    "_id": "d2efd1a0-f155-40f9-a952-76d25bd1a4f7",
+    "id": "d2efd1a0-f155-40f9-a952-76d25bd1a4f7",
+    "name": "Test Developer",
+    "email": "test.dev@vitalis.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Test Developer"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-08-04T04:21:42.844Z",
+    "updatedAt": "2026-08-04T04:21:42.844Z"
+  },
+  {
+    "_id": "df20dd35-58d7-40dc-a30e-5907824519c5",
+    "id": "df20dd35-58d7-40dc-a30e-5907824519c5",
+    "name": "Kushaal",
+    "email": "kushaal227@gmail.com",
+    "authProvider": "google",
+    "role": "user",
+    "profile": {
+      "fullName": "Kushaal"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-08-04T04:21:51.759Z",
+    "updatedAt": "2026-08-04T04:21:51.759Z"
   }
 ]
