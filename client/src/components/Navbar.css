@@ -21,9 +21,10 @@
 }
 
 .app-navbar-container {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 0 1.75rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 1.5rem;
 }
 
 .app-navbar-row {
@@ -32,6 +33,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  width: 100%;
 }
 
 .app-navbar-logo {
