@@ -12,13 +12,46 @@ import './DoctorDirectoryPage.css';
 
 const defaultFilters = {
   specialty: '',
-  location: '',
+  state: '',
+  city: '',
   language: '',
   maxFee: '',
   availability: 'Any time',
   isOnline: false,
   isInClinic: false,
   sortBy: 'Relevance'
+};
+
+const indiaLocations = {
+  "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Tirupati"],
+  "Arunachal Pradesh": ["Itanagar", "Tawang", "Naharlagun"],
+  "Assam": ["Guwahati", "Silchar", "Dibrugarh", "Jorhat"],
+  "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+  "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba"],
+  "Delhi": ["New Delhi", "North Delhi", "South Delhi", "West Delhi"],
+  "Goa": ["Panaji", "Margao", "Vasco da Gama"],
+  "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar"],
+  "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Rohtak"],
+  "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala"],
+  "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
+  "Karnataka": ["Bengaluru", "Mysuru", "Hubballi", "Mangaluru", "Belagavi"],
+  "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam"],
+  "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain"],
+  "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad"],
+  "Manipur": ["Imphal"],
+  "Meghalaya": ["Shillong", "Tura"],
+  "Mizoram": ["Aizawl"],
+  "Nagaland": ["Kohima", "Dimapur"],
+  "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Puri"],
+  "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Chandigarh"],
+  "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner"],
+  "Sikkim": ["Gangtok"],
+  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
+  "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar"],
+  "Tripura": ["Agartala"],
+  "Uttar Pradesh": ["Lucknow", "Kanpur", "Ghaziabad", "Agra", "Varanasi", "Noida"],
+  "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Rishikesh"],
+  "West Bengal": ["Kolkata", "Howrah", "Darjeeling", "Siliguri", "Asansol"]
 };
 
 const specialties = ['Cardiologist', 'Dermatologist', 'Neurologist', 'Pediatrician', 'Orthopedic'];
@@ -82,7 +115,8 @@ function DoctorDirectoryPage() {
   const loadDoctors = async () => {
     setLoading(true);
     try {
-      const response = await getDoctors(filters);
+      const apiFilters = { ...filters, location: filters.city || filters.state };
+      const response = await getDoctors(apiFilters);
       setDoctors(response.data.doctors);
     } catch {
       setDoctors([]);
@@ -101,9 +135,8 @@ function DoctorDirectoryPage() {
 
   const handleClear = () => {
     setFilters(defaultFilters);
-    // wait for state update before searching, or just pass defaultFilters
     setTimeout(() => {
-      getDoctors(defaultFilters).then(res => setDoctors(res.data.doctors));
+      getDoctors({...defaultFilters, location: ''}).then(res => setDoctors(res.data.doctors));
     }, 0);
   };
 
@@ -131,7 +164,8 @@ function DoctorDirectoryPage() {
     const newSort = e.target.value;
     setFilters(prev => ({ ...prev, sortBy: newSort }));
     // trigger sort immediately
-    getDoctors({ ...filters, sortBy: newSort }).then(res => setDoctors(res.data.doctors));
+    const apiFilters = { ...filters, sortBy: newSort, location: filters.city || filters.state };
+    getDoctors(apiFilters).then(res => setDoctors(res.data.doctors));
   };
 
   const toggleBookmark = (id) => {
@@ -185,25 +219,58 @@ function DoctorDirectoryPage() {
             <button className={`doc-tab ${activeTab === 'Past Consultations' ? 'active' : ''}`} onClick={() => setActiveTab('Past Consultations')}>Past Consultations</button>
           </div>
 
-          <div className="doc-filters-grid">
-            <div className="doc-filter-item">
-              <label>Specialty</label>
-              <div className="doc-filter-input">
-                <select name="specialty" value={filters.specialty} onChange={handleChange}>
-                  <option value="">Select specialty</option>
-                  {specialties.map(spec => <option key={spec} value={spec}>{spec}</option>)}
-                </select>
-              </div>
-            </div>
+          {activeTab === 'Find Doctors' && (
+            <>
+              <div className="doc-filters-grid">
+                <div className="doc-filter-item">
+                  <label>Specialty</label>
+                  <div className="doc-filter-input">
+                    <select name="specialty" value={filters.specialty} onChange={handleChange}>
+                      <option value="">Select specialty</option>
+                      {specialties.map(spec => <option key={spec} value={spec}>{spec}</option>)}
+                    </select>
+                  </div>
+                </div>
 
-            <div className="doc-filter-item">
-              <label>State / City</label>
-              <div className="doc-filter-input">
-                <MapPin size={16} className="doc-filter-icon" />
-                <input name="location" value={filters.location} onChange={handleChange} placeholder="Select location" />
-                <ChevronDown size={14} className="doc-filter-icon" style={{marginLeft: 'auto'}} />
-              </div>
-            </div>
+                <div className="doc-filter-item">
+                  <label>State</label>
+                  <div className="doc-filter-input">
+                    <MapPin size={16} className="doc-filter-icon" />
+                    <select 
+                      name="state" 
+                      value={filters.state} 
+                      onChange={(e) => {
+                        // When state changes, reset city
+                        setFilters(prev => ({ ...prev, state: e.target.value, city: '' }));
+                      }} 
+                      style={{marginLeft: '8px'}}
+                    >
+                      <option value="">Select state</option>
+                      {Object.keys(indiaLocations).map(state => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="doc-filter-item">
+                  <label>City</label>
+                  <div className="doc-filter-input">
+                    <MapPin size={16} className="doc-filter-icon" />
+                    <select 
+                      name="city" 
+                      value={filters.city} 
+                      onChange={handleChange} 
+                      style={{marginLeft: '8px'}}
+                      disabled={!filters.state}
+                    >
+                      <option value="">Select city</option>
+                      {filters.state && indiaLocations[filters.state].map(city => (
+                        <option key={city} value={city}>{city}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
 
             <div className="doc-filter-item">
               <label>Language</label>
@@ -236,35 +303,37 @@ function DoctorDirectoryPage() {
                 </select>
               </div>
             </div>
-          </div>
+              </div>
 
-          <div className="doc-filters-actions">
-            <div className="doc-toggle-group">
-              <button 
-                type="button" 
-                className={`doc-toggle-btn ${filters.isOnline ? 'active' : ''}`}
-                onClick={() => handleToggle('isOnline')}
-              >
-                <Video size={16} /> Online Consultation
-              </button>
-              <button 
-                type="button" 
-                className={`doc-toggle-btn ${filters.isInClinic ? 'active' : ''}`}
-                onClick={() => handleToggle('isInClinic')}
-              >
-                <Building size={16} /> In-clinic Available
-              </button>
-            </div>
-            
-            <div className="doc-action-btns">
-              <button type="button" className="doc-clear-btn" onClick={handleClear}>
-                <RefreshCw size={14} /> Clear Filters
-              </button>
-              <button type="button" className="doc-search-btn" onClick={handleSearch}>
-                <Search size={16} /> Search Doctors
-              </button>
-            </div>
-          </div>
+              <div className="doc-filters-actions">
+                <div className="doc-toggle-group">
+                  <button 
+                    type="button" 
+                    className={`doc-toggle-btn ${filters.isOnline ? 'active' : ''}`}
+                    onClick={() => handleToggle('isOnline')}
+                  >
+                    <Video size={16} /> Online Consultation
+                  </button>
+                  <button 
+                    type="button" 
+                    className={`doc-toggle-btn ${filters.isInClinic ? 'active' : ''}`}
+                    onClick={() => handleToggle('isInClinic')}
+                  >
+                    <Building size={16} /> In-clinic Available
+                  </button>
+                </div>
+                
+                <div className="doc-action-btns">
+                  <button type="button" className="doc-clear-btn" onClick={handleClear}>
+                    <RefreshCw size={14} /> Clear Filters
+                  </button>
+                  <button type="button" className="doc-search-btn" onClick={handleSearch}>
+                    <Search size={16} /> Search Doctors
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </section>
 
         {/* Results Header */}

@@ -2,19 +2,40 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useDashboard } from '../context/DashboardContext.jsx';
-import { Menu, X, HeartPulse, Bell, ChevronDown, User, Settings, LogOut, LayoutDashboard, Calendar, Stethoscope, Inbox } from 'lucide-react';
+import { Menu, X, HeartPulse, Bell, ChevronDown, User, Settings, LogOut, LayoutDashboard, Calendar, Stethoscope, Inbox, Search, Sun, Moon, Activity, FileText, Scan, DollarSign, Users, History, Pill, Bot } from 'lucide-react';
 import './Navbar.css';
 
-export default function Navbar() {
+const APP_ROUTES = [
+  { label: 'Home', path: '/app', icon: 'HeartPulse', keywords: ['home', 'dashboard', 'main', 'start', 'overview'] },
+  { label: 'Symptom Checker', path: '/app/symptoms', icon: 'Activity', keywords: ['symptom', 'checker', 'symptoms', 'check symptoms', 'diagnose', 'illness', 'sick', 'pain', 'fever', 'disease'] },
+  { label: 'Report Analysis', path: '/app/report', icon: 'FileText', keywords: ['report', 'analysis', 'lab', 'blood test', 'medical report', 'document', 'pdf', 'upload report', 'lab results'] },
+  { label: 'X-ray Analysis', path: '/app/xray', icon: 'Scan', keywords: ['xray', 'x-ray', 'x ray', 'scan', 'radiology', 'chest xray', 'bone', 'image analysis', 'imaging'] },
+  { label: 'Cost Estimator', path: '/app/cost', icon: 'DollarSign', keywords: ['cost', 'estimator', 'price', 'fee', 'estimate', 'treatment cost', 'hospital cost', 'expense', 'budget', 'how much'] },
+  { label: 'Find Doctors', path: '/app/doctors', icon: 'Users', keywords: ['doctor', 'doctors', 'specialist', 'physician', 'cardiologist', 'dermatologist', 'find doctor', 'book appointment', 'appointment', 'consult', 'neurology'] },
+  { label: 'Health History', path: '/app/history', icon: 'History', keywords: ['history', 'past', 'records', 'consultations', 'past appointments', 'timeline', 'health records', 'previous'] },
+  { label: 'Medicine Info', path: '/app/medicine', icon: 'Pill', keywords: ['medicine', 'drug', 'medication', 'pill', 'tablet', 'prescription', 'pharma', 'dosage', 'side effects'] },
+  { label: 'AI Assistant', path: '/app/assistant', icon: 'Bot', keywords: ['ai', 'assistant', 'chat', 'ask', 'help', 'bot', 'ai chat', 'vitalis ai', 'question', 'query'] },
+  { label: 'Profile', path: '/app/profile', icon: 'User', keywords: ['profile', 'my profile', 'account', 'personal', 'details', 'edit profile', 'name', 'photo'] },
+  { label: 'Settings', path: '/app/settings', icon: 'Settings', keywords: ['settings', 'preferences', 'theme', 'dark mode', 'password', 'change password', 'notifications', 'privacy', 'account settings'] },
+];
+
+const ROUTE_ICONS = { HeartPulse, Activity, FileText, Scan, DollarSign, Users, History, Pill, Bot, User, Settings };
+
+
+export default function Navbar({ darkMode, onToggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, openLogoutModal, openLoginModal } = useAuth();
   const { showDashboard, toggleDashboard, closeDashboard } = useDashboard();
   const notificationsRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -22,19 +43,55 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close search results on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSearchResults(false);
+        setSelectedIndex(-1);
+      }
       if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
         setShowNotifications(false);
       }
     };
-    if (showNotifications) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showNotifications]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navLinks = ['Features', 'Doctors', 'Pricing', 'About', 'Contact'];
+
+  // --- Search logic ---
+  const filteredRoutes = searchQuery.trim().length > 0
+    ? APP_ROUTES.filter(route =>
+        route.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        route.keywords.some(kw => kw.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    : [];
+
+  const handleSearchKeyDown = (e) => {
+    if (!showSearchResults || filteredRoutes.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(i => Math.min(i + 1, filteredRoutes.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(i => Math.max(i - 1, 0));
+    } else if (e.key === 'Enter') {
+      const target = selectedIndex >= 0 ? filteredRoutes[selectedIndex] : filteredRoutes[0];
+      if (target) navigateToRoute(target);
+    } else if (e.key === 'Escape') {
+      setShowSearchResults(false);
+      setSearchQuery('');
+      setSelectedIndex(-1);
+    }
+  };
+
+  const navigateToRoute = (route) => {
+    setSearchQuery('');
+    setShowSearchResults(false);
+    setSelectedIndex(-1);
+    navigate(route.path);
+  };
 
   const appointments = Array.isArray(user?.appointments) ? user.appointments : [];
 
@@ -92,6 +149,62 @@ export default function Navbar() {
             </div>
           </button>
 
+          {/* Search bar - center */}
+          {user && (
+            <div className="app-navbar-search" ref={searchRef}>
+              <Search size={15} className="app-navbar-search-icon" />
+              <input
+                type="text"
+                className="app-navbar-search-input"
+                placeholder="Search features, doctors, tools..."
+                aria-label="Search"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSearchResults(e.target.value.trim().length > 0);
+                  setSelectedIndex(-1);
+                }}
+                onFocus={() => searchQuery.trim().length > 0 && setShowSearchResults(true)}
+                onKeyDown={handleSearchKeyDown}
+                autoComplete="off"
+              />
+              {searchQuery && (
+                <button className="app-search-clear" onClick={() => { setSearchQuery(''); setShowSearchResults(false); }} aria-label="Clear search">
+                  <X size={13} />
+                </button>
+              )}
+
+              {/* Search Results Dropdown */}
+              {showSearchResults && filteredRoutes.length > 0 && (
+                <div className="app-search-dropdown">
+                  {filteredRoutes.map((route, i) => {
+                    const IconComp = ROUTE_ICONS[route.icon];
+                    return (
+                      <button
+                        key={route.path}
+                        className={`app-search-result-item ${i === selectedIndex ? 'selected' : ''}`}
+                        onMouseDown={() => navigateToRoute(route)}
+                        onMouseEnter={() => setSelectedIndex(i)}
+                      >
+                        <span className="app-search-result-icon">
+                          {IconComp && <IconComp size={16} />}
+                        </span>
+                        <span className="app-search-result-label">{route.label}</span>
+                        <span className="app-search-result-path">{route.path.replace('/app', '')}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              {showSearchResults && filteredRoutes.length === 0 && searchQuery.trim().length > 0 && (
+                <div className="app-search-dropdown app-search-empty">
+                  <Search size={18} />
+                  <p>No results for "{searchQuery}"</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Desktop nav links (unauthenticated only) */}
           {!user && (
             <nav className="app-navbar-links">
@@ -105,6 +218,17 @@ export default function Navbar() {
           <div className="app-navbar-actions">
             {user ? (
               <div className="app-navbar-user-section">
+                {/* Theme toggle orb */}
+                <button
+                  type="button"
+                  className={`app-navbar-theme-orb ${darkMode ? 'dark' : 'light'}`}
+                  onClick={onToggleTheme}
+                  aria-label="Toggle dark mode"
+                  title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                >
+                  {darkMode ? <Moon size={14} strokeWidth={2.5} /> : <Sun size={14} strokeWidth={2.5} />}
+                </button>
+
                 {/* Notification bell */}
                 <div className="app-navbar-notifications-wrapper" ref={notificationsRef}>
                   <button

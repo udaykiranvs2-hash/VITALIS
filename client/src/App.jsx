@@ -38,7 +38,7 @@ function AppLayout({ darkMode, onToggleTheme }) {
 
   return (
     <div className={`app-shell ${showDashboard ? 'app-shell-dashboard' : ''}`}>
-      <Navbar />
+      <Navbar darkMode={darkMode} onToggleTheme={onToggleTheme} />
       {showDashboard ? (
         <div className="app-main-layout">
           <Sidebar />
