@@ -26,6 +26,7 @@ import RegisterModal from './components/RegisterModal.jsx';
 import LogoutModal from './components/LogoutModal.jsx';
 import AmbientEffects from './components/AmbientEffects.jsx';
 import FloatingAiChat from './components/FloatingAiChat.jsx';
+import WaterAlarm from './components/WaterAlarm.jsx';
 
 /**
  * The single authenticated layout.
@@ -73,6 +74,7 @@ function App() {
     <div className="app-root">
       <AmbientEffects />
       <FloatingAiChat />
+      <WaterAlarm />
       <LoginModal />
       <RegisterModal />
       <LogoutModal />
