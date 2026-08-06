@@ -12,7 +12,7 @@ export default function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, openLoginModal } = useAuth();
+  const { user, openLogoutModal, openLoginModal } = useAuth();
   const { showDashboard, toggleDashboard, closeDashboard } = useDashboard();
   const notificationsRef = useRef(null);
 
@@ -57,9 +57,7 @@ export default function Navbar() {
     setIsOpen(false);
     setShowDropdown(false);
     setShowNotifications(false);
-    closeDashboard();
-    logout();
-    navigate('/');
+    openLogoutModal();
   };
 
   const handleDashboardToggle = () => {

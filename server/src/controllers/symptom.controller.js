@@ -6,6 +6,7 @@ import { EmergencyEngine } from '../ai/rag/emergency.engine.js';
 import { FollowUpEngine } from '../ai/rag/followup.engine.js';
 import { RagRetriever } from '../ai/rag/retriever.js';
 import { SymptomAnalysisService } from '../ai/rag/analyzer.js';
+import { buildSymptomAssessment, buildLocalSymptomAssessment } from '../services/ai.service.js';
 
 // Initialize the new AI Architecture using Dependency Injection
 let aiService = null;
@@ -44,7 +45,7 @@ export const assessSymptoms = async (req, res) => {
 
     if (aiService) {
       try {
-        // Route the request through the new orchestrator
+        // Route the request through the orchestrator
         const aiResult = await aiService.analyze({
           symptoms,
           profile: { 
@@ -59,7 +60,7 @@ export const assessSymptoms = async (req, res) => {
           }
         });
 
-        // Adapter Pattern: Map the strictly structured backend output to the exact frontend schema
+        // Adapter Pattern: Map the output to the exact frontend schema
         let emergencyWarning = null;
         if (aiResult.emergency) {
           emergencyWarning = {
@@ -69,7 +70,6 @@ export const assessSymptoms = async (req, res) => {
         }
 
         if (aiResult.needsFollowUp) {
-          // Explicitly pass follow-up state to the frontend
           result = {
             needsFollowUp: true,
             questions: aiResult.questions,
@@ -84,26 +84,29 @@ export const assessSymptoms = async (req, res) => {
             confidence: aiResult.confidence || '70%',
             severityLevel: severity || 'moderate',
             suggestedSpecialist: aiResult.specialist || 'General Physician',
+            summaryPoints: aiResult.summaryPoints || [
+              `You are currently experiencing ${symptomsList} for ${duration || 'a few days'} with ${severity || 'moderate'} severity.`,
+              'Your body is actively working to manage your health and restore your natural metabolic balance.',
+              'Prioritizing rest and proper care now will support your body\'s natural recovery.'
+            ],
+            preventionSteps: aiResult.preventionSteps || [
+              'Drink plenty of warm fluids (water, herbal teas, or clear broths) throughout the day to stay well-hydrated.',
+              'Get at least 7 to 8 hours of quiet, restful sleep each night to rebuild strength.',
+              'Avoid cold drafts, heavy or fried foods, and strenuous physical exertion while recovering.',
+              'Practice good hygiene and wash hands frequently to protect against secondary infections.'
+            ],
             nextSteps: aiResult.nextSteps || []
           };
         }
       } catch (aiError) {
         console.error('[SymptomController] AI Analysis Error:', aiError.message);
-        result = null; // Set to null to trigger fallback
+        result = null; // Trigger local fallback
       }
     }
     
     if (!result) {
-      // Fallback if AI not configured or failed due to API limits
-      result = {
-        disclaimer: 'This assessment is informational only and is not a substitute for professional medical advice.',
-        emergencyWarning: null,
-        possibleConditions: ['General wellness review'],
-        confidence: '70%',
-        severityLevel: severity || 'moderate',
-        suggestedSpecialist: 'General Physician',
-        nextSteps: ['Keep a symptom journal', 'Contact primary care if symptoms worsen']
-      };
+      // High-grade fallback if AI architecture fails or hits API quota limits
+      result = buildLocalSymptomAssessment({ age, gender, symptoms, duration, severity });
     }
 
     // Persist to Supabase if available

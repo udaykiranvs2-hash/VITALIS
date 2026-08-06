@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Activity, 
   FileText, 
@@ -13,7 +13,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Sidebar() {
   const location = useLocation();
-  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const { openLogoutModal } = useAuth();
   
   const navItems = [
     { label: 'Symptom Checker', icon: <Activity size={20} />, path: '/app/symptoms' },
@@ -23,26 +24,48 @@ export default function Sidebar() {
     { label: 'Doctors', icon: <Users size={20} />, path: '/app/doctors' },
   ];
 
+  const handleLogout = () => {
+    openLogoutModal();
+  };
+
   return (
     <aside className="app-sidebar">
-      <nav className="sidebar-nav">
-        {navItems.map((item) => (
-          <Link 
-            key={item.label} 
-            to={item.path} 
-            className={`sidebar-link ${location.pathname === item.path ? 'active' : ''}`}
-          >
-            {item.icon}
-            <span>{item.label}</span>
-          </Link>
-        ))}
-      </nav>
-      
-      {/* The user requested to keep Settings and Logout in the top navbar, 
-          so we don't necessarily need them here, but the image shows them. 
-          The user prompt says: "keep the settings and log out button as it is how it is now and dont change their positions" 
-          This means we will leave them in the Navbar and not put them in the Sidebar. 
-          We'll keep the sidebar clean. */}
+      <div className="sidebar-top-section">
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path || (item.path === '/app/symptoms' && (location.pathname === '/app' || location.pathname === '/app/'));
+            return (
+              <Link 
+                key={item.label} 
+                to={item.path} 
+                className={`sidebar-link ${isActive ? 'active' : ''}`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div className="sidebar-bottom-section">
+        <hr className="sidebar-divider" />
+        <Link 
+          to="/app/settings" 
+          className={`sidebar-link ${location.pathname === '/app/settings' ? 'active' : ''}`}
+        >
+          <Settings size={20} />
+          <span>Settings</span>
+        </Link>
+        <button 
+          type="button" 
+          className="sidebar-link sidebar-logout-btn"
+          onClick={handleLogout}
+        >
+          <LogOut size={20} />
+          <span>Log Out</span>
+        </button>
+      </div>
     </aside>
   );
 }
