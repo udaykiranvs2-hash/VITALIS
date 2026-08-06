@@ -1,4 +1,5 @@
 import { SYSTEM_ROLE_MEDICAL_ASSISTANT, buildSymptomAnalysisPrompt } from '../prompts/templates.js';
+import { NormalizerEngine } from './normalizer.engine.js';
 
 /**
  * The core orchestrator for symptom analysis.
@@ -6,12 +7,14 @@ import { SYSTEM_ROLE_MEDICAL_ASSISTANT, buildSymptomAnalysisPrompt } from '../pr
  */
 export class SymptomAnalysisService {
   /**
+   * @param {import('./normalizer.engine.js').NormalizerEngine} normalizerEngine
    * @param {import('./emergency.engine.js').EmergencyEngine} emergencyEngine
    * @param {import('./followup.engine.js').FollowUpEngine} followupEngine
    * @param {import('./retriever.js').RagRetriever} ragRetriever
    * @param {import('../llm/provider.js').LLMProvider} llmProvider
    */
-  constructor(emergencyEngine, followupEngine, ragRetriever, llmProvider) {
+  constructor(normalizerEngine, emergencyEngine, followupEngine, ragRetriever, llmProvider) {
+    this.normalizerEngine = normalizerEngine;
     this.emergencyEngine = emergencyEngine;
     this.followupEngine = followupEngine;
     this.ragRetriever = ragRetriever;
@@ -27,10 +30,16 @@ export class SymptomAnalysisService {
    * @returns {Promise<Object>} The structured JSON analysis or follow-up request
    */
   async analyze(patientData) {
+    console.log('[SymptomAnalysisService] analyze() called with payload:', JSON.stringify(patientData));
     const { symptoms = [], profile = {} } = patientData;
 
+    // 0. NORMALIZE SYMPTOMS
+    console.log('[SymptomAnalysisService] Normalizing symptoms...');
+    const normalizedSymptoms = await this.normalizerEngine.normalize(symptoms);
+    console.log('[SymptomAnalysisService] Symptoms normalized:', normalizedSymptoms);
+
     // 1. FAST EMERGENCY CHECK
-    const emergencyResult = await this.emergencyEngine.evaluate(symptoms, profile);
+    const emergencyResult = await this.emergencyEngine.evaluate(normalizedSymptoms, profile);
     if (emergencyResult.isEmergency) {
       return {
         possibleConditions: ["Unknown Medical Emergency"],
@@ -48,7 +57,7 @@ export class SymptomAnalysisService {
 
     // 2. FOLLOW-UP QUESTION ENGINE
     // Checks if we have enough context to make a safe RAG query.
-    const followupResult = await this.followupEngine.evaluate(symptoms, profile);
+    const followupResult = await this.followupEngine.evaluate(normalizedSymptoms, profile);
     if (followupResult.needsMoreInfo && followupResult.questions.length > 0) {
       // The API layer will read this flag and prompt the user for answers
       return {
@@ -60,11 +69,11 @@ export class SymptomAnalysisService {
 
     // 3. RAG RETRIEVAL
     // We only pull what we absolutely need, preventing token bloat and hallucination.
-    const context = await this.ragRetriever.retrieveContext(symptoms);
+    const context = await this.ragRetriever.retrieveContext(normalizedSymptoms);
 
     // 4. LLM GENERATION
     const prompt = buildSymptomAnalysisPrompt({
-      symptoms,
+      symptoms: normalizedSymptoms,
       profile,
       context
     });

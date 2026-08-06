@@ -71,3 +71,21 @@ Symptoms: ${symptoms.join(', ')}
 Respond strictly in JSON:
 { "isEmergency": boolean, "reason": "Brief reason if true", "immediateAction": "Call 911 / Go to ER / null" }
 `;
+
+/**
+ * Builds the prompt for normalizing colloquial symptoms into standard medical terms.
+ */
+export const buildSymptomNormalizationPrompt = ({ symptoms }) => `
+Translate the following colloquial or user-provided symptom descriptions into standardized medical terminology. 
+Correct any typos. If a symptom is already a standard medical term, leave it as is or correct its spelling.
+Do not hallucinate conditions or invent symptoms.
+
+Reported Symptoms: ${symptoms.join(', ')}
+
+Task:
+Generate a structured JSON response containing the list of normalized symptoms.
+Output MUST strictly match this JSON schema:
+{
+  "normalizedSymptoms": ["clinical term 1", "clinical term 2"]
+}
+`;

@@ -6,6 +6,7 @@ import { EmergencyEngine } from '../ai/rag/emergency.engine.js';
 import { FollowUpEngine } from '../ai/rag/followup.engine.js';
 import { RagRetriever } from '../ai/rag/retriever.js';
 import { SymptomAnalysisService } from '../ai/rag/analyzer.js';
+import { NormalizerEngine } from '../ai/rag/normalizer.engine.js';
 
 // Initialize the new AI Architecture using Dependency Injection
 let aiService = null;
@@ -15,11 +16,12 @@ try {
     const embeddingProvider = new GeminiEmbeddingProvider(process.env.GEMINI_API_KEY);
     const vectorStore = new VectorStore(embeddingProvider);
     
+    const normalizerEngine = new NormalizerEngine(llmProvider);
     const emergencyEngine = new EmergencyEngine();
     const followupEngine = new FollowUpEngine(llmProvider);
     const ragRetriever = new RagRetriever(vectorStore);
     
-    aiService = new SymptomAnalysisService(emergencyEngine, followupEngine, ragRetriever, llmProvider);
+    aiService = new SymptomAnalysisService(normalizerEngine, emergencyEngine, followupEngine, ragRetriever, llmProvider);
     console.log('[SymptomController] AI Architecture initialized successfully.');
   }
 } catch (err) {

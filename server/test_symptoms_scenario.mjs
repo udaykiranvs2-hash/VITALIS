@@ -45,6 +45,20 @@ async function run() {
   
   const scenarios = [
     {
+      name: 'User Scenario - Trouble Breathing, Fever',
+      payload: { 
+        age: "19", 
+        gender: 'male', 
+        duration: "3-7 days", 
+        severity: "moderate", 
+        symptoms: ["Trouble Breathing", "Fever", "Cough", "Sneezing"], 
+        medicalHistory: [], 
+        allergies: [], 
+        medications: [], 
+        lifestyle: { activityLevel: "Sedentary", sleepHours: "7-9 hours", stressLevel: "Low", notes: "" } 
+      }
+    },
+    {
       name: 'Emergency - Severe chest pain',
       payload: { age: 45, gender: 'male', symptoms: ['severe chest pain', 'shortness of breath'] }
     },

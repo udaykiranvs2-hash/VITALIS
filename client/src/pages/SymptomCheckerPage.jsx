@@ -96,8 +96,9 @@ function SymptomCheckerPage() {
       setResult(response.data);
       setToast('Symptom assessment completed successfully.');
     } catch (err) {
-      console.error(err);
-      setToast('Unable to complete symptom assessment. Please try again.');
+      console.error('Symptom Check Error:', err);
+      const msg = err.response?.data?.message || err.message || 'Unknown error occurred.';
+      setToast(`Unable to complete assessment: ${msg}`);
     } finally {
       setLoading(false);
     }
