@@ -34,7 +34,8 @@ export const analyzeReport = async (req, res) => {
       summary: analysis.summary,
       findings: analysis.findings,
       abnormalValues: analysis.abnormalValues,
-      rawText: fileText || ''
+      rawText: fileText || '',
+      uploadedAt: new Date().toISOString()
     });
     user.notifications.push({
       message: 'Your report analysis is ready in Health History.',
@@ -51,7 +52,7 @@ export const analyzeXray = async (req, res) => {
   const analysis = await analyzeXrayImage({ fileName: req.file.originalname, mimeType: req.file.mimetype, buffer: req.file.buffer });
   const user = await findUserById(req.userId);
   if (user) {
-    user.reports.unshift({ title: analysis.title, type: 'X-ray', fileName: req.file.originalname, summary: analysis.summary, findings: analysis.findings, abnormalValues: [], rawText: '' });
+    user.reports.unshift({ title: analysis.title, type: 'X-ray', fileName: req.file.originalname, summary: analysis.summary, findings: analysis.findings, abnormalValues: [], rawText: '', uploadedAt: new Date().toISOString() });
     user.notifications.push({ message: 'Your X-ray upload review is ready in Health History.', type: 'report' });
     await user.save();
   }

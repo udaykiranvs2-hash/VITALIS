@@ -122,16 +122,93 @@
     "id": "df20dd35-58d7-40dc-a30e-5907824519c5",
     "name": "Kushaal",
     "email": "kushaal227@gmail.com",
-    "authProvider": "google",
+    "authProvider": "email",
     "role": "user",
     "profile": {
       "fullName": "Kushaal"
     },
-    "reports": [],
-    "appointments": [],
-    "notifications": [],
+    "reports": [
+      {
+        "title": "X-ray Analysis Result",
+        "type": "X-ray",
+        "fileName": "images.jpg",
+        "summary": "The uploaded image depicts a medical textbook cover featuring an annotated chest X-ray with color-coded overlays. Diagnostic assessment is severely constrained as this is an educational illustration with graphic and text overlays rather than a raw clinical radiograph.",
+        "findings": [
+          "1. Frontal chest radiograph visible as part of a textbook cover graphic, featuring color overlays highlighting the right lung, trachea, and cardiac contours.",
+          "2. Image contains overlaid educational text and graphics that obscure underlying anatomical details.",
+          "3. Image quality, resolution, and non-standard lighting from the book layout limit standard clinical review.",
+          "4. No definitive diagnostic conclusions regarding patient pathology can be drawn from a publishing cover graphic."
+        ],
+        "abnormalValues": [],
+        "rawText": "",
+        "uploadedAt": "2026-08-06T04:36:51.948Z"
+      },
+      {
+        "title": "X-ray Analysis Result",
+        "type": "X-ray",
+        "fileName": "images.jpg",
+        "summary": "Frontal chest radiograph demonstrating clear lung fields without obvious focal consolidation, pneumothorax, or pleural effusion. The cardiac silhouette and mediastinal contours appear within normal limits.",
+        "findings": [
+          "Lungs are well-aerated bilaterally with preserved vascular markings and no overt consolidations.",
+          "Cardiac silhouette and mediastinal contours appear within normal size and anatomical alignment.",
+          "Bilateral costophrenic angles are clear without visible pleural fluid accumulation.",
+          "Assessment is limited by image resolution; subtle or early interstitial processes cannot be completely excluded."
+        ],
+        "abnormalValues": [],
+        "rawText": "",
+        "uploadedAt": "2026-08-05T09:43:18.187Z"
+      }
+    ],
+    "appointments": [
+      {
+        "doctorId": "doc2",
+        "doctorName": "Dr. Anjali Mehta",
+        "specialty": "Dermatologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      },
+      {
+        "doctorId": "doc3",
+        "doctorName": "Dr. Arjun Patel",
+        "specialty": "Neurologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      },
+      {
+        "doctorId": "doc1",
+        "doctorName": "Dr. Ramesh Kumar",
+        "specialty": "Cardiologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      }
+    ],
+    "notifications": [
+      {
+        "message": "Your X-ray upload review is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your X-ray upload review is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Appointment booked with Dr. Ramesh Kumar on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      },
+      {
+        "message": "Appointment booked with Dr. Arjun Patel on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      },
+      {
+        "message": "Appointment booked with Dr. Anjali Mehta on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      }
+    ],
     "history": [],
-    "createdAt": "2026-08-04T04:21:51.759Z",
-    "updatedAt": "2026-08-04T04:21:51.759Z"
+    "createdAt": "2026-08-06T05:51:09.035Z",
+    "updatedAt": "2026-08-06T05:51:09.035Z"
   }
 ]

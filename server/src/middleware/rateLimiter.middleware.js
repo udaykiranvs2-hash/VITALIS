@@ -12,7 +12,7 @@ export const apiLimiter = rateLimit({
 
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 15, // Limit each IP to 15 auth attempts per window
+  limit: 1000, // Increased for development
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   message: {

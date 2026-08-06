@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchHistory } from '../api/api.js';
 import Loader from '../components/Loader.jsx';
 
@@ -44,7 +44,7 @@ function HistoryPage() {
                   <li key={report._id || report.uploadedAt}>
                     <strong>{report.title}</strong>
                     <p>{report.summary}</p>
-                    <span>{new Date(report.uploadedAt).toLocaleDateString()}</span>
+                    <span>{report.uploadedAt ? new Date(report.uploadedAt).toLocaleDateString() : 'Recently'}</span>
                   </li>
                 ))}
               </ul>

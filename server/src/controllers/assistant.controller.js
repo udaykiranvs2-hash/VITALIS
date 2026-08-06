@@ -52,7 +52,7 @@ CRITICAL RULES FOR FORMATTING:
 - Never stop mid-sentence; ensure the response is complete but as short as possible.`;
 
 export const chat = async (req, res) => {
-  const { message, history = [] } = req.body;
+  const { message, history = [], pageContext } = req.body;
 
   if (typeof message !== 'string' || !message.trim()) {
     return res.status(400).json({ message: 'Please type a question or topic.' });
@@ -77,12 +77,17 @@ export const chat = async (req, res) => {
             }))
         : [];
 
+      let dynamicSystemInstruction = systemInstruction;
+      if (pageContext) {
+        dynamicSystemInstruction += `\n\nCRITICAL CONTEXT:\nThe user is currently viewing a screen in the Vitalis app with the following text content:\n"""\n${pageContext}\n"""\nIf the user asks a question related to what they are seeing on the screen, use this context to provide a highly professional, accurate, and relevant answer based ONLY on this text. Do not make up information that isn't in the context if they are asking about the screen.`;
+      }
+
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
         contents: [...previousMessages, { role: 'user', parts: [{ text: message.trim() }] }],
         config: {
-          systemInstruction,
+          systemInstruction: dynamicSystemInstruction,
           temperature: 0.3,
           maxOutputTokens: 1500
         }
