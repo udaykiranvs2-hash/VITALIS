@@ -1,11 +1,22 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { fetchHistory } from '../api/api.js';
 import Loader from '../components/Loader.jsx';
 
 function HistoryPage() {
-  const [history, setHistory] = useState({ reports: [], appointments: [], history: [] });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialFilter = searchParams.get('type') || searchParams.get('filter') || 'all';
+  const [activeTab, setActiveTab] = useState(initialFilter);
+  const [history, setHistory] = useState({ reports: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const typeParam = searchParams.get('type') || searchParams.get('filter');
+    if (typeParam) {
+      setActiveTab(typeParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -22,14 +33,64 @@ function HistoryPage() {
     loadHistory();
   }, []);
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSearchParams({ type: tab });
+  };
+
+  const filteredReports = (history.reports || []).filter((report) => {
+    const isXray = report.type === 'X-ray' || report.title?.toLowerCase().includes('x-ray');
+    if (activeTab === 'xray') return isXray;
+    if (activeTab === 'report') return !isXray;
+    return true;
+  });
+
+  const getHeadingText = () => {
+    if (activeTab === 'xray') return 'X-Ray Analysis History';
+    if (activeTab === 'report') return 'Report Analysis History';
+    return 'Track records and report summaries.';
+  };
+
   return (
     <div className="feature-page">
       <div className="section-header">
         <div>
-          <p className="eyebrow">Health history</p>
-          <h1>Track records, appointments and summaries.</h1>
+          <p className="eyebrow">
+            {activeTab === 'xray'
+              ? 'X-Ray History'
+              : activeTab === 'report'
+              ? 'Report Analysis History'
+              : 'Health History'}
+          </p>
+          <h1>{getHeadingText()}</h1>
+        </div>
+
+        {/* Category Tabs */}
+        <div className="history-tab-buttons" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            className={`secondary-button ${activeTab === 'all' ? 'active-tab' : ''}`}
+            onClick={() => handleTabChange('all')}
+          >
+            All History
+          </button>
+          <button
+            type="button"
+            className={`secondary-button ${activeTab === 'report' ? 'active-tab' : ''}`}
+            onClick={() => handleTabChange('report')}
+          >
+            📄 Report Analysis
+          </button>
+          <button
+            type="button"
+            className={`secondary-button ${activeTab === 'xray' ? 'active-tab' : ''}`}
+            onClick={() => handleTabChange('xray')}
+          >
+            🩻 X-Ray Analysis
+          </button>
         </div>
       </div>
+
       {loading ? (
         <Loader label="Loading health history…" />
       ) : error ? (
@@ -37,53 +98,44 @@ function HistoryPage() {
       ) : (
         <div className="timeline-grid">
           <section>
-            <h2>Recent reports</h2>
-            {history.reports.length ? (
+            <h2>
+              {activeTab === 'xray'
+                ? 'Recent X-Ray Analyses'
+                : activeTab === 'report'
+                ? 'Recent Report Analyses'
+                : 'Recent Reports'}
+            </h2>
+            {filteredReports.length ? (
               <ul className="timeline-list">
-                {history.reports.map((report) => (
-                  <li key={report._id || report.uploadedAt}>
-                    <strong>{report.title}</strong>
-                    <p>{report.summary}</p>
-                    <span>{new Date(report.uploadedAt).toLocaleDateString()}</span>
-                  </li>
-                ))}
+                {filteredReports.map((report, idx) => {
+                  const dateVal = report.uploadedAt || report.createdAt || report.created_at;
+                  const dateObj = dateVal ? new Date(dateVal) : new Date();
+                  const formattedDate = isNaN(dateObj.getTime())
+                    ? new Date().toLocaleDateString()
+                    : dateObj.toLocaleDateString();
+                  const isXray = report.type === 'X-ray' || report.title?.toLowerCase().includes('x-ray');
+                  return (
+                    <li key={report._id || report.id || idx}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <strong>{report.title}</strong>
+                        <span className={`report-tag-pill ${isXray ? 'xray-tag' : 'lab-tag'}`}>
+                          {isXray ? '🩻 X-Ray' : '📄 Lab Report'}
+                        </span>
+                      </div>
+                      <p>{report.summary}</p>
+                      <span>{formattedDate}</span>
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
-              <p className="empty-state">No uploaded reports yet.</p>
-            )}
-          </section>
-
-          <section>
-            <h2>Appointments</h2>
-            {history.appointments.length ? (
-              <ul className="timeline-list">
-                {history.appointments.map((appointment) => (
-                  <li key={appointment._id || appointment.date + appointment.time}>
-                    <strong>{appointment.doctorName}</strong>
-                    <p>{appointment.specialty}</p>
-                    <span>{appointment.date} • {appointment.time} • {appointment.status}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty-state">No appointments scheduled yet.</p>
-            )}
-          </section>
-
-          <section>
-            <h2>Symptom checks</h2>
-            {history.history.length ? (
-              <ul className="timeline-list">
-                {history.history.map((item) => (
-                  <li key={item._id || item.checkedAt}>
-                    <strong>{item.result?.possibleConditions?.join(', ') || 'Symptom check'}</strong>
-                    <p>Severity: {item.severity}, Duration: {item.duration}</p>
-                    <span>{new Date(item.checkedAt).toLocaleDateString()}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty-state">No symptom checks recorded yet.</p>
+              <p className="empty-state">
+                {activeTab === 'xray'
+                  ? 'No X-ray analyses recorded yet.'
+                  : activeTab === 'report'
+                  ? 'No report analyses recorded yet.'
+                  : 'No uploaded reports yet.'}
+              </p>
             )}
           </section>
         </div>

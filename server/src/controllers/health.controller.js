@@ -3,47 +3,72 @@ import { buildSymptomAssessment, analyzeReportDocument, analyzeXrayImage } from 
 
 
 export const analyzeReport = async (req, res) => {
-  let reportType = req.body?.reportType;
-  let reportName = req.body?.reportName;
-  let fileName = req.body?.fileName;
-  let fileText = req.body?.fileText || '';
+  try {
+    let reportType = req.body?.reportType;
+    let reportName = req.body?.reportName;
+    let fileName = req.body?.fileName;
+    let fileText = req.body?.fileText || '';
+    let buffer = null;
+    let mimeType = '';
 
-  if (req.file) {
-    fileName = req.file.originalname;
-    if (!reportName) {
-      reportName = req.file.originalname;
+    if (req.file) {
+      fileName = req.file.originalname;
+      mimeType = req.file.mimetype;
+      buffer = req.file.buffer;
+      if (!reportName) {
+        reportName = req.file.originalname;
+      }
+
+      if (mimeType === 'application/pdf' || fileName.toLowerCase().endsWith('.pdf')) {
+        try {
+          const pdfParse = (await import('pdf-parse')).default;
+          const parsedPdf = await pdfParse(buffer);
+          if (parsedPdf && parsedPdf.text) {
+            fileText = parsedPdf.text;
+          }
+        } catch (pdfErr) {
+          console.warn('PDF text extraction notice:', pdfErr.message);
+        }
+      } else if (mimeType.startsWith('text/') || fileName.toLowerCase().endsWith('.txt')) {
+        fileText = buffer.toString('utf-8');
+      }
     }
-    if (req.file.buffer) {
-      fileText = req.file.buffer.toString('utf-8');
+
+    const analysis = await analyzeReportDocument({
+      reportType: reportType || 'Lab Report',
+      fileName: reportName || fileName || 'Uploaded report',
+      rawText: fileText || '',
+      buffer,
+      mimeType
+    });
+
+    const user = await findUserById(req.userId);
+
+    if (user) {
+      user.reports.unshift({
+        title: analysis.title,
+        type: reportType || 'Lab Report',
+        fileName: fileName || reportName || 'health-report',
+        summary: analysis.summary,
+        writingStyle: analysis.writingStyle,
+        parameters: analysis.parameters,
+        findings: analysis.findings,
+        abnormalValues: analysis.abnormalValues,
+        recommendations: analysis.recommendations,
+        rawText: fileText || ''
+      });
+      user.notifications.push({
+        message: 'Your report analysis is ready in Health History.',
+        type: 'report'
+      });
+      await user.save();
     }
+
+    return res.status(200).json(analysis);
+  } catch (error) {
+    console.error('Report controller error:', error);
+    return res.status(500).json({ message: 'Error processing report analysis: ' + error.message });
   }
-
-  const analysis = await analyzeReportDocument({
-    reportType: reportType || 'Lab Report',
-    fileName: reportName || fileName || 'Uploaded report',
-    rawText: fileText || ''
-  });
-
-  const user = await findUserById(req.userId);
-
-  if (user) {
-    user.reports.unshift({
-      title: analysis.title,
-      type: reportType || 'Lab Report',
-      fileName: fileName || reportName || 'health-report',
-      summary: analysis.summary,
-      findings: analysis.findings,
-      abnormalValues: analysis.abnormalValues,
-      rawText: fileText || ''
-    });
-    user.notifications.push({
-      message: 'Your report analysis is ready in Health History.',
-      type: 'report'
-    });
-    await user.save();
-  }
-
-  return res.status(200).json(analysis);
 };
 
 export const analyzeXray = async (req, res) => {
@@ -51,7 +76,16 @@ export const analyzeXray = async (req, res) => {
   const analysis = await analyzeXrayImage({ fileName: req.file.originalname, mimeType: req.file.mimetype, buffer: req.file.buffer });
   const user = await findUserById(req.userId);
   if (user) {
-    user.reports.unshift({ title: analysis.title, type: 'X-ray', fileName: req.file.originalname, summary: analysis.summary, findings: analysis.findings, abnormalValues: [], rawText: '' });
+    user.reports.unshift({
+      title: analysis.title,
+      type: 'X-ray',
+      fileName: req.file.originalname,
+      summary: analysis.summary,
+      findings: analysis.findings,
+      abnormalValues: [],
+      rawText: '',
+      uploadedAt: new Date().toISOString()
+    });
     user.notifications.push({ message: 'Your X-ray upload review is ready in Health History.', type: 'report' });
     await user.save();
   }

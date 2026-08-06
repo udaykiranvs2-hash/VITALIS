@@ -23,8 +23,10 @@ import SettingsPage from './pages/SettingsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import LoginModal from './components/LoginModal.jsx';
 import RegisterModal from './components/RegisterModal.jsx';
+import LogoutModal from './components/LogoutModal.jsx';
 import AmbientEffects from './components/AmbientEffects.jsx';
 import FloatingAiChat from './components/FloatingAiChat.jsx';
+
 
 /**
  * The single authenticated layout.
@@ -35,21 +37,24 @@ function AppLayout({ darkMode, onToggleTheme }) {
   const { showDashboard } = useDashboard();
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${showDashboard ? 'app-shell-dashboard' : ''}`}>
       <Navbar />
       {showDashboard ? (
         <div className="app-main-layout">
           <Sidebar />
           <main className="app-content app-content-with-sidebar">
             <Outlet context={{ darkMode, onToggleTheme }} />
+            <Footer />
           </main>
         </div>
       ) : (
-        <main className="app-content">
-          <Outlet context={{ darkMode, onToggleTheme }} />
-        </main>
+        <>
+          <main className="app-content">
+            <Outlet context={{ darkMode, onToggleTheme }} />
+          </main>
+          <Footer />
+        </>
       )}
-      <Footer />
     </div>
   );
 }
@@ -69,8 +74,10 @@ function App() {
     <div className="app-root">
       <AmbientEffects />
       <FloatingAiChat />
+
       <LoginModal />
       <RegisterModal />
+      <LogoutModal />
 
       {showSplash && (
         <div className="vitalis-splash-overlay" aria-hidden="true">

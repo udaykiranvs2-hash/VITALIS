@@ -35,26 +35,24 @@ const cannedReplies = [
   }
 ];
 
-const defaultReply = 'I am here to provide general health guidance. Please remember this is informational and not a replacement for professional medical advice.';
+const defaultReply = 'I am here to help you understand your health better.';
 
-const disclaimer =
-  'This assistant provides educational guidance only and does not replace a medical professional.';
+const systemInstruction = `You are Vitalis, an expert AI Health & Medical Assistant.
 
-const systemInstruction = `You are Vitalis, an expert AI Health & Medical Assistant. Your role is to provide users with direct, highly accurate, well-structured, and practical medical and wellness information.
+When a user asks about any health concern, symptom, condition, report, or lifestyle advice:
+1. Quickly explain what could be causing the issue in simple terms.
+2. Provide 1-2 actionable self-care steps.
+3. State when to see a doctor.
 
-When a user asks about any health concern, symptom (such as cold, fever, headache, cough, body pain), condition, report, or lifestyle advice:
-1. **Direct Answer / Overview**: Immediately explain what could be causing the issue in clear, easy-to-understand terms.
-2. **Key Symptoms & Variations**: Highlight common accompanying symptoms or variations to look out for.
-3. **Actionable Self-Care & Home Remedies**: Provide safe, practical, step-by-step guidance (rest, hydration, nutrition, and over-the-counter options where appropriate).
-4. **When to Consult a Doctor**: Clearly state red-flag warning signs that require immediate or professional medical attention.
-
-Formatting Rules:
-- Structure your response cleanly with clear section headers and bullet points.
-- Be thorough, specific, and directly address the user's specific query.
-- Never stop mid-sentence; ensure the response is complete and well-rounded.`;
+CRITICAL RULES FOR FORMATTING:
+- LIMIT YOUR RESPONSE TO MAXIMUM 3 TO 4 SENTENCES TOTAL.
+- Do NOT use bullet points unless absolutely necessary.
+- Be extremely brief, direct, and conversational.
+- Use simple, everyday language (5th-grade level).
+- Never stop mid-sentence; ensure the response is complete but as short as possible.`;
 
 export const chat = async (req, res) => {
-  const { message, history = [] } = req.body;
+  const { message, history = [], pageContext } = req.body;
 
   if (typeof message !== 'string' || !message.trim()) {
     return res.status(400).json({ message: 'Please type a question or topic.' });
@@ -79,12 +77,17 @@ export const chat = async (req, res) => {
             }))
         : [];
 
+      let dynamicSystemInstruction = systemInstruction;
+      if (pageContext) {
+        dynamicSystemInstruction += `\n\nCRITICAL CONTEXT:\nThe user is currently viewing a screen in the Vitalis app with the following text content:\n"""\n${pageContext}\n"""\nIf the user asks a question related to what they are seeing on the screen, use this context to provide a highly professional, accurate, and relevant answer based ONLY on this text. Do not make up information that isn't in the context if they are asking about the screen.`;
+      }
+
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
         contents: [...previousMessages, { role: 'user', parts: [{ text: message.trim() }] }],
         config: {
-          systemInstruction,
+          systemInstruction: dynamicSystemInstruction,
           temperature: 0.3,
           maxOutputTokens: 1500
         }
@@ -92,7 +95,7 @@ export const chat = async (req, res) => {
       
       const reply = response.text?.trim();
       if (reply) {
-        return res.status(200).json({ reply, disclaimer });
+        return res.status(200).json({ reply });
       }
     } catch (error) {
       console.error('Gemini assistant request failed, falling back to canned response:', error.message);
@@ -104,5 +107,5 @@ export const chat = async (req, res) => {
   const matched = cannedReplies.find((item) => item.match.some((trigger) => normalized.includes(trigger)));
   const reply = matched ? matched.response : defaultReply;
 
-  return res.status(200).json({ reply, disclaimer });
+  return res.status(200).json({ reply });
 };

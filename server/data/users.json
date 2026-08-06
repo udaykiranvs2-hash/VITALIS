@@ -4,7 +4,6 @@
     "id": "demo-user",
     "name": "Demo User",
     "email": "demo@example.com",
-    "passwordHash": "$2b$10$NwrZlb/vYqG5gfcRFCdrMOoaYP2Ffsc0A7twme/P6Zn02Va2RsUoi",
     "authProvider": "email",
     "role": "user",
     "profile": {
@@ -14,8 +13,6 @@
     "appointments": [],
     "notifications": [],
     "history": [],
-    "resetToken": null,
-    "resetTokenExpires": null,
     "createdAt": "2026-07-29T14:05:32.896Z",
     "updatedAt": "2026-07-29T14:05:32.896Z"
   },
@@ -24,7 +21,7 @@
     "id": "8551d549-46a6-4330-a331-4c6ad5c77f7a",
     "name": "Kushaal",
     "email": "kushaal227@gmail.com",
-    "passwordHash": "$2b$10$e.QxCPdClS4dZvm/RiUJOeGKF5D/LmIjZTupxGVxFFtQGu3JP9sta",
+    "authProvider": "email",
     "role": "user",
     "profile": {
       "fullName": "Kushaal"
@@ -53,7 +50,9 @@
         "type": "report"
       }
     ],
-    "history": []
+    "history": [],
+    "createdAt": "2026-07-31T06:02:05.032Z",
+    "updatedAt": "2026-07-31T06:02:05.032Z"
   },
   {
     "_id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
@@ -71,5 +70,1104 @@
     "history": [],
     "createdAt": "2026-07-29T14:13:20.249Z",
     "updatedAt": "2026-07-29T14:13:20.249Z"
+  },
+  {
+    "_id": "3534ce92-90f8-493d-b363-ddab0b9e04cc",
+    "id": "3534ce92-90f8-493d-b363-ddab0b9e04cc",
+    "name": "Thaduri Yeshwanth",
+    "email": "yeshwanththaduri@gmail.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": " Yeshwanth",
+      "phone": "7569879985",
+      "birthDate": "2006-04-17",
+      "gender": "male",
+      "bloodGroup": "O+",
+      "emergencyContact": "7569879958",
+      "insuranceProvider": "",
+      "insuranceNumber": "",
+      "preferredHospital": "",
+      "medicalConditions": [],
+      "allergies": [],
+      "medications": [],
+      "familyHistory": []
+    },
+    "reports": [
+      {
+        "title": "Radiographic X-ray Image Analysis & Structural Review",
+        "type": "X-ray",
+        "fileName": "images.jpg",
+        "summary": "Radiographic image screening complete. The visual scan confirms clear anatomical exposure with well-preserved structural integrity and density distribution.",
+        "findings": [
+          "Image contrast and structural exposure allow clear visualization of underlying tissue density.",
+          "No gross radiopaque foreign bodies or acute skeletal deformities detected on screening.",
+          "Articular surfaces and soft tissue outlines appear within expected anatomical limits."
+        ],
+        "abnormalValues": [],
+        "rawText": ""
+      },
+      {
+        "title": "Radiographic X-ray Image Analysis",
+        "type": "X-ray",
+        "fileName": "images.jpg",
+        "summary": "Radiographic image screening complete. The visual scan confirms clear anatomical exposure with well-preserved structural integrity and density distribution.",
+        "findings": [
+          "Image contrast and structural exposure allow clear visualization of underlying tissue density.",
+          "No gross radiopaque foreign bodies or acute skeletal deformities detected on screening.",
+          "Articular surfaces and soft tissue outlines appear within expected anatomical limits."
+        ],
+        "abnormalValues": [],
+        "rawText": ""
+      },
+      {
+        "title": "X-ray Upload Review",
+        "type": "X-ray",
+        "fileName": "images.jpg",
+        "summary": "Your X-ray image was uploaded successfully. This local version can verify the upload and prepare a review, but image-level AI interpretation requires a configured clinical imaging model.",
+        "findings": [
+          "Image file received and queued for clinical review.",
+          "No diagnostic conclusion is shown in local screening mode.",
+          "A qualified radiologist should review the original image and clinical history."
+        ],
+        "abnormalValues": [],
+        "rawText": ""
+      },
+      {
+        "title": "CBC (Complete Blood Count) Analysis",
+        "type": "Lab Report",
+        "fileName": "report 2.png",
+        "summary": "Your overall Complete Blood Count (CBC) is within healthy, balanced reference ranges. Hemoglobin and red blood cells are at healthy levels, indicating your body is getting good oxygen transport. White blood cell counts show a healthy immune system without active infection or inflammation. Platelet count is optimal, supporting healthy natural blood clotting.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "Hemoglobin (Hb)",
+            "value": "14.2 g/dL",
+            "referenceRange": "13.0 - 17.0 g/dL",
+            "status": "Normal",
+            "interpretation": "Sufficient oxygen-carrying capacity."
+          },
+          {
+            "parameter": "Total WBC Count",
+            "value": "7,500 /cu.mm",
+            "referenceRange": "4,000 - 11,000 /cu.mm",
+            "status": "Normal",
+            "interpretation": "Normal immune cell count, no active infection detected."
+          },
+          {
+            "parameter": "Platelet Count",
+            "value": "280,000 /cu.mm",
+            "referenceRange": "150,000 - 450,000 /cu.mm",
+            "status": "Normal",
+            "interpretation": "Optimal blood clotting ability."
+          },
+          {
+            "parameter": "Red Blood Cells (RBC)",
+            "value": "4.8 M/uL",
+            "referenceRange": "4.5 - 5.9 M/uL",
+            "status": "Normal",
+            "interpretation": "Healthy erythrocyte concentration."
+          },
+          {
+            "parameter": "Hematocrit (PCV)",
+            "value": "42.5%",
+            "referenceRange": "40.0% - 50.0%",
+            "status": "Normal",
+            "interpretation": "Balanced red cell volume ratio."
+          },
+          {
+            "parameter": "MCV",
+            "value": "88.0 fL",
+            "referenceRange": "80.0 - 100.0 fL",
+            "status": "Normal",
+            "interpretation": "Normocytic red blood cell index."
+          }
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Kidney & Liver Function Panel Analysis",
+        "type": "Lab Report",
+        "fileName": "report1.png",
+        "summary": "Your kidney parameters (Serum Creatinine 0.92, eGFR 98) confirm healthy filtration performance. Liver transaminase enzymes (ALT 28, AST 24) are completely within normal limits. Bilirubin excretion and protein clearance show healthy liver and renal metabolic clearance.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "Serum Creatinine",
+            "value": "0.92 mg/dL",
+            "referenceRange": "0.70 - 1.30 mg/dL",
+            "status": "Normal",
+            "interpretation": "Normal renal filtration performance."
+          },
+          {
+            "parameter": "BUN (Blood Urea Nitrogen)",
+            "value": "14 mg/dL",
+            "referenceRange": "7 - 20 mg/dL",
+            "status": "Normal",
+            "interpretation": "Normal protein catabolism clearance."
+          },
+          {
+            "parameter": "eGFR",
+            "value": "98 mL/min/1.73m2",
+            "referenceRange": "> 60 mL/min/1.73m2",
+            "status": "Normal",
+            "interpretation": "Optimal kidney glomerular filtration rate."
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "28 U/L",
+            "referenceRange": "7 - 56 U/L",
+            "status": "Normal",
+            "interpretation": "Normal hepatocellular enzyme level."
+          },
+          {
+            "parameter": "AST (SGOT)",
+            "value": "24 U/L",
+            "referenceRange": "10 - 40 U/L",
+            "status": "Normal",
+            "interpretation": "Normal hepatic metabolic tissue status."
+          },
+          {
+            "parameter": "Total Bilirubin",
+            "value": "0.7 mg/dL",
+            "referenceRange": "0.2 - 1.2 mg/dL",
+            "status": "Normal",
+            "interpretation": "Normal bile pigment excretion."
+          },
+          {
+            "parameter": "Alkaline Phosphatase (ALP)",
+            "value": "68 U/L",
+            "referenceRange": "44 - 147 U/L",
+            "status": "Normal",
+            "interpretation": "Normal biliary ductal and bone metabolism."
+          }
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "CBC (Complete Blood Count) Analysis",
+        "type": "Lab Report",
+        "fileName": "report 2.png",
+        "summary": "Complete Blood Count (CBC) parameters are within normal physiological reference ranges. Red cell indices, white cell counts, and platelet metrics indicate a healthy hematological profile.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "Hemoglobin (Hb)",
+            "value": "14.2 g/dL",
+            "referenceRange": "13.0 - 17.0 g/dL",
+            "status": "Normal",
+            "interpretation": "Sufficient oxygen-carrying capacity."
+          },
+          {
+            "parameter": "Total WBC Count",
+            "value": "7,500 /cu.mm",
+            "referenceRange": "4,000 - 11,000 /cu.mm",
+            "status": "Normal",
+            "interpretation": "Normal immune cell count, no active infection detected."
+          },
+          {
+            "parameter": "Platelet Count",
+            "value": "280,000 /cu.mm",
+            "referenceRange": "150,000 - 450,000 /cu.mm",
+            "status": "Normal",
+            "interpretation": "Optimal blood clotting ability."
+          },
+          {
+            "parameter": "Red Blood Cells (RBC)",
+            "value": "4.8 M/uL",
+            "referenceRange": "4.5 - 5.9 M/uL",
+            "status": "Normal",
+            "interpretation": "Healthy erythrocyte concentration."
+          },
+          {
+            "parameter": "Hematocrit (PCV)",
+            "value": "42.5%",
+            "referenceRange": "40.0% - 50.0%",
+            "status": "Normal",
+            "interpretation": "Balanced red cell volume ratio."
+          },
+          {
+            "parameter": "MCV",
+            "value": "88.0 fL",
+            "referenceRange": "80.0 - 100.0 fL",
+            "status": "Normal",
+            "interpretation": "Normocytic red blood cell index."
+          }
+        ],
+        "findings": [
+          "Hemoglobin and hematocrit levels reflect adequate oxygen delivery.",
+          "Leukocyte counts are stable without acute inflammatory shift.",
+          "Platelet morphology and total counts support normal hemostasis.",
+          "Erythrocyte indices (MCV, MCH, MCHC) demonstrate normocytic, normochromic cell populations."
+        ],
+        "abnormalValues": [],
+        "recommendations": [
+          "Share this summary report with your primary physician or specialist during your next visit.",
+          "Maintain a balanced lifestyle, routine physical activity, and adequate hydration.",
+          "Schedule follow-up laboratory testing as recommended by your healthcare provider."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Kidney & Liver Function Panel Analysis",
+        "type": "Lab Report",
+        "fileName": "report1.png",
+        "summary": "Renal and Hepatic Panels demonstrate healthy organ function. Glomerular filtration (eGFR > 90) and liver transaminases (ALT/AST) are fully within normal physiological limits.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "Serum Creatinine",
+            "value": "0.92 mg/dL",
+            "referenceRange": "0.70 - 1.30 mg/dL",
+            "status": "Normal",
+            "interpretation": "Normal renal filtration performance."
+          },
+          {
+            "parameter": "BUN (Blood Urea Nitrogen)",
+            "value": "14 mg/dL",
+            "referenceRange": "7 - 20 mg/dL",
+            "status": "Normal",
+            "interpretation": "Normal protein catabolism clearance."
+          },
+          {
+            "parameter": "eGFR",
+            "value": "98 mL/min/1.73m2",
+            "referenceRange": "> 60 mL/min/1.73m2",
+            "status": "Normal",
+            "interpretation": "Optimal kidney glomerular filtration rate."
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "28 U/L",
+            "referenceRange": "7 - 56 U/L",
+            "status": "Normal",
+            "interpretation": "Normal hepatocellular enzyme level."
+          },
+          {
+            "parameter": "AST (SGOT)",
+            "value": "24 U/L",
+            "referenceRange": "10 - 40 U/L",
+            "status": "Normal",
+            "interpretation": "Normal hepatic metabolic tissue status."
+          },
+          {
+            "parameter": "Total Bilirubin",
+            "value": "0.7 mg/dL",
+            "referenceRange": "0.2 - 1.2 mg/dL",
+            "status": "Normal",
+            "interpretation": "Normal bile pigment excretion."
+          },
+          {
+            "parameter": "Alkaline Phosphatase (ALP)",
+            "value": "68 U/L",
+            "referenceRange": "44 - 147 U/L",
+            "status": "Normal",
+            "interpretation": "Normal biliary ductal and bone metabolism."
+          }
+        ],
+        "findings": [
+          "Glomerular filtration rate (eGFR 98) confirms healthy kidney function.",
+          "Serum Creatinine and BUN demonstrate effective nitrogenous waste clearance.",
+          "Transaminase levels (ALT and AST) show no evidence of hepatic cell strain.",
+          "Bilirubin excretion is intact without cholestatic markers."
+        ],
+        "abnormalValues": [],
+        "recommendations": [
+          "Share this summary report with your primary physician or specialist during your next visit.",
+          "Maintain a balanced lifestyle, routine physical activity, and adequate hydration.",
+          "Schedule follow-up laboratory testing as recommended by your healthcare provider."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "General Diagnostic Report Analysis",
+        "type": "Lab Report",
+        "fileName": "report1.png",
+        "summary": "The submitted report is being interpreted using standard clinical reference ranges. No urgent concerns identified.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "General Metric 1",
+            "value": "Normal",
+            "referenceRange": "Standard",
+            "status": "Normal",
+            "interpretation": "Within expected healthy threshold."
+          },
+          {
+            "parameter": "General Metric 2",
+            "value": "Optimal",
+            "referenceRange": "Standard",
+            "status": "Normal",
+            "interpretation": "Optimal clinical status."
+          }
+        ],
+        "findings": [
+          "The report was reviewed and appears structurally complete.",
+          "Key clinical markers are stable."
+        ],
+        "abnormalValues": [],
+        "recommendations": [
+          "Share this summary with your primary care provider for comprehensive evaluation.",
+          "Keep track of any physical symptoms or changes in well-being.",
+          "Follow up with recommended routine lab testing as advised by your physician."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "General Diagnostic Report Analysis",
+        "type": "Lab Report",
+        "fileName": "report 2.png",
+        "summary": "The submitted report is being interpreted using standard clinical reference ranges. No urgent concerns identified.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "General Metric 1",
+            "value": "Normal",
+            "referenceRange": "Standard",
+            "status": "Normal",
+            "interpretation": "Within expected healthy threshold."
+          },
+          {
+            "parameter": "General Metric 2",
+            "value": "Optimal",
+            "referenceRange": "Standard",
+            "status": "Normal",
+            "interpretation": "Optimal clinical status."
+          }
+        ],
+        "findings": [
+          "The report was reviewed and appears structurally complete.",
+          "Key clinical markers are stable."
+        ],
+        "abnormalValues": [],
+        "recommendations": [
+          "Share this summary with your primary care provider for comprehensive evaluation.",
+          "Keep track of any physical symptoms or changes in well-being.",
+          "Follow up with recommended routine lab testing as advised by your physician."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Kidney & Liver Analysis",
+        "type": "Kidney & Liver",
+        "fileName": "report 2.png",
+        "summary": "The submitted report is being interpreted using standard clinical reference ranges. No urgent findings were identified.",
+        "writingStyle": "Printed / Handwritten Medical Scan",
+        "parameters": [
+          {
+            "parameter": "General Metric 1",
+            "value": "Normal",
+            "referenceRange": "Standard",
+            "status": "Normal",
+            "interpretation": "Within expected healthy threshold."
+          },
+          {
+            "parameter": "General Metric 2",
+            "value": "Optimal",
+            "referenceRange": "Standard",
+            "status": "Normal",
+            "interpretation": "Optimal clinical status."
+          }
+        ],
+        "findings": [
+          "The report was reviewed and appears structurally complete.",
+          "Key clinical markers are stable."
+        ],
+        "abnormalValues": [],
+        "recommendations": [
+          "Share this summary with your primary care provider for comprehensive evaluation.",
+          "Keep track of any physical symptoms or changes in well-being.",
+          "Follow up with recommended routine lab testing as advised by your physician."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Complete Blood Count (CBC) Diagnostic Analysis",
+        "type": "Kidney & Liver",
+        "fileName": "report 2.png",
+        "summary": "The document is a printed Complete Blood Count (CBC) lab report for a 29-year-old male patient, Mr. Ketan Chavan. While hemoglobin (15 g%), PCV (36%), and total WBC counts (5,500/cu.mm) are within normal reference ranges, the report demonstrates a critical, severe elevation in platelet count at 1,550,000/cu.mm (Severe Thrombocytosis). Additionally, RBC indices indicate microcytosis with a low MCV (72.00 fL) and an elevated MCHC (41.67%). Urgent medical evaluation by a hematologist is required due to the risks associated with extreme thrombocytosis.",
+        "writingStyle": "Printed Lab Report",
+        "parameters": [
+          {
+            "parameter": "Haemoglobin",
+            "value": "15 g%",
+            "referenceRange": "14 - 16 g%",
+            "status": "Normal",
+            "interpretation": "Hemoglobin concentration is within healthy limits for adult males."
+          },
+          {
+            "parameter": "RBC Count",
+            "value": "5 mill/cu.mm",
+            "referenceRange": "4.5 - 5.5 mill/cu.mm",
+            "status": "Normal",
+            "interpretation": "Red blood cell count is within normal physiological limits."
+          },
+          {
+            "parameter": "PCV (Packed Cell Volume)",
+            "value": "36 %",
+            "referenceRange": "35 - 45 %",
+            "status": "Normal",
+            "interpretation": "Hematocrit level is within normal range."
+          },
+          {
+            "parameter": "MCV (Mean Corpuscular Volume)",
+            "value": "72.00 fl",
+            "referenceRange": "80 - 99 fl",
+            "status": "Low",
+            "interpretation": "Indicates microcytosis (smaller than average red blood cell size)."
+          },
+          {
+            "parameter": "MCH (Mean Corpuscular Hemoglobin)",
+            "value": "30.00 pg",
+            "referenceRange": "28 - 32 pg",
+            "status": "Normal",
+            "interpretation": "Average amount of hemoglobin per RBC is within normal limits."
+          },
+          {
+            "parameter": "MCHC (Mean Corpuscular Hemoglobin Concentration)",
+            "value": "41.67 %",
+            "referenceRange": "30 - 34 %",
+            "status": "High",
+            "interpretation": "Elevated hemoglobin concentration relative to cell volume."
+          },
+          {
+            "parameter": "RDW (Red Cell Distribution Width)",
+            "value": "10 fl",
+            "referenceRange": "9 - 17 fl",
+            "status": "Normal",
+            "interpretation": "Variation in red blood cell size is normal."
+          },
+          {
+            "parameter": "Total WBC Count",
+            "value": "5500 /cu.mm",
+            "referenceRange": "4000 - 11000 /cu.mm",
+            "status": "Normal",
+            "interpretation": "Overall white blood cell count is normal, indicating no active leukocytosis."
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "60 %",
+            "referenceRange": "40 - 75 %",
+            "status": "Normal",
+            "interpretation": "Neutrophil percentage is within normal limits."
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "30 %",
+            "referenceRange": "20 - 45 %",
+            "status": "Normal",
+            "interpretation": "Lymphocyte percentage is within normal limits."
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "5 %",
+            "referenceRange": "00 - 06 %",
+            "status": "Normal",
+            "interpretation": "Eosinophil count is normal."
+          },
+          {
+            "parameter": "Monocytes",
+            "value": "5 %",
+            "referenceRange": "00 - 10 %",
+            "status": "Normal",
+            "interpretation": "Monocyte percentage is normal."
+          },
+          {
+            "parameter": "Basophils",
+            "value": "0 %",
+            "referenceRange": "00 - 01 %",
+            "status": "Normal",
+            "interpretation": "Basophil count is normal."
+          },
+          {
+            "parameter": "Platelet Count",
+            "value": "1550000 /cu.mm",
+            "referenceRange": "150000 - 450000 /cu.mm",
+            "status": "Critical",
+            "interpretation": "Severe thrombocytosis (>1.5 million/cu.mm), requiring urgent hematological evaluation."
+          }
+        ],
+        "findings": [
+          "Profound, severe thrombocytosis with a platelet count of 1,550,000 /cu.mm (Normal upper limit: 450,000 /cu.mm).",
+          "Microcytosis indicated by a decreased MCV of 72.00 fl (Normal: 80 - 99 fl).",
+          "Elevated MCHC of 41.67% (Normal: 30 - 34%).",
+          "Normal total leukocyte count (5,500 /cu.mm) and differential leukocyte distribution.",
+          "Normal Hemoglobin (15 g%) and PCV (36%)."
+        ],
+        "abnormalValues": [
+          "Platelet Count: 1,550,000 /cu.mm (Critical High)",
+          "MCV: 72.00 fl (Low)",
+          "MCHC: 41.67 % (High)"
+        ],
+        "recommendations": [
+          "Seek urgent evaluation with a Hematologist for diagnostic workup of extreme thrombocytosis.",
+          "Order iron studies (Serum Ferritin, Serum Iron, Total Iron Binding Capacity) to rule out iron-deficiency reactive thrombocytosis.",
+          "Perform genetic testing (e.g., JAK2 V617F mutation screening) to evaluate potential myeloproliferative neoplasms if reactive causes are excluded.",
+          "Repeat CBC with a manual peripheral blood smear review to confirm true platelet elevation and rule out platelet clumping.",
+          "Monitor closely for symptoms such as headache, visual changes, chest pain, leg swelling, or unusual bruising/bleeding."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Blood Test Comprehensive Analysis",
+        "type": "Blood Test",
+        "fileName": "report 2.png",
+        "summary": "This Complete Blood Count report for a 29-year-old male (Mr. Ketan Chavan) shows normal total hemoglobin, PCV, and total/differential white blood cell counts. However, significant abnormalities are present in the RBC indices (low MCV of 72.00 fl and elevated MCHC of 41.67 %) and a markedly elevated platelet count of 1,550,000 /cu.mm (thrombocytosis). Further clinical correlation and repetition of platelet count are strongly recommended.",
+        "writingStyle": "Printed Lab Report",
+        "parameters": [
+          {
+            "parameter": "Haemoglobin",
+            "value": "15 g%",
+            "referenceRange": "14 - 16 g%",
+            "status": "Normal",
+            "interpretation": "Hemoglobin concentration is within optimal range for an adult male."
+          },
+          {
+            "parameter": "RBC Count",
+            "value": "5 mill/cu.mm",
+            "referenceRange": "14 - 16g%",
+            "status": "Normal",
+            "interpretation": "Total red blood cell count appears within normal physiologic limits."
+          },
+          {
+            "parameter": "PCV (Packed Cell Volume)",
+            "value": "36 %",
+            "referenceRange": "35 - 45 %",
+            "status": "Normal",
+            "interpretation": "Hematocrit percentage is within normal limits."
+          },
+          {
+            "parameter": "MCV (Mean Corpuscular Volume)",
+            "value": "72.00 fl",
+            "referenceRange": "80 - 99 fl",
+            "status": "Low",
+            "interpretation": "Decreased average red blood cell volume indicating microcytosis."
+          },
+          {
+            "parameter": "MCH (Mean Corpuscular Hemoglobin)",
+            "value": "30.00 pg",
+            "referenceRange": "28 - 32 pg",
+            "status": "Normal",
+            "interpretation": "Average amount of hemoglobin per RBC is within normal limits."
+          },
+          {
+            "parameter": "MCHC",
+            "value": "41.67 %",
+            "referenceRange": "30 - 34 %",
+            "status": "High",
+            "interpretation": "Elevated mean corpuscular hemoglobin concentration."
+          },
+          {
+            "parameter": "RDW",
+            "value": "10 fl",
+            "referenceRange": "9 - 17 fl",
+            "status": "Normal",
+            "interpretation": "Red cell distribution width is normal, suggesting uniform RBC size."
+          },
+          {
+            "parameter": "Total WBC Count",
+            "value": "5500 /cu.mm",
+            "referenceRange": "4000 - 11000 /cu.mm",
+            "status": "Normal",
+            "interpretation": "Total leukocyte count is within normal physiological range."
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "60 %",
+            "referenceRange": "40 - 75 %",
+            "status": "Normal",
+            "interpretation": "Neutrophil percentage is normal."
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "30 %",
+            "referenceRange": "20 - 45 %",
+            "status": "Normal",
+            "interpretation": "Lymphocyte count is normal."
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "5 %",
+            "referenceRange": "00 - 06 %",
+            "status": "Normal",
+            "interpretation": "Eosinophil count is normal."
+          },
+          {
+            "parameter": "Monocytes",
+            "value": "5 %",
+            "referenceRange": "00 - 10 %",
+            "status": "Normal",
+            "interpretation": "Monocyte count is normal."
+          },
+          {
+            "parameter": "Basophils",
+            "value": "0 %",
+            "referenceRange": "00 - 01 %",
+            "status": "Normal",
+            "interpretation": "Basophil count is normal."
+          },
+          {
+            "parameter": "Platelet Count",
+            "value": "1550000 /cu.mm",
+            "referenceRange": "150000 - 450000 /cu.mm",
+            "status": "High",
+            "interpretation": "Markedly elevated platelet count (thrombocytosis), requiring repeat testing and medical evaluation."
+          }
+        ],
+        "findings": [
+          "Hemoglobin (15 g%) and total WBC count (5500 /cu.mm) are completely within normal reference limits.",
+          "RBC indices reveal low MCV (72.00 fl) and elevated MCHC (41.67 %).",
+          "Platelet count is reported at 1,550,000 /cu.mm, which represents significant thrombocytosis.",
+          "Peripheral blood smear reports normocytic, normochromic RBC morphology and normal WBCs, though smear note describes platelets as 'Adequate On Smear'."
+        ],
+        "abnormalValues": [
+          "MCV: 72.00 fl (Low)",
+          "MCHC: 41.67 % (High)",
+          "Platelet Count: 1,550,000 /cu.mm (High)"
+        ],
+        "recommendations": [
+          "Repeat the Complete Blood Count (CBC) with manual peripheral blood smear review to confirm true platelet counts.",
+          "Consult a physician or hematologist for clinical evaluation regarding the elevated platelet count.",
+          "Evaluate iron profile (Serum Ferritin, Total Iron Binding Capacity) to investigate the lower MCV value.",
+          "Monitor for any signs of unexplained bruising, bleeding, or vascular symptoms."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Kidney & Liver Comprehensive Analysis",
+        "type": "Kidney & Liver",
+        "fileName": "report1.png",
+        "summary": "The diagnostic report presents a Kidney Function Test (KFT) panel for a 98-year-old female patient (Mrs. Sha Bosco). Core serum biomarkers including Creatinine, Urea, BUN, Calcium, Uric Acid, Sodium, and Potassium are all within normal standard ranges. However, the calculated eGFR is reduced at 50.32 mL/min/1.73m², placing the patient into eGFR Category G3a, which indicates a mild-to-moderate reduction in kidney filtration rate consistent with advanced age.",
+        "writingStyle": "Printed Lab Report",
+        "parameters": [
+          {
+            "parameter": "BUN (Blood Urea Nitrogen)",
+            "value": "10.27 mg/dl",
+            "referenceRange": "7.9 - 20",
+            "status": "Normal",
+            "interpretation": "BUN is within normal parameters, showing normal nitrogen clearance."
+          },
+          {
+            "parameter": "SERUM UREA",
+            "value": "22 mg/dl",
+            "referenceRange": "21 - 43",
+            "status": "Normal",
+            "interpretation": "Serum urea is within the reference range."
+          },
+          {
+            "parameter": "SERUM CREATININE",
+            "value": "1.01 mg/dl",
+            "referenceRange": "0.55 - 1.02",
+            "status": "Normal",
+            "interpretation": "Creatinine level is near the upper boundary of normal baseline."
+          },
+          {
+            "parameter": "eGFR (Estimated Glomerular Filtration Rate)",
+            "value": "50.32 ml/min/1.73m^2",
+            "referenceRange": "> 90",
+            "status": "Low",
+            "interpretation": "Reduced kidney filtration rate (G3a category), indicating mild-to-moderate impairment."
+          },
+          {
+            "parameter": "eGFR CATEGORY",
+            "value": "G3a",
+            "referenceRange": "G1 (>90)",
+            "status": "Attention",
+            "interpretation": "Category G3a denotes mildly to moderately decreased renal function."
+          },
+          {
+            "parameter": "SERUM CALCIUM",
+            "value": "9.2 mg/dl",
+            "referenceRange": "8.8 - 10.6",
+            "status": "Normal",
+            "interpretation": "Serum calcium is well-balanced within normal limits."
+          },
+          {
+            "parameter": "SERUM POTASSIUM",
+            "value": "3.6 mmol/L",
+            "referenceRange": "3.5 - 5.1",
+            "status": "Normal",
+            "interpretation": "Potassium level is within normal range."
+          },
+          {
+            "parameter": "SERUM SODIUM",
+            "value": "138 mmol/L",
+            "referenceRange": "136 - 146",
+            "status": "Normal",
+            "interpretation": "Sodium level is within normal limits."
+          },
+          {
+            "parameter": "SERUM URIC ACID",
+            "value": "4 mg/dl",
+            "referenceRange": "2.6 - 6",
+            "status": "Normal",
+            "interpretation": "Uric acid level is normal with low risk for hyperuricemia or gout."
+          },
+          {
+            "parameter": "UREA / CREATININE RATIO",
+            "value": "21.78",
+            "referenceRange": "10 - 20",
+            "status": "Normal",
+            "interpretation": "Ratio is normal to slightly elevated, common in physiological variations."
+          },
+          {
+            "parameter": "BUN / CREATININE RATIO",
+            "value": "10.17",
+            "referenceRange": "10 - 20",
+            "status": "Normal",
+            "interpretation": "Ratio is normal, ruling out acute pre-renal azotemia."
+          }
+        ],
+        "findings": [
+          "Calculated eGFR is 50.32 mL/min/1.73m², placing the patient in eGFR Category G3a.",
+          "Serum Creatinine is at 1.01 mg/dL, which is technically within normal boundaries but yields a lower eGFR when adjusted for age (98 years) and female sex.",
+          "Electrolytes (Sodium: 138 mmol/L, Potassium: 3.6 mmol/L) are completely normal.",
+          "Calcium (9.2 mg/dL) and Uric Acid (4 mg/dL) levels are healthy and within reference limits.",
+          "No acute markers for azotemia or severe metabolic electrolyte disruption are detected."
+        ],
+        "abnormalValues": [
+          "eGFR: 50.32 ml/min/1.73m^2 (Low / Category G3a)"
+        ],
+        "recommendations": [
+          "Consult with a Nephrologist or Geriatric Physician to evaluate age-related renal decline.",
+          "Perform a spot Urine Albumin-to-Creatinine Ratio (uACR) test to screen for proteinuria or kidney damage.",
+          "Maintain adequate oral hydration and monitor renal function parameters every 3 to 6 months.",
+          "Avoid over-the-counter nephrotoxic medications such as NSAIDs (e.g., ibuprofen, naproxen).",
+          "Review current medications with a physician to ensure proper dosing adjustments based on an eGFR of ~50 mL/min/1.73m²."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Kidney & Liver Comprehensive Analysis",
+        "type": "Kidney & Liver",
+        "fileName": "report1.png",
+        "summary": "This report presents the Biochemistry Kidney Function Test (KFT) panel for Mrs. Sha Bosco, a 98-year-old female. Most routine biochemical markers, including BUN, Serum Urea, Serum Creatinine, Calcium, Uric Acid, and Electrolytes (Sodium, Potassium), fall within normal laboratory reference limits. However, the calculated eGFR is reduced at 50.32 mL/min/1.73m² (Category G3a), indicating a mildly-to-moderately decreased glomerular filtration rate typical for advanced age.",
+        "writingStyle": "Digital PDF / Printed Lab Report",
+        "parameters": [
+          {
+            "parameter": "BUN",
+            "value": "10.27 mg/dl",
+            "referenceRange": "7.9 - 20",
+            "status": "Normal",
+            "interpretation": "Blood urea nitrogen level is within normal range."
+          },
+          {
+            "parameter": "SERUM UREA",
+            "value": "22 mg/dl",
+            "referenceRange": "21 - 43",
+            "status": "Normal",
+            "interpretation": "Serum urea level is within the normal reference interval."
+          },
+          {
+            "parameter": "SERUM CREATININE",
+            "value": "1.01 mg/dl",
+            "referenceRange": "0.55 - 1.02",
+            "status": "Normal",
+            "interpretation": "Serum creatinine is within normal limits, though close to the upper boundary considering age-related loss of muscle mass."
+          },
+          {
+            "parameter": "EGFR",
+            "value": "50.32 ml/min/1.73m^2",
+            "referenceRange": "> 90",
+            "status": "Low",
+            "interpretation": "eGFR is decreased, reflecting Stage G3a reduction in glomerular filtration rate."
+          },
+          {
+            "parameter": "EGFR CATEGORY",
+            "value": "G3a",
+            "referenceRange": "N/A",
+            "status": "Attention",
+            "interpretation": "Indicates mildly to moderately decreased renal filtration capacity."
+          },
+          {
+            "parameter": "SERUM CALCIUM",
+            "value": "9.2 mg/dl",
+            "referenceRange": "8.8 - 10.6",
+            "status": "Normal",
+            "interpretation": "Serum calcium concentration is normal."
+          },
+          {
+            "parameter": "SERUM POTASSIUM",
+            "value": "3.6 mmol/L",
+            "referenceRange": "3.5 - 5.1",
+            "status": "Normal",
+            "interpretation": "Potassium level is within normal homeostatic limits."
+          },
+          {
+            "parameter": "SERUM SODIUM",
+            "value": "138 mmol/L",
+            "referenceRange": "136 - 146",
+            "status": "Normal",
+            "interpretation": "Sodium level is normal."
+          },
+          {
+            "parameter": "SERUM URIC ACID",
+            "value": "4 mg/dl",
+            "referenceRange": "2.6 - 6",
+            "status": "Normal",
+            "interpretation": "Uric acid concentration is optimal."
+          },
+          {
+            "parameter": "UREA / CREATININE RATIO",
+            "value": "21.78",
+            "referenceRange": "N/A",
+            "status": "Normal",
+            "interpretation": "Ratio is within standard physiological proportions."
+          },
+          {
+            "parameter": "BUN / CREATININE RATIO",
+            "value": "10.17",
+            "referenceRange": "N/A",
+            "status": "Normal",
+            "interpretation": "BUN to creatinine ratio is normal, with no evidence of acute pre-renal or post-renal azotemia."
+          }
+        ],
+        "findings": [
+          "eGFR is decreased at 50.32 mL/min/1.73m² (Category G3a), consistent with mildly to moderately reduced renal clearance.",
+          "Serum creatinine (1.01 mg/dL) remains within normal reference boundaries (0.55-1.02 mg/dL).",
+          "Serum electrolytes (Sodium 138 mmol/L, Potassium 3.6 mmol/L) and Calcium (9.2 mg/dL) are stable and normal.",
+          "Nitrogenous waste markers (BUN 10.27 mg/dL, Urea 22 mg/dL) show no elevated retention.",
+          "BUN/Creatinine ratio of 10.17 does not suggest acute pre-renal azotemia or dehydration."
+        ],
+        "abnormalValues": [
+          "eGFR: 50.32 ml/min/1.73m^2 (Low; Reference: > 90)",
+          "eGFR Category: G3a (Mildly to moderately decreased)"
+        ],
+        "recommendations": [
+          "Consult with a treating physician or nephrologist for clinical correlation with patient's overall health and medication history.",
+          "Ensure appropriate daily hydration unless otherwise directed for cardiac or respiratory reasons.",
+          "Review all ongoing prescription and over-the-counter medications to adjust dosages for renal clearance and avoid nephrotoxic drugs (e.g., NSAIDs).",
+          "Schedule periodic follow-up renal monitoring (eGFR, Creatinine, Electrolytes, and Urine Routine/Albumin) every 3–6 months."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Blood Test Comprehensive Analysis",
+        "type": "Blood Test",
+        "fileName": "report1.png",
+        "summary": "This report presents the Kidney Function Test (KFT) results for Mrs. Sha Bosco, a 98-year-old female. Most parameters, including BUN, serum urea, serum creatinine, electrolytes (sodium, potassium), calcium, and uric acid, fall within normal limits. However, the estimated Glomerular Filtration Rate (eGFR) is low at 50.32 mL/min/1.73m², placing the patient in Stage G3a, indicating mildly to moderately decreased kidney function, which is common with advanced age.",
+        "writingStyle": "Printed Lab Result",
+        "parameters": [
+          {
+            "parameter": "BUN (Blood Urea Nitrogen)",
+            "value": "10.27 mg/dl",
+            "referenceRange": "7.9 - 20 mg/dl",
+            "status": "Normal",
+            "interpretation": "Normal blood urea nitrogen level, indicating adequate renal excretion of nitrogenous waste."
+          },
+          {
+            "parameter": "Serum Urea",
+            "value": "22 mg/dl",
+            "referenceRange": "21 - 43 mg/dl",
+            "status": "Normal",
+            "interpretation": "Within normal range."
+          },
+          {
+            "parameter": "Serum Creatinine",
+            "value": "1.01 mg/dl",
+            "referenceRange": "0.55 - 1.02 mg/dl",
+            "status": "Normal",
+            "interpretation": "Within the printed normal reference range, though near the upper limit considering age and expected reduced muscle mass."
+          },
+          {
+            "parameter": "eGFR (Estimated Glomerular Filtration Rate)",
+            "value": "50.32 ml/min/1.73m^2",
+            "referenceRange": "> 90 ml/min/1.73m^2",
+            "status": "Low",
+            "interpretation": "Decreased renal filtration capacity (Stage G3a: mildly to moderately decreased)."
+          },
+          {
+            "parameter": "eGFR Category",
+            "value": "G3a",
+            "referenceRange": "G1 (>90)",
+            "status": "Attention",
+            "interpretation": "Classification representing mild-to-moderate reduction in kidney function."
+          },
+          {
+            "parameter": "Serum Calcium",
+            "value": "9.2 mg/dl",
+            "referenceRange": "8.8 - 10.6 mg/dl",
+            "status": "Normal",
+            "interpretation": "Normal circulating calcium levels."
+          },
+          {
+            "parameter": "Serum Potassium",
+            "value": "3.6 mmol/L",
+            "referenceRange": "3.5 - 5.1 mmol/L",
+            "status": "Normal",
+            "interpretation": "Normal serum potassium concentration."
+          },
+          {
+            "parameter": "Serum Sodium",
+            "value": "138 mmol/L",
+            "referenceRange": "136 - 146 mmol/L",
+            "status": "Normal",
+            "interpretation": "Normal serum sodium concentration."
+          },
+          {
+            "parameter": "Serum Uric Acid",
+            "value": "4 mg/dl",
+            "referenceRange": "2.6 - 6 mg/dl",
+            "status": "Normal",
+            "interpretation": "Normal uric acid level."
+          },
+          {
+            "parameter": "Urea / Creatinine Ratio",
+            "value": "21.78",
+            "referenceRange": "Not specified",
+            "status": "Normal",
+            "interpretation": "Ratio within expected clinical bounds."
+          },
+          {
+            "parameter": "BUN / Creatinine Ratio",
+            "value": "10.17",
+            "referenceRange": "Not specified",
+            "status": "Normal",
+            "interpretation": "Normal ratio, suggesting absence of pre-renal azotemia."
+          }
+        ],
+        "findings": [
+          "eGFR is reduced at 50.32 mL/min/1.73m² (Stage G3a, mild-to-moderate impairment).",
+          "Serum Creatinine (1.01 mg/dL) is at the higher end of the reference range for an elderly female.",
+          "Electrolyte levels (Sodium 138 mmol/L, Potassium 3.6 mmol/L) are fully intact and stable.",
+          "Nitrogenous waste parameters (BUN 10.27 mg/dL, Urea 22 mg/dL) are well controlled.",
+          "Serum Calcium and Uric Acid levels are within normal limits."
+        ],
+        "abnormalValues": [
+          "eGFR: 50.32 ml/min/1.73m^2 (Low - Category G3a)"
+        ],
+        "recommendations": [
+          "Schedule a clinical evaluation with a primary care physician, geriatrician, or nephrologist to review these results.",
+          "Avoid over-the-counter nephrotoxic medications, specifically nonsteroidal anti-inflammatory drugs (NSAIDs).",
+          "Maintain adequate fluid intake based on physician advice.",
+          "Review current medication dosages to ensure proper adjustment for renal clearance (eGFR ~50 mL/min).",
+          "Repeat Kidney Function Tests periodically to monitor stability of eGFR and creatinine."
+        ],
+        "rawText": ""
+      },
+      {
+        "title": "Blood Test Analysis",
+        "type": "Blood Test",
+        "fileName": "download.jpg",
+        "summary": "The provided document input ('download.jpg') does not contain extractable text or numerical laboratory data. Consequently, specific blood components, biomarker levels, and reference range comparisons cannot be evaluated. A clear, legible copy of the laboratory report is required to perform a proper analysis.",
+        "findings": [
+          "Input text consists only of a image file reference ('download.jpg').",
+          "No measurable blood markers (e.g., CBC, lipid panel, metabolic panel) were detected in the raw text."
+        ],
+        "abnormalValues": [
+          "Undetermined due to missing or unreadable text data."
+        ],
+        "rawText": "download.jpg"
+      }
+    ],
+    "appointments": [],
+    "notifications": [
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your report analysis is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your X-ray upload review is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your X-ray upload review is ready in Health History.",
+        "type": "report"
+      },
+      {
+        "message": "Your X-ray upload review is ready in Health History.",
+        "type": "report"
+      }
+    ],
+    "history": [],
+<<<<<<< HEAD
+    "createdAt": "2026-08-06T04:46:00.588Z",
+    "updatedAt": "2026-08-06T04:46:00.588Z"
+=======
+    "createdAt": "2026-07-31T06:02:05.104Z",
+    "updatedAt": "2026-07-31T06:02:05.104Z"
+  },
+  {
+    "_id": "d2efd1a0-f155-40f9-a952-76d25bd1a4f7",
+    "id": "d2efd1a0-f155-40f9-a952-76d25bd1a4f7",
+    "name": "Test Developer",
+    "email": "test.dev@vitalis.com",
+    "authProvider": "email",
+    "role": "user",
+    "profile": {
+      "fullName": "Test Developer"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-08-04T04:21:42.844Z",
+    "updatedAt": "2026-08-04T04:21:42.844Z"
+  },
+  {
+    "_id": "df20dd35-58d7-40dc-a30e-5907824519c5",
+    "id": "df20dd35-58d7-40dc-a30e-5907824519c5",
+    "name": "Kushaal",
+    "email": "kushaal227@gmail.com",
+    "authProvider": "google",
+    "role": "user",
+    "profile": {
+      "fullName": "Kushaal"
+    },
+    "reports": [],
+    "appointments": [],
+    "notifications": [],
+    "history": [],
+    "createdAt": "2026-08-04T04:21:51.759Z",
+    "updatedAt": "2026-08-04T04:21:51.759Z"
+>>>>>>> 2edb1eb96180f4edec53c7f676ffde490dc09fc6
   }
 ]

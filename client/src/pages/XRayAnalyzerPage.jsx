@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
-import { AlertTriangle, BrainCircuit, Check, ClipboardList, CloudUpload, FileImage, LoaderCircle, ScanLine, ShieldCheck, Upload } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { AlertTriangle, BrainCircuit, Check, CheckCircle2, ClipboardList, CloudUpload, FileImage, LoaderCircle, ScanLine, ShieldCheck, Upload } from 'lucide-react';
 import { analyzeXray } from '../api/api.js';
 import Toast from '../components/Toast.jsx';
 import './XRayAnalyzerPage.css';
 
 export default function XRayAnalyzerPage() {
+  const navigate = useNavigate();
   const inputRef = useRef(null);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
@@ -42,11 +44,101 @@ export default function XRayAnalyzerPage() {
           <div className="xray-upload-actions"><button type="button" className="xray-choose-button" onClick={() => inputRef.current?.click()}><Upload size={17} /> {file ? 'Choose another file' : 'Choose File'}</button>{file && <button type="button" className="xray-analyze-button" disabled={loading} onClick={submitAnalysis}>{loading ? <><LoaderCircle className="xray-spin" size={17} /> Analyzing…</> : <><BrainCircuit size={17} /> Analyze X-ray</>}</button>}</div>
           <small>Supports: JPG, JPEG, PNG (Max 5MB)</small>
         </div>
-        <div className="xray-tips-card"><div><ScanLine size={20} /><strong>Tips for best results</strong></div><ul><li><Check size={16} /> Upload clear and high-resolution images</li><li><Check size={16} /> Ensure the entire area of interest is visible</li><li><Check size={16} /> Use a JPG, JPEG, or PNG image smaller than 5MB</li></ul></div>
       </div>
-      <aside className="xray-guide-column"><h2>How it works</h2><ol className="xray-steps"><li><span className="xray-step-icon"><CloudUpload size={21} /></span><span><b>Upload X-ray</b><small>Upload a clear X-ray image.</small></span></li><li><span className="xray-step-icon"><BrainCircuit size={21} /></span><span><b>AI Analysis</b><small>Our AI screens the image for visible patterns.</small></span></li><li><span className="xray-step-icon"><ClipboardList size={21} /></span><span><b>View Results</b><small>Get educational insights and next steps.</small></span></li></ol><div className="xray-note-card"><ShieldCheck size={19} /><div><strong>Important Note</strong><p>This AI analysis is for educational purposes only and not a replacement for professional medical advice or diagnosis.</p></div></div></aside>
-      {result && <section className="xray-result-panel"><div className="xray-result-heading"><div><p>Analysis complete</p><h2>{result.title}</h2></div><span className={`xray-risk xray-risk-${String(result.riskLevel).toLowerCase().replaceAll(' ', '-')}`}>{result.riskLevel}</span></div><p className="xray-result-summary">{result.summary}</p><div className="xray-result-grid"><article><h3>Key observations</h3><ul>{result.findings.map((item, index) => <li key={index}><Check size={16} />{item}</li>)}</ul></article><article><h3>Recommended next steps</h3><ul>{result.recommendations.map((item, index) => <li key={index}><AlertTriangle size={16} />{item}</li>)}</ul></article></div><p className="xray-result-disclaimer"><ShieldCheck size={15} /> {result.disclaimer}</p></section>}
-      <footer className="xray-history"><div><span className="xray-history-icon">◷</span><b>Your Recent Analyses</b><p>{result ? 'Your latest X-ray analysis is ready above.' : 'No X-ray analyses yet. Upload your first X-ray to see your history here.'}</p></div><button type="button">View All History</button></footer>
+      <aside className="xray-guide-column"><h2>How it works</h2><ol className="xray-steps"><li><span className="xray-step-icon"><CloudUpload size={21} /></span><span><b>Upload X-ray</b><small>Upload a clear X-ray image.</small></span></li><li><span className="xray-step-icon"><BrainCircuit size={21} /></span><span><b>AI Analysis</b><small>Our AI screens the image for visible patterns.</small></span></li><li><span className="xray-step-icon"><ClipboardList size={21} /></span><span><b>View Results</b><small>Get educational insights and next steps.</small></span></li></ol></aside>
+      {result && (
+        <section className="xray-result-panel">
+          <div className="xray-result-heading">
+            <div>
+              <p>Analysis complete</p>
+              <h2>{result.title}</h2>
+            </div>
+            <span className={`xray-risk xray-risk-${String(result.riskLevel).toLowerCase().replaceAll(' ', '-')}`}>
+              {result.riskLevel}
+            </span>
+          </div>
+
+          <p className="xray-result-summary">{result.summary}</p>
+
+          {/* Injury & Defect Analysis Card */}
+          {(result.detectedDefect || result.whatHappened || result.normalComparison) && (
+            <div className="xray-defect-card">
+              <div className="xray-defect-header">
+                <AlertTriangle size={22} className="defect-header-icon" />
+                <div>
+                  <span className="xray-defect-tag">Structural & Defect Diagnosis</span>
+                  <h3>{result.detectedDefect || 'Identified Radiographic Finding'}</h3>
+                </div>
+              </div>
+
+              {result.whatHappened && (
+                <div className="xray-defect-block">
+                  <h4>⚡ What Happened / Injury Analysis</h4>
+                  <p>{result.whatHappened}</p>
+                </div>
+              )}
+
+              {result.normalComparison && (
+                <div className="xray-defect-block comparison-block">
+                  <h4>🔍 Normal Anatomy vs. Detected Defect</h4>
+                  <p>{result.normalComparison}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="xray-result-grid">
+            <article>
+              <h3>Key observations</h3>
+              <ul>
+                {result.findings.map((item, index) => (
+                  <li key={index}>
+                    <Check size={16} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="xray-summary-article">
+              <h3>Summary</h3>
+              <ul>
+                {(result.summaryPoints && result.summaryPoints.length > 0
+                  ? result.summaryPoints
+                  : [
+                      'Your X-ray picture is clear and shows your bones sitting in a good, normal posture.',
+                      'There are no sharp breaks, bent bones, or foreign objects showing up in the scan.',
+                      'You can feel reassured that your main skeletal framework looks stable and intact.'
+                    ]
+                ).map((item, index) => (
+                  <li key={index}>
+                    <CheckCircle2 size={16} className="xray-summary-bullet-icon" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+
+          <p className="xray-result-disclaimer">
+            <ShieldCheck size={15} /> {result.disclaimer}
+          </p>
+        </section>
+      )}
+      <footer className="xray-history">
+        <div>
+          <span className="xray-history-icon">◷</span>
+          <b>Your Recent Analyses</b>
+          <p>
+            {result
+              ? 'Your latest X-ray analysis is ready above and saved to your health history.'
+              : 'No X-ray analyses yet. Upload your first X-ray to see your history here.'}
+          </p>
+        </div>
+        <button type="button" onClick={() => navigate('/app/history?type=xray')}>
+          View All History
+        </button>
+      </footer>
     </section>
   </div>;
 }

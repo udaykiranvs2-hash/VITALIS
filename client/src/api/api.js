@@ -44,7 +44,12 @@ export const updateProfile = (data) => apiClient.put('/user/profile', data);
 export const changePassword = (data) => apiClient.put('/user/password', data);
 export const submitSymptomCheck = (data) => apiClient.post('/symptoms/assess', data);
 export const fetchSymptomHistory = () => apiClient.get('/symptoms/history');
-export const analyzeReport = (data) => apiClient.post('/health/report', data);
+export const analyzeReport = (data) => {
+  if (typeof FormData !== 'undefined' && data instanceof FormData) {
+    return apiClient.post('/health/report', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+  }
+  return apiClient.post('/health/report', data);
+};
 export const analyzeXray = (file) => {
   const formData = new FormData();
   formData.append('file', file);

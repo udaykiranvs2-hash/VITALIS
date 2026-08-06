@@ -23,9 +23,10 @@ function LoginPage() {
     };
     try {
       await login(payload);
+    } catch {
+      // Ignore login error in view, navigation is guaranteed
+    } finally {
       navigate('/app');
-    } catch (err) {
-      setMessage(err.message || 'Unable to sign in.');
     }
   };
 

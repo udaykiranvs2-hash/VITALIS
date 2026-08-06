@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { submitSymptomCheck, fetchSymptomHistory } from '../api/api.js';
 import Loader from '../components/Loader.jsx';
 import Toast from '../components/Toast.jsx';
-import { ArrowRight, ArrowLeft, ShieldCheck, Check, Sparkles, RotateCcw, AlertTriangle } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ShieldCheck, Check, CheckCircle2, Sparkles, RotateCcw, AlertTriangle } from 'lucide-react';
 import '../styles/symptom-checker.css';
 
 const initialForm = {
@@ -108,6 +108,7 @@ function SymptomCheckerPage() {
     setResult(null);
     setStep(1);
     setForm(initialForm);
+    setViewMode('new');
   };
 
   // Calculating stepper progress line percentage
@@ -123,7 +124,7 @@ function SymptomCheckerPage() {
         <div className="tab-switcher" style={{ display: 'flex', gap: '0.5rem', background: 'var(--surface-strong)', padding: '0.35rem', borderRadius: '12px' }}>
           <button 
             type="button" 
-            onClick={() => setViewMode('new')} 
+            onClick={handleReset} 
             style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: 'none', background: viewMode === 'new' ? 'var(--primary)' : 'transparent', color: viewMode === 'new' ? '#fff' : 'var(--text)', cursor: 'pointer', fontWeight: 600 }}
           >
             New Check
@@ -258,6 +259,47 @@ function SymptomCheckerPage() {
               <h3 style={{ fontSize: '0.9rem', color: 'var(--muted)', margin: '0 0 0.5rem 0' }}>SUGGESTED SPECIALIST</h3>
               <p style={{ fontWeight: 600, color: 'var(--text)', margin: 0 }}>{result.suggestedSpecialist || 'General Physician'}</p>
             </article>
+          </div>
+
+          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '16px', padding: '1.25rem' }}>
+            <h3 style={{ fontSize: '1rem', color: '#166534', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <CheckCircle2 size={18} color="#16a34a" /> Symptom Summary & Body Insights
+            </h3>
+            <ul style={{ paddingLeft: '1.25rem', margin: 0, color: '#1e293b' }}>
+              {(result.summaryPoints && result.summaryPoints.length > 0
+                ? result.summaryPoints
+                : [
+                    `You are currently experiencing ${Array.isArray(form.symptoms) ? form.symptoms.join(', ') : form.symptoms || 'symptoms'} for ${form.duration} with ${form.severity} severity.`,
+                    'Your body is actively working to manage your health and restore your natural metabolic balance.',
+                    'Prioritizing rest and proper care now will support your body\'s natural recovery process.'
+                  ]
+              ).map((item, index) => (
+                <li key={index} style={{ marginBottom: '0.45rem', lineHeight: '1.55' }}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '1.25rem' }}>
+            <h3 style={{ fontSize: '1rem', color: '#1e40af', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <ShieldCheck size={18} color="#2563eb" /> Prevention Steps & Daily Precautions
+            </h3>
+            <ul style={{ paddingLeft: '1.25rem', margin: 0, color: '#1e293b' }}>
+              {(result.preventionSteps && result.preventionSteps.length > 0
+                ? result.preventionSteps
+                : [
+                    'Drink plenty of warm fluids (water, herbal teas, or clear broths) throughout the day to stay well-hydrated.',
+                    'Prioritize 7 to 8 hours of quiet, restful sleep every night to rebuild immune strength.',
+                    'Avoid cold drafts, heavy or fried foods, and intense physical strain while recovering.',
+                    'Practice good personal hygiene and wash hands frequently with soap and water.'
+                  ]
+              ).map((item, index) => (
+                <li key={index} style={{ marginBottom: '0.45rem', lineHeight: '1.55' }}>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div style={{ background: 'var(--surface-strong)', borderRadius: '16px', padding: '1.25rem' }}>
