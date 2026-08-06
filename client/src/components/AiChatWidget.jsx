@@ -34,9 +34,19 @@ function AiChatWidget({ isFullScreen, onClose }) {
     setError('');
 
     try {
+      // Extract page context for the AI
+      let pageContext = '';
+      const mainContent = document.querySelector('main.app-content');
+      if (mainContent) {
+        pageContext = mainContent.innerText.substring(0, 2500);
+      } else {
+        pageContext = document.body.innerText.substring(0, 2500);
+      }
+
       const response = await sendAssistantMessage({
         message: prompt,
-        history: chatHistory
+        history: chatHistory,
+        pageContext: pageContext
       });
 
       const replyText = response?.data?.reply || 'Received response from assistant.';
