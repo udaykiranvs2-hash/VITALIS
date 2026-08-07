@@ -59,17 +59,67 @@
     "id": "ade2e52a-5a34-4c3f-918e-6b87e24c8f24",
     "name": "Uday Kiran",
     "email": "udaykiranvs2@gmail.com",
-    "authProvider": "google",
+    "authProvider": "email",
     "role": "user",
     "profile": {
       "fullName": "Uday Kiran"
     },
     "reports": [],
-    "appointments": [],
-    "notifications": [],
+    "appointments": [
+      {
+        "doctorId": "doc1",
+        "doctorName": "Dr. Ramesh Kumar",
+        "specialty": "Cardiologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      },
+      {
+        "doctorId": "doc1",
+        "doctorName": "Dr. Ramesh Kumar",
+        "specialty": "Cardiologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      },
+      {
+        "doctorId": "doc1",
+        "doctorName": "Dr. Ramesh Kumar",
+        "specialty": "Cardiologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      },
+      {
+        "doctorId": "doc1",
+        "doctorName": "Dr. Ramesh Kumar",
+        "specialty": "Cardiologist",
+        "date": "2026-07-22",
+        "time": "10:00",
+        "status": "confirmed"
+      }
+    ],
+    "notifications": [
+      {
+        "message": "Appointment booked with Dr. Ramesh Kumar on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      },
+      {
+        "message": "Appointment booked with Dr. Ramesh Kumar on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      },
+      {
+        "message": "Appointment booked with Dr. Ramesh Kumar on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      },
+      {
+        "message": "Appointment booked with Dr. Ramesh Kumar on 2026-07-22 at 10:00.",
+        "type": "appointment"
+      }
+    ],
     "history": [],
-    "createdAt": "2026-07-29T14:13:20.249Z",
-    "updatedAt": "2026-07-29T14:13:20.249Z"
+    "createdAt": "2026-08-07T05:58:29.064Z",
+    "updatedAt": "2026-08-07T05:58:29.064Z"
   },
   {
     "_id": "3534ce92-90f8-493d-b363-ddab0b9e04cc",
@@ -1128,12 +1178,8 @@
       }
     ],
     "history": [],
-<<<<<<< HEAD
     "createdAt": "2026-08-06T04:46:00.588Z",
     "updatedAt": "2026-08-06T04:46:00.588Z"
-=======
-    "createdAt": "2026-07-31T06:02:05.104Z",
-    "updatedAt": "2026-07-31T06:02:05.104Z"
   },
   {
     "_id": "d2efd1a0-f155-40f9-a952-76d25bd1a4f7",
@@ -1168,6 +1214,5 @@
     "history": [],
     "createdAt": "2026-08-04T04:21:51.759Z",
     "updatedAt": "2026-08-04T04:21:51.759Z"
->>>>>>> 2edb1eb96180f4edec53c7f676ffde490dc09fc6
   }
 ]

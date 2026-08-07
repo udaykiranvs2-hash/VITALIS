@@ -6,11 +6,8 @@ import { EmergencyEngine } from '../ai/rag/emergency.engine.js';
 import { FollowUpEngine } from '../ai/rag/followup.engine.js';
 import { RagRetriever } from '../ai/rag/retriever.js';
 import { SymptomAnalysisService } from '../ai/rag/analyzer.js';
-<<<<<<< HEAD
 import { NormalizerEngine } from '../ai/rag/normalizer.engine.js';
-=======
 import { buildSymptomAssessment, buildLocalSymptomAssessment } from '../services/ai.service.js';
->>>>>>> 6d220e3c88c88633a3755d1f8a2894c0fcf9cb87
 
 // Initialize the new AI Architecture using Dependency Injection
 let aiService = null;
