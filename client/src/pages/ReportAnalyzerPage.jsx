@@ -105,8 +105,9 @@ export default function ReportAnalyzerPage() {
           </p>
         </div>
         <div className="report-header-art" aria-hidden="true">
-          <FileText size={78} />
-          <Activity size={34} />
+          <div className="report-graphic report-graphic-1"><FileText size={32} /></div>
+          <div className="report-graphic report-graphic-2"><Activity size={28} /></div>
+          <div className="report-graphic report-graphic-3"><CheckCircle2 size={36} /></div>
         </div>
       </header>
 

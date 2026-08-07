@@ -51,22 +51,31 @@
 
 .report-header-art {
   position: relative;
-  width: 240px;
-  height: 130px;
-  display: grid;
-  place-items: center;
-  color: #93c5fd;
-  opacity: 0.85;
-  border-radius: 24px;
-  background: linear-gradient(135deg, rgba(219, 234, 254, 0.85), rgba(255, 255, 255, 0.2));
+  width: 250px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2rem;
 }
 
-.report-header-art svg:last-child {
+.report-graphic {
   position: absolute;
-  right: 14px;
-  bottom: 22px;
-  color: #3b82f6;
+  background: var(--surface);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+  color: #60a5fa;
 }
+
+.report-graphic-1 { width: 80px; height: 80px; top: 10%; left: 0; z-index: 2; }
+.report-graphic-2 { width: 100px; height: 100px; top: 30%; right: 10%; z-index: 1; animation-delay: -1s; }
+.report-graphic-3 { width: 70px; height: 70px; bottom: 10%; left: 30%; z-index: 3; animation-delay: -2s; }
 
 /* Workspace Layout */
 .report-workspace {

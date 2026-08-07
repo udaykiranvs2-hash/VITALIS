@@ -34,7 +34,17 @@ export default function XRayAnalyzerPage() {
 
   return <div className="xray-page">
     <Toast message={toast} onClose={() => setToast('')} />
-    <header className="xray-header"><div><h1>X-ray Analysis</h1><p>Upload your X-ray image and get AI-assisted insights with highlighted findings and risk indicators.</p></div><div className="xray-header-art" aria-hidden="true"><ScanLine size={84} /><ShieldCheck size={38} /></div></header>
+    <header className="xray-header">
+      <div>
+        <h1>X-ray Analysis</h1>
+        <p>Upload your X-ray image and get AI-assisted insights with highlighted findings and risk indicators.</p>
+      </div>
+      <div className="xray-header-art" aria-hidden="true">
+        <div className="xray-graphic xray-graphic-1"><ScanLine size={32} /></div>
+        <div className="xray-graphic xray-graphic-2"><ShieldCheck size={28} /></div>
+        <div className="xray-graphic xray-graphic-3"><FileImage size={36} /></div>
+      </div>
+    </header>
     <section className="xray-workspace">
       <div className="xray-upload-column">
         <input ref={inputRef} type="file" accept="image/jpeg,image/png" hidden onChange={(event) => selectFile(event.target.files?.[0])} />

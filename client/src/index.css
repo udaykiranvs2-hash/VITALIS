@@ -594,7 +594,7 @@ button {
 .theme-toggle-button:hover { background: var(--primary); color: #fff; }
 
 [data-theme='dark'] .app-navbar.top,
-[data-theme='dark'] .app-navbar.scrolled { background: rgba(15, 23, 36, 0.95); border-color: #27364a; }
+[data-theme='dark'] .app-navbar.scrolled { background: rgba(15, 23, 36, 0.95); border-color: #6d28d9; }
 [data-theme='dark'] .app-navbar-logo-text span,
 [data-theme='dark'] .app-navbar-links a,
 [data-theme='dark'] .app-navbar-user-name,
@@ -615,29 +615,65 @@ button {
 [data-theme='dark'] .sidebar-link { color: #cbd5e1; }
 [data-theme='dark'] .sidebar-link:hover { background: #172635; color: #f8fafc; }
 [data-theme='dark'] .sidebar-link.active { background: #183957; color: #93c5fd; }
-[data-theme='dark'] .xray-page { color: #e8f1fb; }
-[data-theme='dark'] .xray-header { background: radial-gradient(circle at 79% 55%, rgba(30, 64, 175, .42), transparent 14rem); }
-[data-theme='dark'] .xray-header p,
-[data-theme='dark'] .xray-dropzone p,
-[data-theme='dark'] .xray-dropzone small,
-[data-theme='dark'] .xray-steps small,
-[data-theme='dark'] .xray-tips-card,
-[data-theme='dark'] .xray-history p,
-[data-theme='dark'] .xray-result-summary,
-[data-theme='dark'] .xray-result-grid li,
-[data-theme='dark'] .xray-result-disclaimer { color: #cbd5e1; }
-[data-theme='dark'] .xray-workspace,
-[data-theme='dark'] .xray-dropzone,
-[data-theme='dark'] .xray-result-panel,
-[data-theme='dark'] .xray-result-grid article { background: #0f1724; border-color: #304257; }
-[data-theme='dark'] .xray-tips-card,
-[data-theme='dark'] .xray-note-card { background: #172635; }
-[data-theme='dark'] .xray-dropzone h2,
-[data-theme='dark'] .xray-guide-column h2,
-[data-theme='dark'] .xray-steps b,
-[data-theme='dark'] .xray-history b,
-[data-theme='dark'] .xray-result-heading h2,
-[data-theme='dark'] .xray-result-grid h3 { color: #f1f5f9; }
+[data-theme='dark'] .app-navbar-search { background: rgba(23, 38, 53, 0.9); border-color: #304257; }
+[data-theme='dark'] .app-navbar-search:focus-within { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
+[data-theme='dark'] .app-navbar-search-input { color: #f1f5f9; }
+[data-theme='dark'] .app-navbar-search-input::placeholder { color: #64748b; }
+[data-theme='dark'] .app-search-dropdown { background: #0f1724; border-color: #304257; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35); }
+[data-theme='dark'] .app-search-result-item:hover,
+[data-theme='dark'] .app-search-result-item.selected { background: #172635; }
+[data-theme='dark'] .app-search-result-icon { background: #1e3a5f; color: #93c5fd; }
+[data-theme='dark'] .app-search-result-item.selected .app-search-result-icon { background: #3b82f6; color: #fff; }
+[data-theme='dark'] .app-search-result-label { color: #f1f5f9; }
+[data-theme='dark'] .app-search-result-path { background: #1e2d3d; color: #64748b; }
+  [data-theme='dark'] .xray-page, [data-theme='dark'] .report-page { color: #e8f1fb; }
+  [data-theme='dark'] .xray-header, [data-theme='dark'] .report-header { background: radial-gradient(circle at 79% 55%, rgba(30, 64, 175, .42), transparent 14rem); }
+  [data-theme='dark'] .xray-header p,
+  [data-theme='dark'] .report-header p,
+  [data-theme='dark'] .xray-dropzone p,
+  [data-theme='dark'] .report-dropzone p,
+  [data-theme='dark'] .xray-dropzone small,
+  [data-theme='dark'] .report-dropzone small,
+  [data-theme='dark'] .xray-steps small,
+  [data-theme='dark'] .report-steps small,
+  [data-theme='dark'] .xray-tips-card,
+  [data-theme='dark'] .xray-history p,
+  [data-theme='dark'] .report-history p,
+  [data-theme='dark'] .xray-result-summary,
+  [data-theme='dark'] .report-result-summary,
+  [data-theme='dark'] .xray-result-grid li,
+  [data-theme='dark'] .report-result-grid li,
+  [data-theme='dark'] .xray-result-disclaimer,
+  [data-theme='dark'] .report-result-disclaimer { color: #cbd5e1; }
+  [data-theme='dark'] .xray-workspace,
+  [data-theme='dark'] .report-workspace,
+  [data-theme='dark'] .xray-dropzone,
+  [data-theme='dark'] .report-dropzone,
+  [data-theme='dark'] .xray-result-panel,
+  [data-theme='dark'] .report-result-panel,
+  [data-theme='dark'] .xray-result-grid article,
+  [data-theme='dark'] .report-result-grid article,
+  [data-theme='dark'] .report-file-card,
+  [data-theme='dark'] .report-mismatch-card { background: #0f1724; border-color: #304257; }
+  [data-theme='dark'] .xray-tips-card,
+  [data-theme='dark'] .xray-note-card,
+  [data-theme='dark'] .report-note-card,
+  [data-theme='dark'] .report-parameters-table th,
+  [data-theme='dark'] .report-parameters-table td { background: #172635; }
+  [data-theme='dark'] .xray-dropzone h2,
+  [data-theme='dark'] .report-dropzone h2,
+  [data-theme='dark'] .xray-guide-column h2,
+  [data-theme='dark'] .report-guide-column h2,
+  [data-theme='dark'] .xray-steps b,
+  [data-theme='dark'] .report-steps b,
+  [data-theme='dark'] .xray-history b,
+  [data-theme='dark'] .report-history b,
+  [data-theme='dark'] .xray-result-heading h2,
+  [data-theme='dark'] .report-result-heading h2,
+  [data-theme='dark'] .report-header h1,
+  [data-theme='dark'] .report-file-name,
+  [data-theme='dark'] .xray-result-grid h3,
+  [data-theme='dark'] .report-result-grid h3 { color: #f1f5f9; }
 
 .app-shell {
   min-height: 100vh;

@@ -84,7 +84,10 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (err) {
         console.error('Error fetching profile on session handle:', err);
-        if (err?.response?.status === 401) {
+        const storedUser = localStorage.getItem('vitalis_user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        } else if (err?.response?.status === 401) {
           clearAuthState();
         }
       }
